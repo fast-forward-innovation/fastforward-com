@@ -1,0 +1,28 @@
+- id: 3d-animation
+  name: 3D Animation
+- id: augmented-reality
+  name: Augmented Reality
+- id: design
+  name: Design
+- id: development
+  name: Development
+- id: digital-strategy
+  name: Digital Strategy
+- id: game-development
+  name: Game Development
+- id: hardware-integration
+  name: Hardware Integration
+- id: software-development
+  name: Software Development
+- id: strategy
+  name: Strategy
+- id: support
+  name: Support
+- id: technical-consulting
+  name: Technical Consulting
+- id: ux
+  name: UX
+- id: visual-design
+  name: Visual Design
+- id: web-development
+  name: Web Development
