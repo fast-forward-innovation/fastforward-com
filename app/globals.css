@@ -104,41 +104,6 @@
     max-width: 1600px;
   }
 
-  .mobile-nav {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    flex-direction: column;
-    padding-left: 0.25rem;
-    padding-top: 2rem;
-  }
-
-  .desktop-nav {
-    position: static;
-    width: auto;
-    height: auto;
-    flex-direction: row;
-    padding: 0;
-    align-items: center;
-  }
-
-  .menu-open {
-    right: -0.75rem;
-    transition: right 300ms ease-in-out;
-  }
-
-  .menu-closed {
-    right: calc(100% + 0.75rem);
-    transition: right 300ms ease-in-out;
-  }
-
-  @media (prefers-reduced-motion) {
-    .menu-open,
-    .menu-closed {
-      transition: none;
-    }
-  }
-
   #footer-links li::before {
     content: ">";
     padding-right: 8px;
@@ -394,13 +359,14 @@
   }
 
   /* ----- Hamburger icon (hand-rolled, replaces tailwind-hamburgers) ----- */
+  /* Positioning (absolute/top/right) comes from utility classes in the JSX
+     so the element remains positioned for its ::before / ::after bars. */
   .hamburger {
     width: 2rem;
     height: 1.5rem;
     background: transparent;
     border: 0;
     cursor: pointer;
-    position: relative;
     padding: 0;
   }
   .hamburger .hamburger-bar,

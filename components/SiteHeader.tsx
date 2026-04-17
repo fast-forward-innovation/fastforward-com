@@ -72,7 +72,7 @@ export function SiteHeader() {
           aria-expanded={menuOpen}
           aria-controls={menuId}
           onClick={toggle}
-          className={`hamburger absolute top-3 right-0 lg:hidden ${menuOpen ? "is-active" : ""}`}
+          className={`hamburger !absolute top-3 right-3 lg:hidden z-30 ${menuOpen ? "is-active" : ""}`}
           tabIndex={2}
         >
           <span className="hamburger-bar" />
@@ -81,7 +81,15 @@ export function SiteHeader() {
         <ul
           id={menuId}
           aria-hidden={!menuOpen}
-          className={`${menuOpen ? "menu-open" : "menu-closed"} mobile-nav flex lg:desktop-nav bg-white z-20`}
+          className={[
+            // shared
+            "flex bg-white z-20 transition-[right] duration-300 ease-in-out motion-reduce:transition-none",
+            // mobile: fullscreen panel that slides in from the right side
+            "absolute top-0 h-screen w-screen flex-col pl-1 pt-20",
+            menuOpen ? "right-[-0.75rem]" : "right-[calc(100%+0.75rem)]",
+            // desktop: in-flow row next to the logo
+            "lg:static lg:h-auto lg:w-auto lg:flex-row lg:p-0 lg:items-center lg:right-auto",
+          ].join(" ")}
         >
           {NAV_LINKS.map(({ label, href, mobileOnly }) => (
             <li
