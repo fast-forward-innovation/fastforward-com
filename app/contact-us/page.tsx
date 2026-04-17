@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ContactForm } from "@/components/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -48,18 +49,7 @@ export default function ContactUsPage() {
               hear from you.
             </p>
           </div>
-          {/* TODO(phase-5): replace with <ContactForm /> — client component */}
-          {/*   POSTs to /api/contact (new API route forwarding to Monday). */}
-          <p className="text-ff_gray italic">
-            Contact form coming soon. In the meantime, email{" "}
-            <a
-              className="text-ff_teal font-semibold hover:underline"
-              href="mailto:hello@fastforward.sh"
-            >
-              hello@fastforward.sh
-            </a>
-            .
-          </p>
+          <ContactForm />
         </div>
       </div>
     </div>

@@ -359,6 +359,25 @@
     @apply text-3xl leading-tight md:text-5xl md:leading-tight pb-6 md:pb-8;
   }
 
+  /* ----- Contact form ----- */
+  .contact-input {
+    @apply mb-2;
+  }
+  .contact-input label,
+  .contact-input legend {
+    @apply pb-2 text-md md:text-base;
+  }
+  .input__error input,
+  .input__error textarea {
+    @apply border-2 border-ff_red;
+  }
+  .input__required label::after {
+    content: "*";
+  }
+  #contact-form label {
+    @apply block;
+  }
+
   .next-post::after {
     content: "→";
     color: var(--color-ff_teal);
