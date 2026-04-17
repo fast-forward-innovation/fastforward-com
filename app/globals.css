@@ -289,6 +289,91 @@
     }
   }
 
+  /* ----- Homepage banner (rotating hero + animated underline) ----- */
+  .banner-background {
+    transition: opacity 0.7s cubic-bezier(0.45, 0, 0.55, 1);
+    opacity: 0;
+  }
+  .banner-background.entering {
+    opacity: 1;
+  }
+
+  .animated-underline {
+    position: relative;
+    transition: all 0.6s cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  .animated-underline:before {
+    z-index: -1;
+    background: linear-gradient(
+      148.48deg,
+      #dd2e2a 0%,
+      #b81d19 19.08%,
+      #18397f 59.12%,
+      #1e2142 100%
+    );
+    transition:
+      background 0.7s,
+      width 0.5s;
+    content: "";
+    width: 0;
+    height: calc(0.75rem + (100vw - 900px) / 80);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+  .animated-underline.entering:before {
+    width: 100%;
+    left: 0;
+  }
+  .animated-underline.exiting:before {
+    width: 0;
+    right: 0;
+    left: initial;
+  }
+
+  /* ----- Project / post detail (featured image bottom fade + typography) ----- */
+  #featured-image::after {
+    content: "";
+    background: white;
+    position: absolute;
+    height: 50%;
+    bottom: 0;
+    width: 100vw;
+    left: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    z-index: -1;
+  }
+
+  .main-section p:not(:last-child),
+  .main-section ul:not(:last-child),
+  .main-section ol:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+  .main-section li {
+    list-style-type: disc;
+    list-style-position: inside;
+  }
+
+  .section-tagline {
+    @apply text-3xl leading-tight md:text-5xl md:leading-tight pb-6 md:pb-8;
+  }
+
+  .next-post::after {
+    content: "→";
+    color: var(--color-ff_teal);
+    position: absolute;
+    right: -25px;
+    top: 0;
+  }
+
+  .inline-services-style:after {
+    content: " • ";
+  }
+  .inline-services-style:last-child:after {
+    content: none;
+  }
+
   /* ----- Hamburger icon (hand-rolled, replaces tailwind-hamburgers) ----- */
   .hamburger {
     width: 2rem;
