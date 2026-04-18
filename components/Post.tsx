@@ -104,7 +104,7 @@ export function Post({ project }: { project: Project }) {
             </div>
           </div>
           {featuredImage && (
-            <div id="featured-image" className="relative mb-[4.5rem]">
+            <div id="featured-image" className="relative mb-[4.5rem] lg:px-6">
               <Image
                 src={featuredImage.src}
                 alt={featuredImage.alt || title}
@@ -112,7 +112,7 @@ export function Post({ project }: { project: Project }) {
                 height={featuredImage.height ?? 900}
                 priority
                 sizes="100vw"
-                className="max-lg:h-[60vh] lg:mx-6 object-cover w-full"
+                className="max-lg:h-[60vh] object-cover w-full"
               />
             </div>
           )}
