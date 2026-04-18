@@ -65,8 +65,7 @@
     @apply text-md md:text-lg pb-5;
   }
 
-  button,
-  .btn {
+  button {
     @apply text-xl xl:text-base py-3 px-6 rounded font-semibold;
   }
 
@@ -128,34 +127,6 @@
 /* ---------------------------------------------------------------------- */
 
 @layer utilities {
-  /* Animated underline on nav links */
-  .hover-linear-gradient-underline {
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
-    position: relative;
-  }
-  .hover-linear-gradient-underline:after {
-    background: linear-gradient(
-      148.48deg,
-      #dd2e2a 0%,
-      #b81d19 19.08%,
-      #18397f 59.12%,
-      #1e2142 100%
-    );
-    content: "";
-    width: 0;
-    height: 0.2em;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    transition: width 0.3s ease;
-  }
-  @media (hover: hover) {
-    .hover-linear-gradient-underline:hover:after {
-      width: 100%;
-    }
-  }
-
   /* Background patterns */
   .ff-background {
     background-image: url("/Pattern.svg");
@@ -177,30 +148,6 @@
 
   .light-gradient-background {
     background: linear-gradient(158.44deg, #eef3f5 0%, #ebf2f6 100%);
-  }
-
-  /* CTA button — brand gradient with hover inversion */
-  .linear-gradient-background-hover {
-    @apply text-white;
-    background: linear-gradient(
-      148.48deg,
-      #dd2e2a 0%,
-      #b81d19 19.08%,
-      #18397f 59.12%,
-      #1e2142 100%
-    );
-    transition: background 0.3s ease;
-  }
-  @media (hover: hover) {
-    .linear-gradient-background-hover:hover {
-      background: linear-gradient(
-        148.48deg,
-        #1e2142 0%,
-        #18397f 19.08%,
-        #b81d19 59.12%,
-        #dd2e2a 100%
-      );
-    }
   }
 
   .linear-gradient-background {
@@ -417,5 +364,69 @@
     transition:
       bottom 0.2s ease 0s,
       transform 0.2s ease 0.2s;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Tailwind 4 @utility — top-level, at-rule definitions.                   */
+/* These are here (not in @layer components/utilities) because Tailwind 4  */
+/* only generates responsive variants (e.g. `lg:btn`) for classes          */
+/* declared via @utility.                                                   */
+/* ---------------------------------------------------------------------- */
+
+@utility btn {
+  @apply text-xl xl:text-base py-3 px-6 rounded font-semibold;
+}
+
+@utility hover-linear-gradient-underline {
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+  position: relative;
+
+  &::after {
+    background: linear-gradient(
+      148.48deg,
+      #dd2e2a 0%,
+      #b81d19 19.08%,
+      #18397f 59.12%,
+      #1e2142 100%
+    );
+    content: "";
+    width: 0;
+    height: 0.2em;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transition: width 0.3s ease;
+  }
+
+  @media (hover: hover) {
+    &:hover::after {
+      width: 100%;
+    }
+  }
+}
+
+@utility linear-gradient-background-hover {
+  @apply text-white;
+  background: linear-gradient(
+    148.48deg,
+    #dd2e2a 0%,
+    #b81d19 19.08%,
+    #18397f 59.12%,
+    #1e2142 100%
+  );
+  transition: background 0.3s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      background: linear-gradient(
+        148.48deg,
+        #1e2142 0%,
+        #18397f 19.08%,
+        #b81d19 59.12%,
+        #dd2e2a 100%
+      );
+    }
   }
 }
