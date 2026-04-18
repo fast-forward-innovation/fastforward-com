@@ -414,26 +414,52 @@
   }
 }
 
+/* Register gradient-stop variables as <color> so they can be interpolated
+   via CSS transition — plain `transition: background` cannot tween between
+   two linear-gradient() values, so the hover swap would be instant without
+   these @property declarations. */
+@property --gradient1 {
+  syntax: "<color>";
+  initial-value: #dd2e2a;
+  inherits: false;
+}
+@property --gradient2 {
+  syntax: "<color>";
+  initial-value: #b81d19;
+  inherits: false;
+}
+@property --gradient3 {
+  syntax: "<color>";
+  initial-value: #18397f;
+  inherits: false;
+}
+@property --gradient4 {
+  syntax: "<color>";
+  initial-value: #1e2142;
+  inherits: false;
+}
+
 @utility linear-gradient-background-hover {
   @apply text-white;
   background: linear-gradient(
     148.48deg,
-    #dd2e2a 0%,
-    #b81d19 19.08%,
-    #18397f 59.12%,
-    #1e2142 100%
+    var(--gradient1) 0%,
+    var(--gradient2) 19.08%,
+    var(--gradient3) 59.12%,
+    var(--gradient4) 100%
   );
-  transition: background 0.3s ease;
+  transition:
+    --gradient1 0.3s,
+    --gradient2 0.3s,
+    --gradient3 0.3s,
+    --gradient4 0.3s;
 
   @media (hover: hover) {
     &:hover {
-      background: linear-gradient(
-        148.48deg,
-        #1e2142 0%,
-        #18397f 19.08%,
-        #b81d19 59.12%,
-        #dd2e2a 100%
-      );
+      --gradient1: #1e2142;
+      --gradient2: #18397f;
+      --gradient3: #b81d19;
+      --gradient4: #dd2e2a;
     }
   }
 }
