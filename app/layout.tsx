@@ -44,12 +44,10 @@ export default function RootLayout({
       lang="en"
       className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`}
     >
-      <body className="min-h-screen flex flex-col font-sans bg-white">
+      <body className="min-h-screen flex flex-col font-sans bg-white pt-[82px] lg:pt-[92px] xl:pt-[114px]">
         <SiteHeader />
-        <div className="relative top-[82px] lg:top-[92px] xl:top-[114px]">
-          <main className="mb-auto">{children}</main>
-          <FooterBlock />
-        </div>
+        <main className="flex-auto">{children}</main>
+        <FooterBlock />
         {gaTrackingId && <GoogleAnalytics gaId={gaTrackingId} />}
       </body>
     </html>

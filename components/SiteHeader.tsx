@@ -39,13 +39,14 @@ export function SiteHeader() {
   const toggle = () => setMenuOpen((v) => !v);
 
   return (
-    <div
+    <header
       data-is-root-path={isHomePage}
       className="px-3 lg:px-6 py-5 bg-white border-b border-b-ff_slateGray w-full z-40 fixed top-0"
     >
       <nav
         ref={navRef}
         id="hamburger-menu"
+        aria-label="Primary"
         className="relative lg:flex items-center justify-between mx-auto"
       >
         {isHomePage ? (
@@ -118,6 +119,6 @@ export function SiteHeader() {
           </li>
         </ul>
       </nav>
-    </div>
+    </header>
   );
 }
