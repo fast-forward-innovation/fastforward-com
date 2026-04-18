@@ -33,6 +33,13 @@
 /* ---------------------------------------------------------------------- */
 
 @layer base {
+  html {
+    /* Stop the browser's rubber-band overscroll from exposing the OS
+       window color above/below the fixed header. Preserves normal
+       scroll behavior within the page. */
+    overscroll-behavior-y: none;
+  }
+
   h1,
   .h1,
   h2,
