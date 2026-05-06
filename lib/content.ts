@@ -11,6 +11,10 @@ import type {
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 
+// In-process caches are skipped in dev so edits to content/*.{mdx,yml}
+// are picked up on the next request without restarting the server.
+const CACHE_ENABLED = process.env.NODE_ENV === "production";
+
 function readMdx(filePath: string): { data: Record<string, unknown>; content: string } {
   const raw = readFileSync(filePath, "utf8");
   const { data, content } = matter(raw);
@@ -33,18 +37,20 @@ function listMdx(subdir: string): string[] {
 
 let _settings: Settings | null = null;
 export function getSettings(): Settings {
-  if (_settings) return _settings;
+  if (CACHE_ENABLED && _settings) return _settings;
   const raw = readFileSync(path.join(CONTENT_DIR, "settings.yml"), "utf8");
-  _settings = yaml.load(raw) as Settings;
-  return _settings;
+  const parsed = yaml.load(raw) as Settings;
+  if (CACHE_ENABLED) _settings = parsed;
+  return parsed;
 }
 
 let _services: Service[] | null = null;
 export function getServices(): Service[] {
-  if (_services) return _services;
+  if (CACHE_ENABLED && _services) return _services;
   const raw = readFileSync(path.join(CONTENT_DIR, "services.yml"), "utf8");
-  _services = yaml.load(raw) as Service[];
-  return _services;
+  const parsed = yaml.load(raw) as Service[];
+  if (CACHE_ENABLED) _services = parsed;
+  return parsed;
 }
 
 export function getServiceById(id: string): Service | undefined {
@@ -57,7 +63,7 @@ export function getServiceById(id: string): Service | undefined {
 
 let _projects: Project[] | null = null;
 export function getAllProjects(): Project[] {
-  if (_projects) return _projects;
+  if (CACHE_ENABLED && _projects) return _projects;
   const files = listMdx("projects");
   const items = files.map((f) => {
     const { data } = readMdx(f);
@@ -68,8 +74,8 @@ export function getAllProjects(): Project[] {
     if (a.isSticky !== b.isSticky) return a.isSticky ? -1 : 1;
     return (b.date || "").localeCompare(a.date || "");
   });
-  _projects = items;
-  return _projects;
+  if (CACHE_ENABLED) _projects = items;
+  return items;
 }
 
 export function getProjectBySlug(slug: string): Project | null {
@@ -104,13 +110,14 @@ export function getPaginatedProjects(
 
 let _pages: Page[] | null = null;
 export function getAllPages(): Page[] {
-  if (_pages) return _pages;
+  if (CACHE_ENABLED && _pages) return _pages;
   const files = listMdx("pages");
-  _pages = files.map((f) => {
+  const items = files.map((f) => {
     const { data } = readMdx(f);
     return data as unknown as Page;
   });
-  return _pages;
+  if (CACHE_ENABLED) _pages = items;
+  return items;
 }
 
 export function getPageBySlug(slug: string): Page | null {

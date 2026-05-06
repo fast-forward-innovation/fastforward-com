@@ -1,0 +1,250 @@
+---
+title: Growing with Pantheon's Platform Options
+slug: growing-with-pantheon
+date: '2026-05-05T12:00:00'
+excerpt: >-
+  How a long-running Pantheon site evolved from Decoupled Sites
+  (Gatsby on headless WordPress) to Pantheon's Next.js platform —
+  prompted by a simple realization: the content model we'd been
+  carrying for years no longer matched the way our editorial team
+  actually worked.
+isSticky: true
+featuredImage:
+  src: /hero-images/homepage-rotation-2.jpeg
+  alt: A glowing, geometric pattern in Fast Forward's brand gradient.
+  width: 2880
+  height: 1614
+cardImage:
+  src: /hero-images/homepage-rotation-1.jpeg
+  alt: A glowing, geometric pattern in Fast Forward's brand gradient.
+  width: 2880
+  height: 2880
+additionalPostFields:
+  label: Fast Forward Innovation
+  brandColor: '#dd2e2a'
+services:
+  - development
+  - strategy
+  - design
+pageSections:
+  - type: MainSection
+    tagline: When the site model drifts from the editorial reality
+    title: The Challenge
+    background: white
+    richText: >
+      <p><strong>fastforward.sh</strong> has been a Pantheon site for years. It started
+      on Pantheon's standard hosting, moved to Pantheon's Decoupled
+      Sites platform when we wanted a faster front-end — a Gatsby 4
+      build feeding off headless WordPress over WPGraphQL — and stayed
+      there as we shipped, iterated, and grew the team.</p>
+
+      <p>What we didn't notice for a while was that the editorial
+      workflow underneath the site had quietly shifted. Copy edits were
+      happening in Google Docs, not in the WordPress admin. Case
+      studies were authored by our marketing team, sent to our developers to place in
+      Wordpress, then sending back preview links. The team that the CMS was meant
+      to serve had stopped logging into it; the developers were the
+      ones maintaining a tool nobody was using.</p>
+
+      <p>The site model and the editorial model had drifted apart. The
+      real question wasn't "how do we modernize the front end" — it
+      was "what shape of platform actually fits how this team works
+      now?"</p>
+  - type: ImageBlock
+    images:
+      - src: /hero-images/homepage-rotation-3.jpg
+        alt: >-
+          A close-up of a curved, illuminated surface in deep red and
+          navy — Fast Forward's brand gradient.
+        width: 1440
+        height: 1002
+  - type: MainSection
+    tagline: Match the platform to the editorial workflow
+    title: The Approach
+    background: white
+    richText: >
+      <p>Three options were on the table.</p>
+
+      <dl class="verdict-list">
+      <div data-verdict="rejected">
+        <dt>Option 01</dt>
+        <dd>Keep WordPress as the CMS and refresh the Gatsby front-end — the smallest disruption, but it preserved the original mismatch.</dd>
+        </div>
+        <div data-verdict="rejected">
+        <dt>Option 02</dt>
+        <dd>Trade WordPress for a modern headless CMS like Sanity or Contentful — better editorial UI, but still a runtime dependency for a team that had stopped using runtime CMS UIs.</dd>
+        </div>
+        <div data-verdict="chosen">
+        <dt>Option 03</dt>
+        <dd>Drop the CMS entirely, store content as MDX and YAML in the repository, and move from Pantheon's Decoupled Sites platform to Pantheon's Next.js platform.</dd>
+        </div>
+      </dl>
+
+      <p>We chose option three. It was the only one that aligned the
+      site model with what the editorial team had already become — a
+      small, technical group editing content the same way they edit
+      code. Putting content in version control gives us atomic deploys,
+      code review on copy changes, instant rollbacks, and a build that
+      is fully deterministic from the repository state alone — for
+      free.</p>
+
+      <p>Importantly, this wasn't a re-platform. It was a shelf change.
+      Pantheon's offering had grown alongside us. The Decoupled Sites
+      shelf fit when we needed a headless CMS feeding a static front
+      end; the Next.js shelf fit when our editorial reality outgrew the
+      headless CMS. Same vendor, same operational model, same CDN, same
+      environment promotion — just a different platform shape
+      underneath.</p>
+  - type: MainSection
+    tagline: Pantheon Next.js, fully static, modern foundation
+    title: The Stack
+    background: white
+    richText: >
+      <p>The new site runs on <strong>Next.js 16</strong> with the App
+      Router, <strong>React 19</strong>, and <strong>TypeScript</strong>.
+      Styling is <strong>Tailwind CSS 4</strong> in CSS-first mode —
+      design tokens live in an <code>@theme</code> block in
+      <code>app/globals.css</code>, and there is no
+      <code>tailwind.config</code> file at all. Typography is loaded
+      through <code>next/font/google</code> with <code>size-adjust</code>
+      fallback metrics, so Manrope and JetBrains Mono swap in without
+      the layout shift that used to plague font loading.</p>
+
+      <p>Content is plain MDX and YAML in <code>content/</code>. A
+      build-time loader reads it synchronously with <code>gray-matter</code>
+      and <code>js-yaml</code>, returns typed objects, and feeds them
+      into statically-generated routes. Every marketing page is rendered
+      to HTML at build time and served from Pantheon's CDN. The only
+      runtime surface is a single API route — the contact form posts to
+      a Monday.com Leads board.</p>
+
+      <p>The hosting move kept everything that worked about Pantheon
+      and swapped only what needed to change. The platform builds the
+      site from the GitHub repository on every push to <code>main</code>;
+      promotion from Dev to Test to Live runs on the same tag-based
+      model the team has used for years. The runtime is now containerized
+      Node instead of PHP, the front end is Next.js instead of Gatsby,
+      and the database is gone entirely — but the operator's mental
+      model didn't move.</p>
+  - type: ImageBlock
+    images:
+      - src: /hero-images/homepage-rotation-1.jpeg
+        alt: >-
+          A textured surface lit by Fast Forward's red-to-navy brand
+          gradient.
+        width: 2880
+        height: 2880
+  - type: MainSection
+    tagline: Pantheon's CLI as the connective tissue
+    title: How We Built It
+    background: gray
+    richText: >
+      <p>The day-to-day work of running a Pantheon site has always
+      lived in <strong>Terminus</strong>, Pantheon's command-line
+      interface. Cloning a fresh database from Live to Dev, spinning up
+      a multidev for a feature branch, running drush against a Drupal
+      environment, clearing the CDN after a deploy — all of it is one
+      Terminus command away, and the same commands work across the
+      Drupal sites, the WordPress sites, and now the Next.js site we
+      maintain. The platform's CLI is the connective tissue that makes
+      a multi-platform Pantheon reality feel like a single operations
+      surface.</p>
+
+      <p>That muscle memory carried straight into the migration. Every
+      multidev cut for a risky migration phase was a one-line
+      <code>terminus multidev:create</code>. Every CDN invalidation
+      after a Test or Live deploy was a single
+      <code>terminus env:clear-cache</code>. Pantheon's environment
+      model — the same Dev/Test/Live promotion shape we've worked
+      with for years across other platform shelves — held the entire
+      port together.</p>
+
+      <p>The migration itself was structured as seven phased rewrites,
+      one focused effort per concern (scaffold, content export, content
+      loader, page rendering, contact form, SEO, pre-flight). Each
+      phase produced a single, reviewable commit. The WordPress content
+      was moved with a re-runnable, idempotent script that hit the
+      WPGraphQL endpoint, mapped ACF flex-content blocks to a YAML
+      discriminated union, downloaded media into <code>public/</code>
+      with eight-way concurrency, and wrote a migration report. Every
+      time the WordPress install changed during the port, "what's new
+      since yesterday" was a re-run plus a <code>git diff</code>.</p>
+
+      <p>For visual review — the failure mode that matters most for a
+      brand site — we deliberately did not install Playwright, Percy,
+      or Chromatic. A static marketing site fails visually, not
+      logically; type-checking and lint don't catch a too-tight
+      headline or a logo on the wrong background. Instead we run a
+      five-point spot check defined in <code>DESIGN.md</code> against a
+      live dev server, and lean on the Pantheon Test environment as
+      the real safety net before promotion to Live. Match the test
+      surface to the failure mode.</p>
+  - type: ImageBlock
+    images:
+      - src: /hero-images/homepage-rotation-2.jpeg
+        alt: >-
+          Fast Forward's brand gradient rendered as a curved, glowing
+          form.
+        width: 2880
+        height: 1614
+  - type: MainSection
+    tagline: One repository, no CMS, still on Pantheon
+    title: The Result
+    background: white
+    richText: >
+      <p>Two repositories and three services were replaced with one
+      repository and zero runtime dependencies. The CMS database is
+      gone. The GraphQL layer is gone. The plugin update treadmill is
+      gone. Content edits are pull requests. Deploys are atomic. The
+      site is fully statically generated and served from Pantheon's
+      CDN, with one server-rendered route for the contact form.</p>
+
+      <p>The operations model, on the other hand, is unchanged. The
+      team still uses Terminus for everything that touches an
+      environment. The same Dev/Test/Live promotion model that has
+      carried us across multiple Pantheon platform shapes carries us
+      forward — and when the editorial reality eventually shifts again
+      (a return to a CMS for non-technical editors, a new Pantheon
+      offering, a different content shape entirely), moving shelves
+      remains a tractable operation rather than a full re-platform.</p>
+
+      <p>The lesson, in one line: <strong>match the site model to the
+      editorial team, and pick the platform shape that supports it.</strong>
+      For us, that meant the Pantheon Next.js shelf. For the next
+      site, it might mean something else entirely. The point is that
+      Pantheon's platform menu keeps growing alongside the shapes our
+      work takes.</p>
+  - type: MainSection
+    tagline: Technical Notes
+    title: Behind the Curtain
+    background: gray
+    richText: >
+      <p>Every brand token — colors, type scale, container width —
+      lives as a CSS custom property in the <code>@theme</code> block
+      of <code>app/globals.css</code>. Tailwind v4 generates utilities
+      from those tokens automatically (<code>bg-ff_red</code>,
+      <code>text-ff_black</code>, <code>max-w-ff_siteWidth</code>) with
+      no JavaScript configuration. Reusable effects — the brand's
+      signature linear and radial gradients, the animated underline
+      treatment, the hand-rolled hamburger icon — are declared as
+      Tailwind v4 <code>@utility</code> blocks so they pick up
+      responsive variants.</p>
+
+      <p>The content loader uses <code>gray-matter</code> for MDX
+      frontmatter and <code>js-yaml</code> for service taxonomies and
+      settings. The block taxonomy from the WordPress side
+      (<code>MainSection</code>, <code>ImageBlock</code>,
+      <code>ClientQuote</code>) maps cleanly to React components, so
+      the mental model from the old codebase carries forward into the
+      new one without a translation layer.</p>
+
+      <p>Two routes are dynamic at runtime —
+      <code>app/api/contact/route.ts</code> for form submissions, and
+      <code>app/contact-submitted/page.tsx</code>, which reads
+      <code>searchParams</code>. Everything else — homepage, our-work
+      index, project detail pages, dynamic content pages, the contact
+      form view, sitemap, robots, manifest, icon — is prerendered at
+      build time and served from Pantheon's CDN.</p>
+contentHtml: ''
+---
+

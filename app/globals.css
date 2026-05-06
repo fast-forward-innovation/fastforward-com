@@ -266,12 +266,100 @@
 
   .main-section p:not(:last-child),
   .main-section ul:not(:last-child),
-  .main-section ol:not(:last-child) {
+  .main-section ol:not(:last-child),
+  .main-section dl:not(:last-child) {
     margin-bottom: 2rem;
   }
   .main-section li {
     list-style-type: disc;
     list-style-position: inside;
+  }
+
+  /* Definition lists — mono-rail labels with row dividers.
+     Stacks on mobile; switches to a fixed-label / fluid-body grid at md. */
+  .main-section dl {
+    margin-top: 2rem;
+  }
+  .main-section dl dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: 0.02em;
+    color: var(--color-ff_gray);
+    border-top: 1px solid var(--color-ff_lightGray);
+    padding: 1.25rem 0 0.5rem;
+  }
+  .main-section dl dt.chosen {
+    color: var(--color-ff_red);
+  }
+
+  /* Verdict-marker variant — opt-in via dl.verdict-list. Each row is a
+     <div data-verdict="chosen|rejected"> wrapping a dt+dd pair. The
+     verdict label is rendered via ::after, so authors don't repeat
+     "Chosen"/"Rejected" in the body copy. */
+  .main-section dl.verdict-list {
+    display: block;
+    margin-top: 2rem;
+  }
+  .main-section dl.verdict-list > div {
+    position: relative;
+    border-top: 1px solid var(--color-ff_lightGray);
+    padding: 1.5rem 1rem 1.5rem 1.25rem;
+  }
+  .main-section dl.verdict-list > div[data-verdict="chosen"] {
+    border-left: 3px solid var(--color-ff_red);
+  }
+  .main-section dl.verdict-list dt {
+    border-top: none;
+    padding: 0 7rem 0.5rem 0;
+    margin-bottom: 0;
+  }
+  .main-section dl.verdict-list > div[data-verdict="chosen"] dt {
+    color: var(--color-ff_red);
+  }
+  .main-section dl.verdict-list dd {
+    border-top: none;
+    padding: 0;
+  }
+  @media (min-width: 768px) {
+    .main-section dl.verdict-list dd {
+      padding-right: 7rem;
+    }
+  }
+  .main-section dl.verdict-list > div::after {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: 0.02em;
+    color: var(--color-ff_gray);
+    position: absolute;
+    top: 1.5rem;
+    right: 0;
+  }
+  .main-section dl.verdict-list > div[data-verdict="rejected"]::after {
+    content: "\2610  Rejected";
+  }
+  .main-section dl.verdict-list > div[data-verdict="chosen"]::after {
+    content: "\2610  Chosen";
+    color: var(--color-ff_red);
+  }
+  .main-section dl dd {
+    color: var(--color-ff_black);
+    margin-inline-start: 0;
+    padding: 0 0 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .main-section dl {
+      display: grid;
+      grid-template-columns: minmax(8rem, 13rem) 1fr;
+      column-gap: 2.5rem;
+      align-items: start;
+    }
+    .main-section dl dt {
+      padding: 1.5rem 1rem 1.5rem 0;
+    }
+    .main-section dl dd {
+      border-top: 1px solid var(--color-ff_lightGray);
+      padding: 1.5rem 0;
+    }
   }
 
   .section-tagline {
