@@ -5,22 +5,38 @@ export function ImageBlock({ block }: { block: ImageBlockData }) {
   const images = block.images.filter(Boolean);
   if (images.length === 0) return null;
 
+  const narrow = block.width === "text";
   const one = images.length === 1;
 
   if (one) {
     const img = images[0];
-    return (
-      <div className="my-8 md:my-[4.5rem]">
-        <Image
-          src={img.src}
-          alt={img.alt}
-          width={img.width ?? 1600}
-          height={img.height ?? 900}
-          className="max-lg:h-[50vh] w-full object-cover"
-          sizes="100vw"
-        />
-      </div>
+    const image = (
+      <Image
+        src={img.src}
+        alt={img.alt}
+        width={img.width ?? 1600}
+        height={img.height ?? 900}
+        className={
+          narrow
+            ? "w-full h-auto"
+            : "max-lg:h-[50vh] w-full object-cover"
+        }
+        sizes={narrow ? "(min-width: 768px) 75vw, 100vw" : "100vw"}
+      />
     );
+
+    if (narrow) {
+      return (
+        <div className="px-6 md:px-12 my-8 md:my-[4.5rem]">
+          <div className="mx-auto max-w-screen-xl">
+            <div className="hidden md:inline-block md:w-1/4 align-top" aria-hidden />
+            <div className="md:inline-block md:w-3/4 align-top">{image}</div>
+          </div>
+        </div>
+      );
+    }
+
+    return <div className="my-8 md:my-[4.5rem]">{image}</div>;
   }
 
   const [a, b] = images;

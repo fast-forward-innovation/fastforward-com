@@ -16,6 +16,7 @@ export interface MainSection {
 export interface ImageBlock {
   type: "ImageBlock";
   images: FrontmatterImage[];
+  width?: "full" | "text";
 }
 
 export interface ClientQuote {
