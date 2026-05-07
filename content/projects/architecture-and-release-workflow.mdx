@@ -1,0 +1,174 @@
+---
+title: Architecture and Release Workflow on Pantheon Next.js
+slug: architecture-and-release-workflow
+date: '2026-05-06T12:00:00'
+excerpt: >-
+  A diagram-first walkthrough of two patterns we leaned on hardest
+  during the migration: the architectural shift from Pantheon Decoupled
+  Sites (Gatsby + headless WordPress) to Pantheon's Next.js platform,
+  and the tag-driven release workflow that drives Dev, Test, Live, and
+  per-PR preview environments.
+isSticky: false
+featuredImage:
+  src: /hero-images/homepage-rotation-2.jpeg
+  alt: A glowing, geometric pattern in Fast Forward's brand gradient.
+  width: 2880
+  height: 1614
+cardImage:
+  src: /hero-images/homepage-rotation-1.jpeg
+  alt: A glowing, geometric pattern in Fast Forward's brand gradient.
+  width: 2880
+  height: 2880
+additionalPostFields:
+  label: Fast Forward Innovation
+  brandColor: '#dd2e2a'
+services:
+  - development
+  - strategy
+pageSections:
+  - type: MainSection
+    tagline: Two repositories, two upgrade tracks, one CMS nobody used
+    title: The Old Architecture
+    background: white
+    richText: >
+      <p>fastforward.sh ran on Pantheon's <strong>Decoupled Sites</strong>
+      platform: a Gatsby 4 front-end in one repository, a headless
+      WordPress install in another, and a WPGraphQL endpoint stitching
+      them together at build time. Two repositories, two upgrade tracks
+      (Node + Gatsby on the front; PHP + plugins on the back), and one
+      CMS that the editorial team had quietly stopped logging into.</p>
+
+      <img
+        src="/content/images/architecture/old_architecture_pantheon_polished.svg"
+        alt="Diagram of the old architecture: GitHub repos for Gatsby and WordPress feed into Pantheon's Decoupled Sites platform, with WPGraphQL stitching content from WordPress into Gatsby at build time."
+        style="width: 100%; height: auto; display: block; margin: 2rem 0;"
+      />
+
+      <p>The diagram traces the request path under that setup. WordPress
+      held the source of truth, GraphQL was the integration layer,
+      Gatsby was the build tool, and Pantheon's Decoupled Sites
+      platform fronted the result. Every architectural decision had to
+      flow through both halves; every plugin update on the WordPress
+      side risked schema drift on the Gatsby side.</p>
+  - type: MainSection
+    tagline: One repository, fully static, served from Pantheon's CDN
+    title: The New Architecture
+    background: white
+    richText: >
+      <p>The new shape replaces the entire backend with the repository
+      itself. Content lives as MDX and YAML files under
+      <code>content/</code>. A build-time loader reads them with
+      <code>gray-matter</code> and <code>js-yaml</code>, returning typed
+      objects to statically-generated routes. <strong>Next.js 16</strong>
+      on Pantheon's Next.js platform builds the site from GitHub on
+      every push to <code>main</code>, and Pantheon's CDN serves the
+      result.</p>
+
+      <img
+        src="/content/images/architecture/new_architecture_pantheon_nextjs.svg"
+        alt="Diagram of the new architecture: a single GitHub repository feeds Pantheon's Next.js platform, which builds and serves the site from the CDN."
+        style="width: 100%; height: auto; display: block; margin: 2rem 0;"
+      />
+
+      <p>The CMS database is gone. The GraphQL layer is gone. The plugin
+      update treadmill is gone. The runtime surface — the only routes
+      that aren't prerendered — is a single API route for the contact
+      form. One repository. One pipeline. One mental model.</p>
+  - type: MainSection
+    tagline: If the editorial reality changes, the shape can too
+    title: A Future-Friendly Shape
+    background: white
+    richText: >
+      <p>Today's editorial team works in pull requests, so MDX-in-repo
+      fits. If that changes — if non-technical editors come back into
+      the picture, or if content volume outgrows what's comfortable in
+      version control — the Next.js platform absorbs a headless CMS
+      without a full re-platform.</p>
+
+      <img
+        src="/content/images/architecture/future_architecture_headless_cms.svg"
+        alt="Diagram of a possible future architecture: a headless CMS feeds Next.js at build time, with the same Pantheon hosting and CDN underneath."
+        style="width: 100%; height: auto; display: block; margin: 2rem 0;"
+      />
+
+      <p>The diagram sketches that future shape. A headless CMS
+      (Contentful, Sanity, Payload, or another) feeds Next.js at build
+      time; the rest of the stack — Pantheon's hosting, the CDN, the
+      Dev/Test/Live promotion model — is unchanged. The architecture is
+      intentionally open at the source-of-truth boundary, so the
+      platform shape can grow with the editorial reality, not against
+      it.</p>
+  - type: MainSection
+    tagline: Push to main, tag to promote
+    title: The Release Workflow
+    background: gray
+    richText: >
+      <p>Pantheon's Next.js platform inherits the
+      <strong>Dev → Test → Live</strong> environment model from their
+      WordPress and Drupal products. The mental model collapses to one
+      line: <em>push to <code>main</code>, tag to promote.</em></p>
+
+      <img
+        src="/content/images/architecture/pantheon_release_workflow_git_tags.svg"
+        alt="Diagram of the release workflow: pushes to main auto-deploy to Dev; pantheon_test_* tags promote to Test; pantheon_live_* tags promote to Live."
+        style="width: 100%; height: auto; display: block; margin: 2rem 0;"
+      />
+
+      <p>Every push to <code>main</code> auto-builds and deploys to Dev,
+      usually within 1–3 minutes. Promotion to Test happens by pushing a
+      git tag matching the <code>pantheon_test_*</code> prefix at the
+      commit you want to ship; Pantheon watches for the pattern and
+      builds. Promotion to Live is the same shape, with
+      <code>pantheon_live_*</code>. The git log <em>is</em> the deploy
+      log: every Test build has a tag, every Live build has a tag, and
+      the diff between two tags is the diff that shipped.</p>
+  - type: MainSection
+    tagline: Two commands, two environments
+    title: Tagging Test and Live
+    background: gray
+    richText: >
+      <p>The promotion commands are short enough to commit to memory or
+      to alias. They follow a single pattern: annotated tag with a
+      date-stamped suffix, then push the tag.</p>
+
+      <img
+        src="/content/images/architecture/pantheon_tag_commands_test_live.svg"
+        alt="Diagram showing the two tag commands: git tag -a pantheon_test_YYYYMMDD for Test, and git tag -a pantheon_live_YYYYMMDD for Live, each followed by a push."
+        style="width: 100%; height: auto; display: block; margin: 2rem 0;"
+      />
+
+      <p>To promote to Test:
+      <code>git tag -a pantheon_test_$(date +%Y%m%d) -m "Promote to Test"</code>,
+      followed by <code>git push origin pantheon_test_$(date +%Y%m%d)</code>.
+      The same shape with the <code>pantheon_live_*</code> prefix
+      promotes to Live. Rolling back is just tagging a prior commit with
+      a fresh <code>pantheon_live_*</code> tag — the same forward
+      mechanism walks backward, no separate undo path.</p>
+  - type: MainSection
+    tagline: Multidev environments per pull request
+    title: PR Preview Environments
+    background: gray
+    richText: >
+      <p>For work that warrants a stakeholder review URL — a redesign
+      branch, a migration phase mid-flight, a customer demo build —
+      Pantheon's Next.js platform supports per-branch
+      <strong>multidev</strong> environments. Each one is fully
+      isolated: its own URL, its own Secrets bucket, its own CDN.</p>
+
+      <img
+        src="/content/images/architecture/pantheon_pr_preview_environments.svg"
+        alt="Diagram of the PR preview workflow: a feature branch pushed to GitHub spawns a multidev environment with its own URL, used for review, then cleaned up when the PR merges to main."
+        style="width: 100%; height: auto; display: block; margin: 2rem 0;"
+      />
+
+      <p>The diagram traces a typical pull-request lifecycle. A feature
+      branch is pushed; Pantheon spins up a multidev environment with
+      its own URL; stakeholders review the change on a real,
+      production-like build; the PR merges to <code>main</code>; the
+      multidev is torn down. The whole loop runs without blocking the
+      trunk and without two reviews colliding on the same environment —
+      the same operational model that the team has used for years
+      across other Pantheon platforms, applied to Next.js.</p>
+contentHtml: ''
+---
+
