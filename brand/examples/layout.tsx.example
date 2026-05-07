@@ -1,0 +1,33 @@
+/*
+ * Example: app/layout.tsx with brand fonts wired up.
+ *
+ * The `variable` className on <html> is what makes `font-sans` and
+ * `font-mono` tokens resolve to Manrope and JetBrains Mono — both
+ * must be applied or the kit's type stack falls back to system UI.
+ */
+
+import type { Metadata } from "next";
+import { manrope, jetbrainsMono } from "../brand/fonts";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "Your App",
+  description: "…",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html
+      lang="en"
+      className={`${manrope.variable} ${jetbrainsMono.variable}`}
+    >
+      <body className="font-sans bg-ff_lightGray text-ff_black">
+        {children}
+      </body>
+    </html>
+  );
+}

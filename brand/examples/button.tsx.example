@@ -1,0 +1,40 @@
+/*
+ * Example: brand-aligned button and link treatments.
+ *
+ * - `btn` utility supplies canonical shape (padding, radius, weight).
+ * - Pair with a color utility for the fill.
+ * - For a gradient CTA that flips on hover, use
+ *   `linear-gradient-background-hover`.
+ * - For links, `hover-linear-gradient-underline` is the default
+ *   treatment on marketing surfaces.
+ */
+
+export function PrimaryCta({ children }: { children: React.ReactNode }) {
+  return (
+    <button className="btn bg-ff_red text-white hover:bg-ff_tealDarker transition-colors">
+      {children}
+    </button>
+  );
+}
+
+export function GradientCta({ children }: { children: React.ReactNode }) {
+  return (
+    <button className="btn linear-gradient-background-hover">
+      {children}
+    </button>
+  );
+}
+
+export function BrandLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a href={href} className="text-ff_teal hover-linear-gradient-underline">
+      {children}
+    </a>
+  );
+}
