@@ -270,9 +270,27 @@
   .main-section dl:not(:last-child) {
     margin-bottom: 2rem;
   }
-  .main-section li {
-    list-style-type: disc;
-    list-style-position: inside;
+  /* Bulleted lists in MDX content — small teal square markers in a
+     hanging indent (so wrapped lines align with the text), with
+     breathing room between items. */
+  .main-section ul {
+    list-style: none;
+    padding-left: 1.5rem;
+  }
+  .main-section ul li {
+    position: relative;
+  }
+  .main-section ul li + li {
+    margin-top: 1rem;
+  }
+  .main-section ul li::before {
+    content: "";
+    position: absolute;
+    left: -1.25rem;
+    top: 0.6em;
+    width: 0.45rem;
+    height: 0.45rem;
+    background: var(--color-ff_teal);
   }
 
   /* Definition lists — mono-rail labels with row dividers.
