@@ -52,9 +52,12 @@ export interface Page {
   title: string;
   slug: string;
   date: string;
-  layout: "default" | "landing";
+  layout: "default" | "landing" | "case-study";
   featuredImage?: FrontmatterImage;
-  contentHtml: string;
+  contentHtml?: string;
+  additionalPostFields?: AdditionalPostFields;
+  services?: string[];
+  pageSections?: PageSection[];
 }
 
 export interface Service {

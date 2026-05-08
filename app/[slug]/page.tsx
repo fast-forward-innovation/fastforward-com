@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getAllPages, getPageBySlug } from "@/lib/content";
 import { Page } from "@/components/Page";
 import { LandingPage } from "@/components/LandingPage";
+import { CaseStudyPage } from "@/components/CaseStudyPage";
 
 export const dynamicParams = false;
 
@@ -35,6 +36,9 @@ export default async function DynamicPage({
 
   if (page.layout === "landing") {
     return <LandingPage page={page} />;
+  }
+  if (page.layout === "case-study") {
+    return <CaseStudyPage page={page} />;
   }
   return <Page page={page} />;
 }
