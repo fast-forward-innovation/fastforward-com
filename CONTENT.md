@@ -165,6 +165,22 @@ The legacy `public/content/images/YYYY/MM/` folders are leftovers from the WordP
 
 The `services` field on a project is an array of slugs from [content/services.yml](content/services.yml). **Always read that file fresh before drafting** — the list evolves, and the user adds and renames services as needed. Never invent slugs that aren't in the file. If a project needs a service that's not yet listed, surface it and ask before adding a new entry.
 
+## Editorial workflow
+
+Drafts move through five states — `draft` → `review` → `revisions` → `approved` → `live` — tracked in an optional top-level `editorial:` block in MDX frontmatter:
+
+```yaml
+editorial:
+  status: review              # draft | review | revisions | approved | live
+  branch: content-review      # feature branch the change rides on
+  pr: 42                      # PR number
+  updated: 2026-05-11
+  reviewers: ["..."]          # optional
+  notes: "..."                # optional, single-line ask from reviewer
+```
+
+The block is parsed by `gray-matter` but not declared in [lib/types.ts](lib/types.ts), so the renderer ignores it. When a piece reaches `live`, **remove the `editorial` block entirely** — production MDX stays clean. State transitions are driven by the `/workflow` skill ([.claude/commands/workflow.md](.claude/commands/workflow.md)), which also handles the Pantheon push (branch + PR via [scripts/deploy-feature-branch.sh](scripts/deploy-feature-branch.sh)).
+
 ## Pre-publish checklist
 
 Before declaring a draft ready, walk through this list:
