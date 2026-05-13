@@ -1,0 +1,244 @@
+---
+title: Bringing MIT-Haiti closer to its readers
+slug: mit-haiti-pantheon-migration
+date: '2026-05-13T12:00:00'
+layout: case-study
+additionalPostFields:
+  label: Migration Proposal
+  brandColor: '#008ca8'
+services:
+  - web-development
+  - development
+  - digital-strategy
+  - technical-consulting
+  - support
+editorial:
+  status: draft
+  branch: content-review
+  updated: 2026-05-13
+  notes: First pass — converted from the standalone HTML brief into the case-study layout.
+pageSections:
+  - type: MainSection
+    tagline: A proposal to bring the site closer to the people it serves
+    title: Overview
+    background: white
+    richText: >
+      <p><img src="/content/images/mit-haiti-pantheon-migration/mit-ayiti-logo.svg"
+      alt="MIT-Ayiti Initiative logo" width="320" height="113" /></p>
+
+      <p>This is a proposal to move <strong>mit-ayiti.net</strong> to a
+      faster, more reliable home and to store ready-to-load copies of the
+      site on servers near Haiti — without changing a single feature
+      visitors use.</p>
+
+      <p>Submissions, profiles, the podcast, the resource library, and
+      search all keep working exactly as they do today. The change is
+      underneath: a modern hosting platform, a global delivery network
+      that puts the site closer to readers in Haiti, and a workflow that
+      lets the team try changes safely before visitors ever see them.</p>
+  - type: MainSection
+    tagline: What's holding the site back
+    title: Today
+    background: gray
+    richText: >
+      <p>The site runs on Dreamhost shared hosting in the United States.
+      That setup has served MIT-Haiti for years, but it's now the main
+      drag on speed, security, and the team's ability to ship changes
+      with confidence.</p>
+
+      <ul>
+        <li><strong>Everything lives on one US server.</strong> Every
+        time someone in Haiti visits the site, the page has to travel
+        roughly 2,400 km from the US and back. There's no copy stored
+        closer to home, so every visit takes the long way around.</li>
+        <li><strong>Changes go straight to the live site.</strong>
+        There's no practice space to try changes safely before visitors
+        see them. If an update breaks something, the broken version
+        goes live first — visitors are effectively the test.</li>
+        <li><strong>Outdated software.</strong> WordPress and its
+        add-ons are years behind their current versions. Each older
+        version has known security weaknesses that newer versions have
+        already fixed.</li>
+        <li><strong>Too many add-ons.</strong> Several add-ons doing
+        overlapping jobs — including an old newsletter tool the team
+        has already replaced with Mailchimp. More moving parts means
+        more things that can break.</li>
+        <li><strong>Manual upkeep.</strong> Backups, security
+        certificates, software updates, server maintenance — all done
+        by hand. When something breaks at 2 a.m., it's the team's
+        problem to fix.</li>
+        <li><strong>No way to measure Haiti speeds.</strong> There are
+        no tools in place to track how the site actually performs for
+        visitors in Haiti. No real answer to "how fast is this for
+        someone in Port-au-Prince right now?"</li>
+      </ul>
+  - type: MainSection
+    tagline: What Pantheon brings
+    title: After Migration
+    background: white
+    richText: >
+      <p>Pantheon is a managed hosting platform built specifically for
+      WordPress and Drupal. We've been a Pantheon partner for more than
+      a decade. The move addresses every issue above and pushes the
+      ongoing maintenance burden off the team.</p>
+
+      <ul>
+        <li><strong>A worldwide network of nearby servers.</strong>
+        Pantheon includes a network of 70+ servers around the world
+        that hold ready-to-load copies of the site. The nearest one to
+        Haiti is in Miami — about 1,400 km away, roughly half the
+        current distance.</li>
+        <li><strong>A safer way to publish changes.</strong> Three
+        separate copies of the site: one for building, one for
+        testing, and one for visitors. Changes get tried out and
+        reviewed in the first two before they ever reach the live
+        site.</li>
+        <li><strong>Up-to-date software.</strong> Current versions of
+        WordPress and the software it runs on. Faster, more secure,
+        and compatible with modern add-ons for years to come.</li>
+        <li><strong>Fewer, better add-ons.</strong> Two or three
+        unused add-ons removed during the move. The rest updated to
+        current versions. Less to break, less to maintain, faster
+        pages overall.</li>
+        <li><strong>Pantheon handles the upkeep.</strong> Automatic
+        backups, free security certificates, software updates, server
+        maintenance, and protection against malicious traffic — all
+        handled by Pantheon, not by the team.</li>
+        <li><strong>Clear visibility into performance.</strong>
+        Pantheon's dashboard shows traffic, response times, and how
+        often the nearby copy is being used — all in real time. Easy
+        to see how the site is doing, including for visitors in
+        Haiti.</li>
+      </ul>
+  - type: MainSection
+    tagline: The numbers Haiti will feel
+    title: Performance
+    background: gray
+    richText: >
+      <p>Three measurements that change for a visitor in Port-au-Prince
+      the day the site moves:</p>
+
+      <dl>
+        <dt>Distance to nearest server</dt>
+        <dd>From <strong>2,400 km</strong> to <strong>1,400 km</strong>
+        — Port-au-Prince to the nearest copy of the site, in Miami.</dd>
+        <dt>Time to start loading</dt>
+        <dd>From <strong>~120 ms</strong> to <strong>~30 ms</strong> —
+        how long before the page starts to appear. Roughly four times
+        faster.</dd>
+        <dt>Full page load</dt>
+        <dd>From <strong>3–6 seconds</strong> to <strong>under one
+        second</strong> — how long a typical page takes to fully
+        appear for a visitor in Haiti.</dd>
+      </dl>
+
+      <p>Visually, the difference is the introduction of a "nearby
+      copy" in Miami that handles the great majority of visits — the
+      Pantheon origin in the US is only contacted when content
+      changes.</p>
+  - type: ImageBlock
+    width: text
+    images:
+      - src: /content/images/mit-haiti-pantheon-migration/before-after-page-delivery.svg
+        alt: >-
+          Before-and-after diagram of page delivery to a visitor in
+          Port-au-Prince. Today, every visit reaches a single Dreamhost
+          server in the US, 2,400 km away, taking 3 to 6 seconds. After
+          migration, a nearby copy in Miami serves the page in under a
+          second, with the Pantheon origin contacted only when content
+          changes.
+        width: 1100
+        height: 360
+  - type: MainSection
+    tagline: Four phases, about four to six weeks
+    title: The Process
+    background: white
+    richText: >
+      <p>The migration runs in four phases. The original site keeps
+      serving visitors as normal until the very last step, when we
+      point the domain at the new home at a scheduled, low-traffic
+      time.</p>
+
+      <dl>
+        <dt>01 · Copy</dt>
+        <dd>A complete copy of the site is built on the new platform.
+        The original keeps running as normal — visitors won't see
+        anything change yet. <em>Roughly one week.</em></dd>
+        <dt>02 · Update</dt>
+        <dd>On the copy, WordPress and its add-ons get updated to
+        current versions. Unused add-ons are removed. The live site
+        stays untouched. <em>Roughly one to two weeks.</em></dd>
+        <dt>03 · Test</dt>
+        <dd>Every feature gets tested — registration, submissions,
+        profiles, the podcast, search — to make sure nothing broke.
+        Any issues are fixed before launch. <em>Roughly one to two
+        weeks.</em></dd>
+        <dt>04 · Cut over</dt>
+        <dd>At a chosen low-traffic time, the website's address is
+        updated to point at the new platform. Within hours, visitors
+        land on Pantheon — and feel the speed. <em>Scheduled, takes
+        about a day.</em></dd>
+      </dl>
+  - type: MainSection
+    tagline: Free — with one condition
+    title: The Cost
+    background: gray
+    richText: >
+      <p>A migration like this would normally be a paid engagement.
+      We'd like to do it for MIT-Haiti at <strong>no cost</strong> — in
+      exchange for permission to document the work and share the story
+      across all our marketing.</p>
+
+      <dl>
+        <dt>For MIT-Haiti</dt>
+        <dd>A modernized, faster, more reliable site at no cost. Full
+        ownership of the site and its content stays with you. No
+        invoice arrives.</dd>
+        <dt>For our team</dt>
+        <dd>A documented case study and talking points to share across
+        our marketing. Visible work in the public-interest education
+        sector.</dd>
+        <dt>For Pantheon</dt>
+        <dd>A real-world case study to point to: their platform
+        serving a public-good initiative reaching educators and
+        learners across Haiti.</dd>
+      </dl>
+  - type: MainSection
+    tagline: Possibilities for after the migration
+    title: Looking Ahead
+    background: white
+    richText: >
+      <p>The migration is the foundation. Once it's in place, a few
+      things become possible that are awkward or expensive on the
+      current setup. None of these are part of the migration scope —
+      they're conversations to have once the site is on solid
+      ground.</p>
+
+      <ul>
+        <li><strong>Write content in tools you already use.</strong>
+        Today, all site content has to be written and edited inside
+        WordPress. We could connect the site to Google Docs or
+        Microsoft 365 so contributors draft content in familiar tools,
+        and finished drafts publish to the site directly. Lower
+        friction for occasional contributors, easier workflows for
+        everyone.</li>
+        <li><strong>A richer community experience.</strong> The
+        current community features — accounts, profiles, favorites,
+        submissions — work well for what they do. Beyond the
+        migration: discussions around resources, alerts when new
+        content matches a contributor's interests, and clearer
+        recognition for active members. We can shape this together
+        once the foundation is solid.</li>
+      </ul>
+  - type: MainSection
+    tagline: Every feature stays, every link keeps working
+    title: What Doesn't Change
+    background: gray
+    richText: >
+      <p>Submissions, profiles, the podcast, the resource library, and
+      search all work exactly as they do today. Visitors won't notice
+      anything has changed — except that pages load much faster.</p>
+
+      <p><strong>The site just gets faster, safer, and easier to look
+      after.</strong></p>
+---

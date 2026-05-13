@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" role="img" aria-labelledby="diag-title diag-desc" font-family="system-ui, -apple-system, 'Manrope', sans-serif">
+  <title id="diag-title">Before and after: page delivery from Haiti</title>
+  <desc id="diag-desc">Diagram comparing the request path before and after the Pantheon migration. Before: Haiti users reach a single US Dreamhost server, around 2,400 km away, with 3 to 6 second page loads. After: Haiti users reach a Fastly edge cache in Miami at roughly 1,400 km, under one second per page, with the Pantheon origin contacted only on cache misses.</desc>
+  <defs>
+    <marker id="arr-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#dd2e2a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#008ca8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-mute" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#aaaaaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- TODAY label -->
+  <text x="40" y="40" font-family="JetBrains Mono, ui-monospace, monospace" font-size="12" letter-spacing="2" fill="#dd2e2a" font-weight="600">TODAY</text>
+
+  <!-- User box (today) -->
+  <rect x="40" y="60" width="200" height="84" fill="#edf1f2" stroke="#191819" stroke-width="0.5" rx="3"/>
+  <text x="140" y="96" font-size="19" fill="#191819" text-anchor="middle" font-weight="600">User in Haiti</text>
+  <text x="140" y="120" font-size="13" fill="#7f7d81" text-anchor="middle">Port-au-Prince</text>
+
+  <!-- Long arrow -->
+  <line x1="248" y1="102" x2="852" y2="102" stroke="#dd2e2a" stroke-width="1.5" marker-end="url(#arr-red)"/>
+  <text x="550" y="88" font-size="13" fill="#191819" text-anchor="middle">2,400 km · every visit takes the long way</text>
+  <text x="550" y="128" font-family="JetBrains Mono, ui-monospace, monospace" font-size="12" fill="#dd2e2a" text-anchor="middle" font-weight="600" letter-spacing="1.5">3–6 SECONDS PER PAGE</text>
+
+  <!-- Origin box (today) -->
+  <rect x="860" y="60" width="200" height="84" fill="#edf1f2" stroke="#191819" stroke-width="0.5" rx="3"/>
+  <text x="960" y="96" font-size="19" fill="#191819" text-anchor="middle" font-weight="600">Dreamhost</text>
+  <text x="960" y="120" font-size="13" fill="#7f7d81" text-anchor="middle">United States</text>
+
+  <!-- Divider -->
+  <line x1="40" y1="190" x2="1060" y2="190" stroke="#191819" stroke-opacity="0.12" stroke-width="0.5"/>
+
+  <!-- AFTER label -->
+  <text x="40" y="220" font-family="JetBrains Mono, ui-monospace, monospace" font-size="12" letter-spacing="2" fill="#004a59" font-weight="600">AFTER</text>
+
+  <!-- User box (after) -->
+  <rect x="40" y="240" width="200" height="84" fill="#edf1f2" stroke="#191819" stroke-width="0.5" rx="3"/>
+  <text x="140" y="276" font-size="19" fill="#191819" text-anchor="middle" font-weight="600">User in Haiti</text>
+  <text x="140" y="300" font-size="13" fill="#7f7d81" text-anchor="middle">Port-au-Prince</text>
+
+  <!-- Short solid arrow to edge -->
+  <line x1="248" y1="282" x2="442" y2="282" stroke="#008ca8" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+  <text x="345" y="268" font-size="13" fill="#191819" text-anchor="middle">1,400 km</text>
+  <text x="345" y="308" font-family="JetBrains Mono, ui-monospace, monospace" font-size="12" fill="#004a59" text-anchor="middle" font-weight="600" letter-spacing="1.5">&lt; 1 SECOND</text>
+
+  <!-- Edge cache box (highlighted teal) -->
+  <rect x="450" y="240" width="200" height="84" fill="#008ca8" stroke="#008ca8" stroke-width="0.5" rx="3"/>
+  <text x="550" y="276" font-size="19" fill="#ffffff" text-anchor="middle" font-weight="600">Nearby copy</text>
+  <text x="550" y="300" font-size="13" fill="#edf1f2" text-anchor="middle">Miami edge</text>
+
+  <!-- Dashed arrow to origin (occasional) -->
+  <line x1="658" y1="282" x2="852" y2="282" stroke="#aaaaaa" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arr-mute)"/>
+  <text x="755" y="268" font-size="13" fill="#7f7d81" text-anchor="middle">only when content changes</text>
+  <text x="755" y="308" font-family="JetBrains Mono, ui-monospace, monospace" font-size="11" fill="#7f7d81" text-anchor="middle" letter-spacing="1.5">RARE · &lt; 10% OF VISITS</text>
+
+  <!-- Origin box (after) -->
+  <rect x="860" y="240" width="200" height="84" fill="#edf1f2" stroke="#191819" stroke-width="0.5" rx="3"/>
+  <text x="960" y="276" font-size="19" fill="#191819" text-anchor="middle" font-weight="600">Pantheon origin</text>
+  <text x="960" y="300" font-size="13" fill="#7f7d81" text-anchor="middle">United States</text>
+</svg>
