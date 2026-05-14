@@ -80,6 +80,12 @@ export interface Project {
   date: string;
   excerpt?: string;
   isSticky: boolean;
+  /**
+   * When true, the project is hidden from public listings (home page,
+   * /our-work index, sitemap) and gets a `noindex` meta tag. The direct
+   * URL still resolves so the page can be shared as a preview.
+   */
+  draft?: boolean;
   featuredImage?: FrontmatterImage;
   cardImage?: FrontmatterImage;
   additionalPostFields?: AdditionalPostFields;

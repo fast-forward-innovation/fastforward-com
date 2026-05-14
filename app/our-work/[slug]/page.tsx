@@ -18,6 +18,9 @@ export async function generateMetadata({
   return {
     title: project.title,
     description: project.additionalPostFields?.seoDescription,
+    robots: project.draft
+      ? { index: false, follow: false }
+      : undefined,
   };
 }
 

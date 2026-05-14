@@ -83,15 +83,24 @@ export function getProjectBySlug(slug: string): Project | null {
   return getAllProjects().find((p) => p.slug === slug) ?? null;
 }
 
+/**
+ * Projects intended for public surfaces (home page, /our-work index,
+ * sitemap). Filters out drafts; getAllProjects() remains unfiltered so
+ * draft URLs continue to resolve for preview-sharing.
+ */
+export function getPublishedProjects(): Project[] {
+  return getAllProjects().filter((p) => !p.draft);
+}
+
 export function getFeaturedProjects(n = 4): Project[] {
-  return getAllProjects().slice(0, n);
+  return getPublishedProjects().slice(0, n);
 }
 
 export function getPaginatedProjects(
   page: number,
   perPage?: number,
 ): { items: Project[]; total: number; totalPages: number; page: number; perPage: number } {
-  const all = getAllProjects();
+  const all = getPublishedProjects();
   const resolvedPerPage = perPage ?? getSettings().postsPerPage ?? 10;
   const totalPages = Math.max(1, Math.ceil(all.length / resolvedPerPage));
   const safePage = Math.min(Math.max(1, page), totalPages);
