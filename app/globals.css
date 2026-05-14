@@ -384,6 +384,220 @@
     @apply text-3xl leading-tight md:text-5xl md:leading-tight pb-6 md:pb-8;
   }
 
+  /* ----- Lab project header ----- */
+  .lab-eyebrow {
+    @apply inline-flex items-center font-mono uppercase tracking-wider text-xs md:text-md pb-4 md:pb-6;
+    color: var(--color-ff_tealDarker);
+  }
+  .lab-eyebrow__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--color-ff_teal);
+    margin-right: 0.6rem;
+    box-shadow: 0 0 0 4px rgba(0, 140, 168, 0.15);
+  }
+  .lab-tagline {
+    @apply text-lg md:text-2xl leading-snug pb-6;
+    color: var(--color-ff_black);
+    max-width: 48rem;
+  }
+  .lab-links {
+    @apply flex flex-wrap gap-x-6 gap-y-2 mt-2;
+  }
+  .lab-links__link {
+    @apply font-mono text-sm md:text-md tracking-wider uppercase;
+    color: var(--color-ff_teal);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .lab-links__link:hover {
+    border-bottom-color: var(--color-ff_teal);
+  }
+  .lab-stack {
+    @apply flex flex-wrap gap-2 pt-3 max-w-md;
+    list-style: none;
+    padding-left: 0;
+  }
+  .lab-stack__chip {
+    @apply font-mono text-xs md:text-sm px-3 py-1;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 9999px;
+    color: var(--color-ff_black);
+  }
+  .lab-stack__chip--tag {
+    background: transparent;
+    border-color: rgba(0, 140, 168, 0.45);
+    color: var(--color-ff_tealDarker);
+  }
+
+  /* ----- Code block ----- */
+  .code-card {
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #0f1115;
+    box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.4);
+  }
+  .code-card__bar {
+    @apply flex items-center justify-between;
+    padding: 0.65rem 1rem;
+    background: #181b22;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .code-card__filename {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: #e2e6eb;
+    letter-spacing: 0.02em;
+  }
+  .code-card__filename--muted {
+    color: #7a8290;
+  }
+  .code-card__lang {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-ff_teal);
+    padding: 0.15rem 0.55rem;
+    border: 1px solid rgba(0, 140, 168, 0.4);
+    border-radius: 9999px;
+  }
+  .code-card__pre {
+    margin: 0;
+    padding: 1.25rem 1rem;
+    overflow-x: auto;
+    color: #e6e8eb;
+    background: #0f1115;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .code-card__pre code {
+    font-family: inherit;
+    color: inherit;
+    background: transparent;
+    white-space: pre;
+  }
+  .code-card__caption {
+    @apply text-sm md:text-md mt-3;
+    color: var(--color-ff_gray);
+  }
+
+  /* ----- Team / individual profile block ----- */
+  .team-profile__card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 0.75rem;
+    background: #fff;
+  }
+  @media (min-width: 640px) {
+    .team-profile__card {
+      flex-direction: row;
+      gap: 2rem;
+      align-items: center;
+      padding: 1.75rem 2rem;
+    }
+  }
+  .team-profile__avatar {
+    flex-shrink: 0;
+    width: 7rem;
+    height: 7rem;
+    border-radius: 9999px;
+    background: rgba(0, 140, 168, 0.08);
+    border: 1px solid rgba(0, 140, 168, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--color-ff_teal);
+  }
+  @media (min-width: 768px) {
+    .team-profile__avatar {
+      width: 8rem;
+      height: 8rem;
+    }
+  }
+  .team-profile__avatar-svg {
+    width: 75%;
+    height: 75%;
+  }
+  .team-profile__avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .team-profile__body {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .team-profile__name {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-ff_black);
+    margin: 0;
+  }
+  .team-profile__role {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-ff_tealDarker);
+    margin: 0.25rem 0 0.75rem;
+  }
+  .team-profile__bio {
+    color: var(--color-ff_black);
+    margin: 0;
+    line-height: 1.6;
+  }
+  .team-profile__links {
+    @apply flex flex-wrap gap-x-6 gap-y-1 mt-3;
+    list-style: none;
+    padding: 0;
+  }
+  .team-profile__links a {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-ff_teal);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  .team-profile__links a:hover {
+    border-bottom-color: var(--color-ff_teal);
+  }
+
+  /* ----- Video / screencast block ----- */
+  .video-card {
+    margin: 0;
+  }
+  .video-card__frame {
+    position: relative;
+    width: 100%;
+    background: #000;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.3);
+  }
+  .video-card__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  .video-card__caption {
+    @apply text-sm md:text-md mt-3;
+    color: var(--color-ff_gray);
+  }
+
   /* ----- Contact form ----- */
   .contact-input {
     @apply mb-2;

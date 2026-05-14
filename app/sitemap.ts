@@ -3,7 +3,7 @@ import { getAllPages, getAllProjects } from "@/lib/content";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.fastforward.sh";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date().toISOString();
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -18,7 +18,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const pageRoutes: MetadataRoute.Sitemap = getAllPages().map((p) => ({
+  const pages = await getAllPages();
+  const pageRoutes: MetadataRoute.Sitemap = pages.map((p) => ({
     url: `${SITE_URL}/${p.slug}`,
     lastModified: p.date ? new Date(p.date).toISOString() : now,
     priority: 0.5,

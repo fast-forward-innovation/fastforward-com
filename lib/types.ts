@@ -26,12 +26,52 @@ export interface ClientQuote {
   quote?: string;
 }
 
-export type PageSection = MainSection | ImageBlock | ClientQuote;
+export interface CodeBlock {
+  type: "CodeBlock";
+  title?: string;
+  filename?: string;
+  language?: string;
+  code: string;
+  caption?: string;
+}
+
+export interface VideoBlock {
+  type: "VideoBlock";
+  provider?: "loom" | "youtube" | "file";
+  src: string;
+  title?: string;
+  caption?: string;
+  aspectRatio?: string;
+  poster?: string;
+}
+
+export interface TeamProfile {
+  type: "TeamProfile";
+  kind?: "individual" | "team";
+  name: string;
+  role?: string;
+  bio?: string;
+  avatar?: FrontmatterImage;
+  links?: { label: string; url: string }[];
+}
+
+export type PageSection =
+  | MainSection
+  | ImageBlock
+  | ClientQuote
+  | CodeBlock
+  | VideoBlock
+  | TeamProfile;
 
 export interface AdditionalPostFields {
   label?: string;
+  tagline?: string;
   brandColor?: string;
   seoDescription?: string;
+  stack?: string[];
+  tags?: string[];
+  repoUrl?: string;
+  liveUrl?: string;
 }
 
 export interface Project {
@@ -52,12 +92,14 @@ export interface Page {
   title: string;
   slug: string;
   date: string;
-  layout: "default" | "landing" | "case-study";
+  layout: "default" | "landing" | "case-study" | "lab-project";
   featuredImage?: FrontmatterImage;
   contentHtml?: string;
   additionalPostFields?: AdditionalPostFields;
   services?: string[];
   pageSections?: PageSection[];
+  source?: "mdx" | "pcc-archieml" | "pcc-smart-components";
+  pccArticleId?: string;
 }
 
 export interface Service {
