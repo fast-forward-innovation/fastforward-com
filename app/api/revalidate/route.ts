@@ -1,20 +1,19 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 
 /**
  * Pantheon Content Publisher webhook → on-publish revalidation for Lab Project
- * pages. PCC posts here on article.published / unpublished / updated; we
- * invalidate the cached list + the specific slug so the next request refetches
- * fresh PCC content without a full rebuild.
+ * pages. PCC posts here on article.publish / unpublish / update; we
+ * invalidate the `pcc:lab-projects` tag (every PCC fetch is tagged with it),
+ * so the next request refetches fresh content without a full rebuild.
  *
- * Env:
- *   PCC_WEBHOOK_SECRET — shared secret. Same value goes into the PCC
- *   webhook config. Generate with `openssl rand -hex 32`.
+ * Auth: PCC doesn't send a signing header today, so the shared secret rides
+ * in the URL as `?token=...`. Configure the same value as the
+ * `PCC_WEBHOOK_SECRET` env var and in PCC's webhook URL.
  */
 
 const LIST_TAG = "pcc:lab-projects";
-const detailTag = (slug: string) => `pcc:lab-project:${slug}`;
 
 const HANDLED_EVENTS = new Set([
   "article.publish",
@@ -31,40 +30,33 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const raw = await req.text();
-  const signature = req.headers.get("x-pantheon-signature") ?? "";
-  if (!verifySignature(raw, signature, secret)) {
-    return NextResponse.json({ error: "bad signature" }, { status: 401 });
+  const token = new URL(req.url).searchParams.get("token") ?? "";
+  if (!constantTimeEquals(token, secret)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  let payload: { slug?: string; event?: string };
+  let payload: { event?: string };
   try {
-    payload = JSON.parse(raw);
+    payload = await req.json();
   } catch {
     return NextResponse.json({ error: "invalid json" }, { status: 400 });
   }
 
-  const { slug, event } = payload;
-  if (!event || !HANDLED_EVENTS.has(event)) {
+  if (!payload.event || !HANDLED_EVENTS.has(payload.event)) {
     return NextResponse.json({ ignored: true }, { status: 200 });
   }
 
   revalidateTag(LIST_TAG, "max");
-  if (slug) revalidateTag(detailTag(slug), "max");
 
   return new NextResponse(null, { status: 204 });
 }
 
-function verifySignature(body: string, signature: string, secret: string) {
-  const expected = createHmac("sha256", secret).update(body).digest("hex");
-  const a = Buffer.from(expected, "hex");
-  const b = Buffer.from(
-    signature.replace(/^sha256=/, "").trim(),
-    "hex",
-  );
-  if (a.length === 0 || a.length !== b.length) return false;
+function constantTimeEquals(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length === 0 || aBuf.length !== bBuf.length) return false;
   try {
-    return timingSafeEqual(a, b);
+    return timingSafeEqual(aBuf, bBuf);
   } catch {
     return false;
   }

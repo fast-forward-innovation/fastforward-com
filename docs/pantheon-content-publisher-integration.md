@@ -224,19 +224,18 @@ Update [lib/content.ts](../lib/content.ts):
 
 New file: `app/api/revalidate/route.ts`.
 
-- Accepts `POST` with header `X-Pantheon-Signature` and JSON body `{ slug, articleId, event }`.
-- Verifies HMAC against `PCC_WEBHOOK_SECRET` (constant-time compare).
-- On `article.publish` / `article.unpublish` / `article.update`:
-  - `revalidateTag('pcc:lab-projects')` (path list).
-  - `revalidateTag(\`pcc:lab-project:${slug}\`)` (the page itself).
-- Returns 204 on success, 401 on bad signature, 400 on missing fields.
+- Accepts `POST` with `?token=` query string (PCC doesn't sign webhooks, so we authenticate via a URL secret).
+- Constant-time-compares `?token=` to `PCC_WEBHOOK_SECRET`.
+- On `article.publish` / `article.unpublish` / `article.update`: `revalidateTag('pcc:lab-projects', 'max')` — every PCC fetch is tagged with this, so one call invalidates both the list and per-slug caches.
+- Returns 204 on success, 401 on bad token, 400 on invalid JSON.
+
+> **Why URL secret, not HMAC.** Inspecting the actual webhook payloads in `get_webhook_logs` showed PCC sends `{ articleId, siteId }` with no signing header. The MCP `update_collection` schema also doesn't expose a webhook signing secret. URL-token auth gives equivalent shared-secret security over HTTPS, with the trade-off that the secret appears in PCC's webhook logs and the receiving server's access logs (acceptable here since the endpoint only invalidates a cache tag).
 
 ### 10. Register the webhook with PCC
 
-Via the dashboard or the MCP server's webhook tool:
+Via the dashboard or the MCP server's `update_collection` (with `webhookConfig`):
 
-- URL: `https://www.fastforward.sh/api/revalidate` (and Test / Dev environment URLs).
-- Secret: `PCC_WEBHOOK_SECRET`.
+- URL: `https://www.fastforward.sh/api/revalidate?token=<PCC_WEBHOOK_SECRET>` (and Test / Dev environment URLs).
 - Events: `article.publish`, `article.unpublish`, `article.update`. (Verified via `get_available_webhook_events` — names use the bare verb, not `…ed`.)
 
 ### 11. Demo content — one ArchieML article (Phase 1a)
