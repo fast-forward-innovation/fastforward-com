@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "pantheon-content-publisher": {
+      "type": "http",
+      "url": "https://mcp.content.pantheon.io"
+    }
+  }
+}

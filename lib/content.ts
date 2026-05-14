@@ -8,6 +8,7 @@ import type {
   Service,
   Settings,
 } from "./types";
+import { fetchLabProjectPages } from "./pcc";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 
@@ -109,17 +110,38 @@ export function getPaginatedProjects(
 // ---------------------------------------------------------------------------
 
 let _pages: Page[] | null = null;
-export function getAllPages(): Page[] {
+export async function getAllPages(): Promise<Page[]> {
   if (CACHE_ENABLED && _pages) return _pages;
+
+  // MDX-derived pages (authoritative; collisions resolve in their favor).
   const files = listMdx("pages");
-  const items = files.map((f) => {
+  const mdx: Page[] = files.map((f) => {
     const { data } = readMdx(f);
-    return data as unknown as Page;
+    return { ...(data as unknown as Page), source: "mdx" };
   });
-  if (CACHE_ENABLED) _pages = items;
-  return items;
+
+  // PCC-derived lab project pages. Gracefully empty when PCC_SITE_ID/TOKEN
+  // aren't set, so this works at build time before Pantheon is wired up.
+  const pcc = await fetchLabProjectPages();
+
+  const mdxSlugs = new Set(mdx.map((p) => p.slug));
+  const merged = [
+    ...mdx,
+    ...pcc.filter((p) => {
+      if (mdxSlugs.has(p.slug)) {
+        console.warn(
+          `[content] slug "${p.slug}" exists in MDX and PCC — MDX wins`,
+        );
+        return false;
+      }
+      return true;
+    }),
+  ];
+
+  if (CACHE_ENABLED) _pages = merged;
+  return merged;
 }
 
-export function getPageBySlug(slug: string): Page | null {
-  return getAllPages().find((p) => p.slug === slug) ?? null;
+export async function getPageBySlug(slug: string): Promise<Page | null> {
+  return (await getAllPages()).find((p) => p.slug === slug) ?? null;
 }

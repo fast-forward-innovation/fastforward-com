@@ -1,0 +1,47 @@
+/*
+ * Fast Forward — Design Tokens
+ *
+ * Drop this into your stylesheet after `@import "tailwindcss"`.
+ * Tailwind v4 auto-generates utilities from these variables
+ * (e.g. `bg-ff_red`, `text-ff_black`, `max-w-ff_siteWidth`,
+ * `text-base`, `text-3xl`).
+ *
+ * Token naming rules:
+ *   - Colors use the `ff_` prefix to avoid collision with Tailwind
+ *     defaults (--color-red-500 etc. still resolve).
+ *   - Type scale uses the standard Tailwind size names so utilities
+ *     auto-generate (text-xs, text-sm, text-md, text-lg, text-base,
+ *     text-3xl).
+ */
+
+@theme {
+  /* ---- Color palette ---- */
+  --color-ff_black:      #191819; /* default text, dark surfaces */
+  --color-ff_gray:       #7f7d81; /* secondary text */
+  --color-ff_slateGray:  #aaaaaa; /* dividers, disabled */
+  --color-ff_lightGray:  #edf1f2; /* light surfaces */
+  --color-ff_red:        #dd2e2a; /* primary accent / CTA */
+  --color-ff_teal:       #008ca8; /* links, inline accents */
+  --color-ff_tealDarker: #004a59; /* link hover on light bg */
+
+  /* ---- Font variables (declared in ../fonts.ts via next/font) ---- */
+  --font-sans: var(--font-manrope),        system-ui,    sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* ---- Type scale (all line-heights 1.6) ---- */
+  --text-xs:                 0.75rem;
+  --text-xs--line-height:    1.6;
+  --text-sm:                 0.875rem;
+  --text-sm--line-height:    1.6;
+  --text-md:                 1rem;
+  --text-md--line-height:    1.6;
+  --text-lg:                 1.125rem;
+  --text-lg--line-height:    1.6;
+  --text-base:               1.31rem;   /* default body copy */
+  --text-base--line-height:  1.6;
+  --text-3xl:                1.875rem;
+  --text-3xl--line-height:   1.6;
+
+  /* ---- Container width ---- */
+  --container-ff_siteWidth:  1600px;
+}

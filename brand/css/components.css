@@ -1,0 +1,31 @@
+/*
+ * Fast Forward — Layout Components
+ *
+ * Named layout building blocks. Load after base.css.
+ */
+
+@layer components {
+  .section,
+  .section-wide {
+    @apply py-16 px-6 md:px-12 md:py-24;
+  }
+  .section > * {
+    @apply max-w-screen-xl;
+  }
+  .section-wide > * {
+    max-width: 1600px;
+  }
+
+  /* Children of the radial gradient surface inherit light text. */
+  .radial-gradient-background *,
+  .radial-gradient-background-small * {
+    @apply text-ff_lightGray;
+  }
+
+  .radial-gradient-background a:hover:not(.btn),
+  .radial-gradient-background a:active:not(.btn),
+  .radial-gradient-background-small a:hover:not(.btn),
+  .radial-gradient-background-small a:active:not(.btn) {
+    @apply underline;
+  }
+}

@@ -1,0 +1,61 @@
+/*
+ * Fast Forward — Base Element Defaults
+ *
+ * Styles applied to raw HTML elements. Load after tokens.css.
+ *
+ * Note: heading sizes are tuned for marketing surfaces. If your app
+ * has a compact UI context, extend locally rather than mutating these
+ * defaults — the scale is part of the brand specification.
+ */
+
+@layer base {
+  html {
+    /* Prevent the browser's rubber-band overscroll from exposing the
+       OS window color above/below a fixed header. */
+    overscroll-behavior-y: none;
+  }
+
+  h1, .h1,
+  h2, .h2,
+  h3, .h3,
+  h5, h6 {
+    @apply text-ff_black pb-3 md:pb-5 lg:pb-8;
+  }
+  p, span {
+    @apply text-ff_black;
+  }
+
+  h1, .h1 {
+    @apply text-[2.5rem] md:text-[3.75rem] lg:text-[5.6rem] leading-tight pt-4;
+  }
+  h2, .h2 {
+    @apply text-[2rem] sm:text-6xl;
+  }
+  h3, .h3 {
+    @apply text-2xl sm:text-3xl;
+  }
+  h4, .h4 {
+    @apply text-md md:text-lg pb-5;
+  }
+
+  button {
+    @apply text-xl xl:text-base py-3 px-6 rounded font-semibold;
+  }
+
+  input,
+  textarea {
+    border: 1px solid #888;
+    border-radius: 4px;
+    padding: 1rem;
+    width: 100%;
+  }
+
+  input::placeholder {
+    @apply text-md md:text-base opacity-60 text-ff_black;
+  }
+
+  input:focus,
+  textarea:focus {
+    outline-color: #18397f;
+  }
+}

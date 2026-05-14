@@ -1,0 +1,179 @@
+/*
+ * Fast Forward — Brand Utilities
+ *
+ * Gradients, backgrounds, and interactive treatments. Load after
+ * components.css.
+ *
+ * The top-level `@utility` declarations (not `@layer utilities`) are
+ * important: Tailwind v4 only generates responsive variants
+ * (`lg:btn` etc.) for classes declared with `@utility`.
+ *
+ * Asset URLs below assume the kit's patterns are mirrored at
+ * `/brand/patterns/...` under your public/ root. Adjust the paths if
+ * you place them elsewhere.
+ */
+
+@layer utilities {
+  .ff-background {
+    background-image: url("/brand/patterns/pattern.svg");
+    background-position: right;
+  }
+
+  .ff-entire-background {
+    background:
+      url("/brand/patterns/fst-fwd-background.svg"),
+      linear-gradient(158.44deg, #eef3f5 0%, #ebf2f6 100%);
+  }
+
+  .dark-background {
+    @apply bg-ff_black;
+  }
+  .dark-background * {
+    @apply text-white;
+  }
+
+  .light-gradient-background {
+    background: linear-gradient(158.44deg, #eef3f5 0%, #ebf2f6 100%);
+  }
+
+  .linear-gradient-background {
+    @apply text-white;
+    background: linear-gradient(
+      148.48deg,
+      #dd2e2a 0%,
+      #b81d19 19.08%,
+      #18397f 59.12%,
+      #1e2142 100%
+    );
+  }
+
+  .radial-gradient-background {
+    background: radial-gradient(
+      circle 200vw at top left,
+      #dd2e2a 0%,
+      #b81d19 19.08%,
+      #18397f 59.12%,
+      #1e2142 100%
+    );
+  }
+  @media (min-width: 768px) {
+    .radial-gradient-background {
+      background: radial-gradient(
+        circle 75vw at top left,
+        #dd2e2a 0%,
+        #b81d19 19.08%,
+        #18397f 59.12%,
+        #1e2142 100%
+      );
+    }
+  }
+
+  .radial-gradient-background-small {
+    background: radial-gradient(
+      circle 200vw at top left,
+      #b81d19 0%,
+      #18397f 30%,
+      #1e2142
+    );
+  }
+  @media (min-width: 1024px) {
+    .radial-gradient-background-small {
+      background: radial-gradient(
+        circle 75vw at top left,
+        #b81d19 0%,
+        #18397f 30%,
+        #1e2142
+      );
+    }
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Top-level @utility — required for responsive variants in v4.     */
+/* ---------------------------------------------------------------- */
+
+@utility btn {
+  @apply text-xl xl:text-base py-3 px-6 rounded font-semibold;
+}
+
+@utility hover-linear-gradient-underline {
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+  position: relative;
+
+  &::after {
+    background: linear-gradient(
+      148.48deg,
+      #dd2e2a 0%,
+      #b81d19 19.08%,
+      #18397f 59.12%,
+      #1e2142 100%
+    );
+    content: "";
+    width: 0;
+    height: 0.2em;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transition: width 0.3s ease;
+  }
+
+  @media (hover: hover) {
+    &:hover::after {
+      width: 100%;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* @property declarations — enable smooth gradient interpolation on */
+/* hover. Without these, `transition: background` cannot tween      */
+/* between two linear-gradient() values, so the swap would snap     */
+/* instead of crossfading.                                          */
+/* ---------------------------------------------------------------- */
+
+@property --gradient1 {
+  syntax: "<color>";
+  initial-value: #dd2e2a;
+  inherits: false;
+}
+@property --gradient2 {
+  syntax: "<color>";
+  initial-value: #b81d19;
+  inherits: false;
+}
+@property --gradient3 {
+  syntax: "<color>";
+  initial-value: #18397f;
+  inherits: false;
+}
+@property --gradient4 {
+  syntax: "<color>";
+  initial-value: #1e2142;
+  inherits: false;
+}
+
+@utility linear-gradient-background-hover {
+  @apply text-white;
+  background: linear-gradient(
+    148.48deg,
+    var(--gradient1) 0%,
+    var(--gradient2) 19.08%,
+    var(--gradient3) 59.12%,
+    var(--gradient4) 100%
+  );
+  transition:
+    --gradient1 0.3s,
+    --gradient2 0.3s,
+    --gradient3 0.3s,
+    --gradient4 0.3s;
+
+  @media (hover: hover) {
+    &:hover {
+      --gradient1: #1e2142;
+      --gradient2: #18397f;
+      --gradient3: #b81d19;
+      --gradient4: #dd2e2a;
+    }
+  }
+}

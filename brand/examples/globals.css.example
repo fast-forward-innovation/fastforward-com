@@ -1,0 +1,18 @@
+/*
+ * Example: assembled app/globals.css using the Fast Forward brand kit.
+ *
+ * Copy this into your app/globals.css and adjust the relative paths
+ * if your kit is located elsewhere. Order matters:
+ *
+ *   tokens → base → components → utilities → (your overrides)
+ */
+
+@import "tailwindcss";
+
+/* Brand kit */
+@import "../brand/css/tokens.css";
+@import "../brand/css/base.css";
+@import "../brand/css/components.css";
+@import "../brand/css/utilities.css";
+
+/* Your project-specific styles below */

@@ -1,0 +1,171 @@
+---
+title: Lorem Ipsum Lab Project Title
+slug: lab-project-sample
+date: '2026-05-14T12:00:00'
+layout: lab-project
+additionalPostFields:
+  label: Lab Project
+  tagline: A one-line description of what this experiment is exploring and why it matters.
+  brandColor: '#008ca8'
+  stack:
+    - Next.js 16
+    - React 19
+    - TypeScript
+    - Tailwind 4
+    - MDX
+  tags:
+    - Museum
+    - Experiential
+    - Marketing
+    - Content
+  repoUrl: https://github.com/fastforward/example-lab-repo
+  liveUrl: https://example.fastforward.sh
+editorial:
+  status: draft
+  branch: content-review
+  updated: 2026-05-14
+  notes: Template sample with Lorem Ipsum — use as a starting point for new lab projects.
+featuredImage:
+  src: /content/images/architecture/new_architecture_pantheon_nextjs.svg
+  alt: Placeholder hero image for the lab project sample
+  width: 1600
+  height: 900
+pageSections:
+  - type: TeamProfile
+    kind: individual
+    name: Jason Yarrington
+    role: Web Solutions
+    bio: >
+      Hands-on with this build from frontmatter to deploy. Curious about
+      anything that makes the gap between "draft in a doc" and "live on
+      the site" smaller.
+    links:
+      - label: LinkedIn
+        url: https://www.linkedin.com/in/jasonyarrington
+  - type: MainSection
+    tagline: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+    title: Overview
+    background: white
+    richText: >
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+      ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+      aliquip ex ea commodo consequat.</p>
+
+      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse
+      cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+      cupidatat non proident, sunt in culpa qui officia deserunt mollit
+      anim id est laborum.</p>
+
+      <ul>
+        <li><strong>What we tried:</strong> Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit.</li>
+        <li><strong>Why it matters:</strong> Sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua.</li>
+        <li><strong>Where it could go:</strong> Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris.</li>
+      </ul>
+  - type: MainSection
+    tagline: The piece that made it click
+    title: Key Code
+    background: gray
+    richText: >
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. The
+      snippet below is the smallest piece of code that captures the idea
+      — everything else is plumbing around this.</p>
+  - type: CodeBlock
+    filename: app/api/docs/route.ts
+    language: typescript
+    code: |
+      import { NextResponse } from "next/server";
+      import { fetchDocFromPantheon } from "@/lib/pantheon";
+
+      export async function GET(
+        _req: Request,
+        { params }: { params: { id: string } },
+      ) {
+        const doc = await fetchDocFromPantheon(params.id);
+        if (!doc) {
+          return NextResponse.json({ error: "not found" }, { status: 404 });
+        }
+        return NextResponse.json(doc, {
+          headers: {
+            "Cache-Control": "s-maxage=60, stale-while-revalidate=300",
+          },
+        });
+      }
+    caption: A thin route handler that fetches a doc by ID and lets the CDN handle re-validation.
+  - type: MainSection
+    tagline: How the pieces fit together
+    title: Approach
+    background: white
+    richText: >
+      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+      accusantium doloremque laudantium, totam rem aperiam.</p>
+
+      <ul>
+        <li>Step one — lorem ipsum dolor sit amet.</li>
+        <li>Step two — consectetur adipiscing elit, sed do eiusmod.</li>
+        <li>Step three — tempor incididunt ut labore et dolore.</li>
+      </ul>
+  - type: CodeBlock
+    filename: lib/pantheon.ts
+    language: typescript
+    code: |
+      const PANTHEON_API = process.env.PANTHEON_API_URL!;
+
+      export async function fetchDocFromPantheon(id: string) {
+        const res = await fetch(`${PANTHEON_API}/documents/${id}`, {
+          headers: { Authorization: `Bearer ${process.env.PANTHEON_TOKEN}` },
+          next: { revalidate: 60 },
+        });
+        if (!res.ok) return null;
+        return res.json();
+      }
+    caption: Wrapping the Pantheon Docs API in a small typed helper keeps fetch options consistent across routes.
+  - type: ImageBlock
+    width: text
+    images:
+      - src: /content/images/architecture/pantheon_release_workflow_git_tags.svg
+        alt: Placeholder screenshot of the working integration
+        width: 1100
+        height: 360
+  - type: MainSection
+    tagline: A short walkthrough of the result
+    title: Screencast
+    background: gray
+    richText: >
+      <p>Below is a short screencast walking through the editing
+      experience end-to-end — from authoring in the docs tool through
+      publishing on the live site.</p>
+  - type: VideoBlock
+    provider: youtube
+    src: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+    title: Lab project screencast
+    caption: Replace with a real Loom, YouTube, or self-hosted MP4 link.
+  - type: ClientQuote
+    tagline: Takeaway
+    quote: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit — sed do eiusmod tempor incididunt ut labore.</p>"
+    clientName: — A short one-line conclusion or pull-quote
+  - type: MainSection
+    tagline: Where this could go next
+    title: Next Steps
+    background: white
+    richText: >
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. A few
+      directions worth exploring once the foundation is in place:</p>
+
+      <ul>
+        <li>Idea one — lorem ipsum dolor sit amet.</li>
+        <li>Idea two — consectetur adipiscing elit.</li>
+        <li>Idea three — sed do eiusmod tempor incididunt.</li>
+      </ul>
+  - type: TeamProfile
+    kind: team
+    name: Experiential Team
+    role: Fast Forward
+    bio: >
+      The crew that builds for screens you walk up to, not just sit in
+      front of. Touch tables, kiosks, projected installs, and the
+      stitched-together web tooling that keeps them all in sync.
+---

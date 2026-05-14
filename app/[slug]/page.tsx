@@ -3,11 +3,15 @@ import { notFound } from "next/navigation";
 import { getAllPages, getPageBySlug } from "@/lib/content";
 import { Page } from "@/components/Page";
 import { LandingPage } from "@/components/LandingPage";
+import { CaseStudyPage } from "@/components/CaseStudyPage";
+import { LabProjectPage } from "@/components/LabProjectPage";
 
-export const dynamicParams = false;
+// PCC-sourced lab projects can appear between builds — let Next render
+// unknown slugs on first request and 404 if no Page resolves.
+export const dynamicParams = true;
 
-export function generateStaticParams() {
-  return getAllPages().map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  return (await getAllPages()).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -16,7 +20,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const page = getPageBySlug(slug);
+  const page = await getPageBySlug(slug);
   if (!page) return {};
   return {
     title: page.title,
@@ -30,11 +34,17 @@ export default async function DynamicPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const page = getPageBySlug(slug);
+  const page = await getPageBySlug(slug);
   if (!page) notFound();
 
   if (page.layout === "landing") {
     return <LandingPage page={page} />;
+  }
+  if (page.layout === "case-study") {
+    return <CaseStudyPage page={page} />;
+  }
+  if (page.layout === "lab-project") {
+    return <LabProjectPage page={page} />;
   }
   return <Page page={page} />;
 }
