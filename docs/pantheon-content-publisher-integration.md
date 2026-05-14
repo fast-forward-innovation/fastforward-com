@@ -132,7 +132,9 @@ PCC_TOKEN=
 PCC_WEBHOOK_SECRET=
 ```
 
-Set live values per environment via Pantheon Secrets Manager (Dev / Test / Live). `PCC_TOKEN` must be present at `next build` time on Pantheon — confirm by running a build with the secret injected.
+In Pantheon Secrets Manager set all three with **Secret Type: `Environment`** and **Scopes: `Job` + `Web`** (both checked). The dialog text for Environment-type mentions "Integrated Composer builds" — that wording is misleading on Pantheon's Next.js platform. Environment is the type that actually surfaces secrets as `process.env.X` at both build (`Job` scope) and runtime (`Web` scope). **Runtime-type secrets do NOT surface as env vars for Next.js** — they require a Pantheon-specific fetch API. Mirror the existing `MONDAY_API_TOKEN` configuration when in doubt.
+
+Pantheon's UI does not allow changing Secret Type after creation; if you set the wrong type, delete the secret and recreate it. Trigger a fresh Dev redeploy after changing secrets so the new build sees them.
 
 ### 4. New module: `lib/pcc.ts`
 
