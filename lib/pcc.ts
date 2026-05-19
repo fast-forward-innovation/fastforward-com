@@ -288,14 +288,19 @@ function normalizeArchieMlRow(
       const ib = row as Partial<ImageBlock> & Record<string, unknown>;
       // ArchieML can't cleanly express deeply nested arrays of objects, so
       // we also accept flat fields (`imageSrc`, `imageAlt`, `imageWidth`,
-      // `imageHeight`) and assemble a single-image array from them.
+      // `imageHeight`, `imagePlaceholder`, `imageNotes`) and assemble a
+      // single-image array from them.
       let images = Array.isArray(ib.images) ? ib.images : [];
       const flatSrc =
         typeof ib.imageSrc === "string" ? (ib.imageSrc as string) : undefined;
       const flatSrcLegacy =
         typeof ib.src === "string" ? (ib.src as string) : undefined;
       const src = flatSrc ?? flatSrcLegacy;
-      if (images.length === 0 && src) {
+      const truthy = (v: unknown): boolean =>
+        v === true ||
+        (typeof v === "string" && /^(true|yes|1)$/i.test(v.trim()));
+      const isPlaceholder = truthy(ib.imagePlaceholder ?? ib.placeholder);
+      if (images.length === 0 && (src || isPlaceholder)) {
         const numOrNull = (v: unknown): number | null => {
           if (typeof v === "number") return v;
           if (typeof v === "string" && v.trim() !== "") {
@@ -304,15 +309,21 @@ function normalizeArchieMlRow(
           }
           return null;
         };
+        const notes =
+          (typeof ib.imageNotes === "string" && (ib.imageNotes as string)) ||
+          (typeof ib.notes === "string" && (ib.notes as string)) ||
+          undefined;
         images = [
           {
-            src,
+            src: src ?? "",
             alt:
               (typeof ib.imageAlt === "string" && (ib.imageAlt as string)) ||
               (typeof ib.alt === "string" && (ib.alt as string)) ||
               "",
             width: numOrNull(ib.imageWidth ?? ib.width),
             height: numOrNull(ib.imageHeight ?? ib.height),
+            ...(isPlaceholder ? { placeholder: true } : {}),
+            ...(notes ? { notes } : {}),
           },
         ];
       }

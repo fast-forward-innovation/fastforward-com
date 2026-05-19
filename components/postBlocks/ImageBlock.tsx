@@ -1,5 +1,45 @@
 import Image from "next/image";
-import type { ImageBlock as ImageBlockData } from "@/lib/types";
+import type { FrontmatterImage, ImageBlock as ImageBlockData } from "@/lib/types";
+import { PlaceholderImage } from "./PlaceholderImage";
+
+function ImageOrPlaceholder({
+  img,
+  className,
+  sizes,
+  priority,
+  fallbackWidth,
+  fallbackHeight,
+}: {
+  img: FrontmatterImage;
+  className: string;
+  sizes?: string;
+  priority?: boolean;
+  fallbackWidth: number;
+  fallbackHeight: number;
+}) {
+  if (img.placeholder) {
+    return (
+      <PlaceholderImage
+        alt={img.alt}
+        width={img.width ?? fallbackWidth}
+        height={img.height ?? fallbackHeight}
+        notes={img.notes}
+        className={className}
+      />
+    );
+  }
+  return (
+    <Image
+      src={img.src}
+      alt={img.alt}
+      width={img.width ?? fallbackWidth}
+      height={img.height ?? fallbackHeight}
+      className={className}
+      sizes={sizes}
+      priority={priority}
+    />
+  );
+}
 
 export function ImageBlock({ block }: { block: ImageBlockData }) {
   const images = block.images.filter(Boolean);
@@ -11,11 +51,10 @@ export function ImageBlock({ block }: { block: ImageBlockData }) {
   if (one) {
     const img = images[0];
     const image = (
-      <Image
-        src={img.src}
-        alt={img.alt}
-        width={img.width ?? 1600}
-        height={img.height ?? 900}
+      <ImageOrPlaceholder
+        img={img}
+        fallbackWidth={1600}
+        fallbackHeight={900}
         className={
           narrow
             ? "w-full h-auto"
@@ -43,19 +82,17 @@ export function ImageBlock({ block }: { block: ImageBlockData }) {
   return (
     <div className="my-8 md:my-[4.5rem]">
       <div className="mx-auto lg:flex justify-between">
-        <Image
-          src={a.src}
-          alt={a.alt}
-          width={a.width ?? 1200}
-          height={a.height ?? 800}
+        <ImageOrPlaceholder
+          img={a}
+          fallbackWidth={1200}
+          fallbackHeight={800}
           className="max-lg:mb-8 lg:inline-block w-full lg:mr-4 lg:w-1/2 object-cover"
           sizes="(min-width: 1024px) 50vw, 100vw"
         />
-        <Image
-          src={b.src}
-          alt={b.alt}
-          width={b.width ?? 1200}
-          height={b.height ?? 800}
+        <ImageOrPlaceholder
+          img={b}
+          fallbackWidth={1200}
+          fallbackHeight={800}
           className="lg:inline-block w-full lg:ml-4 lg:w-1/2 object-cover"
           sizes="(min-width: 1024px) 50vw, 100vw"
         />

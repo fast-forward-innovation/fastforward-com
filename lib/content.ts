@@ -9,6 +9,7 @@ import type {
   Settings,
 } from "./types";
 import { fetchLabProjectPages } from "./pcc";
+import { isLiveEnvironment } from "./env";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 
@@ -85,10 +86,13 @@ export function getProjectBySlug(slug: string): Project | null {
 
 /**
  * Projects intended for public surfaces (home page, /our-work index,
- * sitemap). Filters out drafts; getAllProjects() remains unfiltered so
- * draft URLs continue to resolve for preview-sharing.
+ * sitemap). On Live, filters out drafts; on every other environment
+ * (multidev, test, dev, local) returns everything so reviewers can
+ * browse in-progress work. getAllProjects() remains unfiltered either
+ * way so draft URLs continue to resolve for preview-sharing.
  */
 export function getPublishedProjects(): Project[] {
+  if (!isLiveEnvironment()) return getAllProjects();
   return getAllProjects().filter((p) => !p.draft);
 }
 

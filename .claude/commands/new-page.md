@@ -40,7 +40,7 @@ Ask, one at a time:
 2. **Slug.** What URL path? (kebab-case; verify uniqueness against `content/pages/`.)
 3. **Outline.** What sections / headings does it need?
 4. **Body content.** Walk through each section.
-5. **Featured image** (optional)? If yes, source path and dimensions.
+5. **Featured image** (optional)? If yes, source path and dimensions. If the file doesn't exist yet, set `placeholder: true` with `alt` + `notes` + declared `width`/`height` — see the Placeholders section in [CONTENT.md](CONTENT.md).
 
 ### 2. Propose a structure
 

@@ -349,6 +349,35 @@ The legacy `public/content/images/YYYY/MM/` folders are leftovers from the WordP
 - Inline ImageBlock images: full-bleed at the section width — provide at least 1440px wide.
 - All images compress before commit (no 5MB hero JPGs).
 
+**Placeholders for missing images.**
+
+When drafting a page or case study before the real image exists, set `placeholder: true` on the image instead of pointing at a file that isn't on disk. The renderer ([components/postBlocks/PlaceholderImage.tsx](components/postBlocks/PlaceholderImage.tsx)) draws a light-gray block at the declared aspect ratio with the alt text — and, if provided, designer notes — visible in place. Works for `featuredImage`, `cardImage`, and any image inside an `ImageBlock`.
+
+```yaml
+featuredImage:
+  src: ""                              # leave empty (or use the eventual path)
+  alt: "Three authoring surfaces converging on a single rendered page."
+  width: 2880
+  height: 1614
+  placeholder: true
+  notes: "Hero composite: code editor on the left, Google Doc center, Claude Code prompt on the right; light gradient background in brand teal."
+```
+
+Inside an `ImageBlock`:
+
+```yaml
+- type: ImageBlock
+  images:
+    - src: ""
+      alt: "Flow diagram — Google Doc to PCC to webhook to Next.js refetch."
+      width: 1600
+      height: 900
+      placeholder: true
+      notes: "Four-step horizontal flow; arrows in brand teal; monospace labels."
+```
+
+When the real image lands: drop the file on disk, set `src` to the path, and remove `placeholder` and `notes`. Real images and placeholders can coexist in the same draft — the renderer picks per image.
+
 ## Service taxonomy
 
 The `services` field on a project is an array of slugs from [content/services.yml](content/services.yml). **Always read that file fresh before drafting** — the list evolves, and the user adds and renames services as needed. Never invent slugs that aren't in the file. If a project needs a service that's not yet listed, surface it and ask before adding a new entry.
@@ -367,7 +396,9 @@ editorial:
   notes: "..."                # optional, single-line ask from reviewer
 ```
 
-The block is parsed by `gray-matter` but not declared in [lib/types.ts](lib/types.ts), so the renderer ignores it. When a piece reaches `live`, **remove the `editorial` block entirely** — production MDX stays clean. State transitions are driven by the `/workflow` skill ([.claude/commands/workflow.md](.claude/commands/workflow.md)), which also handles the Pantheon push (branch + PR via [scripts/deploy-feature-branch.sh](scripts/deploy-feature-branch.sh)).
+The block is declared as the `Editorial` interface in [lib/types.ts](lib/types.ts) and consumed by [components/DraftStatusToast.tsx](components/DraftStatusToast.tsx) — a fixed bottom-right toast rendered on every `draft: true` project case study and lab project, showing the current status with click-through to the PR. When a piece reaches `live`, **remove the `editorial` block entirely** (and `draft: true`) — production MDX stays clean. State transitions are driven by the `/workflow` skill ([.claude/commands/workflow.md](.claude/commands/workflow.md)), which also handles the Pantheon push (branch + PR via [scripts/deploy-feature-branch.sh](scripts/deploy-feature-branch.sh)).
+
+**Environment-aware visibility.** On any environment other than Live (multidev, test, dev, local), `draft: true` projects appear in the home-page featured block, `/our-work`, and the sitemap so reviewers can browse drafts on a multidev URL. On Live, drafts are hidden from those surfaces; only direct URLs resolve (with `noindex`). The same `draft?` field is also recognized on lab-project Pages.
 
 ## Pre-publish checklist
 

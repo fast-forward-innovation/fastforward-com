@@ -8,6 +8,7 @@ import type {
 import { MainSection } from "./postBlocks/MainSection";
 import { ImageBlock } from "./postBlocks/ImageBlock";
 import { QuoteBlock } from "./postBlocks/QuoteBlock";
+import { PlaceholderImage } from "./postBlocks/PlaceholderImage";
 
 function hexToRgba(hex: string, alpha = 0.17) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -117,15 +118,25 @@ export function CaseStudyArticle({
         </div>
         {featuredImage && (
           <div id="featured-image" className="relative mb-[4.5rem] lg:px-6">
-            <Image
-              src={featuredImage.src}
-              alt={featuredImage.alt || title}
-              width={featuredImage.width ?? 1600}
-              height={featuredImage.height ?? 900}
-              priority
-              sizes="100vw"
-              className="max-lg:h-[60vh] object-cover w-full"
-            />
+            {featuredImage.placeholder ? (
+              <PlaceholderImage
+                alt={featuredImage.alt || title}
+                width={featuredImage.width ?? 1600}
+                height={featuredImage.height ?? 900}
+                notes={featuredImage.notes}
+                className="max-lg:h-[60vh] w-full"
+              />
+            ) : (
+              <Image
+                src={featuredImage.src}
+                alt={featuredImage.alt || title}
+                width={featuredImage.width ?? 1600}
+                height={featuredImage.height ?? 900}
+                priority
+                sizes="100vw"
+                className="max-lg:h-[60vh] object-cover w-full"
+              />
+            )}
           </div>
         )}
       </div>

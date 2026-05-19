@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getServiceById } from "@/lib/content";
 import type { Project } from "@/lib/types";
+import { PlaceholderImage } from "../postBlocks/PlaceholderImage";
 
 export function ProjectCard({ project }: { project: Project }) {
   const { slug, title, additionalPostFields, services, cardImage } = project;
@@ -17,13 +18,21 @@ export function ProjectCard({ project }: { project: Project }) {
     >
       {cardImage && (
         <div className="relative w-full aspect-[20/23] overflow-hidden mb-6">
-          <Image
-            src={cardImage.src}
-            alt={cardImage.alt || title}
-            fill
-            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-            className="object-cover"
-          />
+          {cardImage.placeholder ? (
+            <PlaceholderImage
+              alt={cardImage.alt || title}
+              notes={cardImage.notes}
+              fill
+            />
+          ) : (
+            <Image
+              src={cardImage.src}
+              alt={cardImage.alt || title}
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+              className="object-cover"
+            />
+          )}
         </div>
       )}
       <div>
