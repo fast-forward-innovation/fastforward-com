@@ -118,3 +118,77 @@ test.describe("llms.txt", () => {
     expect(body).not.toContain("lab-project-sample");
   });
 });
+
+test.describe("Security headers", () => {
+  test("Strict-Transport-Security present on the home page", async ({ request }) => {
+    const res = await request.get("/");
+    const hsts = res.headers()["strict-transport-security"];
+    expect(hsts).toBeTruthy();
+    expect(hsts).toMatch(/max-age=\d{6,}/);
+    expect(hsts).toMatch(/includeSubDomains/i);
+  });
+
+  test("Strict-Transport-Security present on a project page", async ({ request }) => {
+    const res = await request.get("/our-work/architecture-and-release-workflow");
+    expect(res.headers()["strict-transport-security"]).toBeTruthy();
+  });
+});
+
+test.describe("Static asset caching", () => {
+  test("Next /_next/static/* assets are served with immutable Cache-Control", async ({ page, request }) => {
+    await page.goto("/");
+    // Pick up the first hashed Next static asset referenced from the home
+    // page. CSS link tags are the most reliable since they appear in the
+    // initial HTML; <script src> would also work.
+    const href = await page
+      .locator('link[rel="stylesheet"][href^="/_next/static/"]')
+      .first()
+      .getAttribute("href");
+    expect(href, "expected at least one /_next/static/ stylesheet").toBeTruthy();
+
+    const assetRes = await request.get(href!);
+    expect(assetRes.status()).toBe(200);
+    const cacheControl = assetRes.headers()["cache-control"] ?? "";
+    expect(cacheControl).toMatch(/immutable/);
+    expect(cacheControl).toMatch(/max-age=31536000/);
+  });
+});
+
+test.describe("JSON-LD structured data", () => {
+  test("home page emits Organization + WebSite schemas", async ({ page }) => {
+    await page.goto("/");
+    const scripts = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+    expect(scripts.length).toBeGreaterThanOrEqual(2);
+    const parsed = scripts.map((s) => JSON.parse(s));
+    const types = parsed.map((d) => d["@type"]);
+    expect(types).toContain("Organization");
+    expect(types).toContain("WebSite");
+    const org = parsed.find((d) => d["@type"] === "Organization");
+    expect(org?.name).toBe("Fast Forward");
+    expect(org?.url).toBe(APEX);
+  });
+
+  test("project page emits BreadcrumbList + CreativeWork schemas", async ({ page }) => {
+    const slug = "architecture-and-release-workflow";
+    await page.goto(`/our-work/${slug}`);
+    const scripts = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+    const parsed = scripts.map((s) => JSON.parse(s));
+    const types = parsed.map((d) => d["@type"]);
+    expect(types).toContain("BreadcrumbList");
+    expect(types).toContain("CreativeWork");
+
+    const breadcrumb = parsed.find((d) => d["@type"] === "BreadcrumbList");
+    expect(breadcrumb?.itemListElement).toHaveLength(3);
+    expect(breadcrumb?.itemListElement[2].item).toBe(
+      `${APEX}/our-work/${slug}`,
+    );
+
+    const work = parsed.find((d) => d["@type"] === "CreativeWork");
+    expect(work?.url).toBe(`${APEX}/our-work/${slug}`);
+    expect(work?.name).toMatch(/Architecture and Release Workflow/);
+  });
+});
