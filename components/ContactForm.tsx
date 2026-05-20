@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Script from "next/script";
+import { formatPhoneInput } from "@/lib/phone-format";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const TURNSTILE_ENABLED = Boolean(TURNSTILE_SITE_KEY);
@@ -127,9 +128,14 @@ export function ContactForm() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     const { name, value } = e.currentTarget;
+    // Phone is the only field that auto-formats. The formatter strips
+    // non-digit characters, so any letters / symbols the user types are
+    // dropped before they ever land in state — no separate keystroke
+    // filter needed, and paste / autofill go through the same path.
+    const nextValue = name === "phone" ? formatPhoneInput(value) : value;
     setForm((prev) => {
-      const next = { ...prev, [name]: value };
-      validate(name, value);
+      const next = { ...prev, [name]: nextValue };
+      validate(name, nextValue);
       return next;
     });
   }

@@ -57,6 +57,16 @@ test.describe("Contact form", () => {
     await page.waitForURL(/\/contact-submitted\?success=false/);
   });
 
+  test("phone input auto-formats while typing and rejects non-digit characters", async ({ page }) => {
+    await page.goto("/contact-us");
+    const phone = page.locator("#phone");
+    await phone.click();
+    // Type a mix of digits and noise — non-digits should never appear in
+    // the value, and the formatter wraps the digits as the user goes.
+    await page.keyboard.type("abc617def555ghi0000");
+    await expect(phone).toHaveValue("(617) 555-0000");
+  });
+
   test("does not submit and surfaces validation errors when form is empty", async ({ page }) => {
     let calls = 0;
     await page.route("**/api/contact", async (route) => {
