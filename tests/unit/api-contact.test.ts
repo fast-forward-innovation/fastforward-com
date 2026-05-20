@@ -130,6 +130,10 @@ describe("POST /api/contact — Monday submission", () => {
       variables?: { name?: string; cols?: string };
     };
     expect(sent.query).toContain("create_item");
+    // Auto-create unknown Dropdown / Status labels (e.g., when the
+    // classifier's inquiry types haven't been added to the Monday column
+    // yet). Without this, the column write silently no-ops.
+    expect(sent.query).toContain("create_labels_if_missing: true");
     expect(sent.variables?.name).toBe("Ada Lovelace");
     const cols = JSON.parse(sent.variables?.cols ?? "{}");
     expect(cols.lead_email.email).toBe("ada@example.com");
