@@ -20,6 +20,9 @@
 /.next/
 /out/
 
+# Pantheon next.js cache handler — file-based fallback when CACHE_BUCKET unset (local dev)
+/.cache/
+
 # production
 /build
 
