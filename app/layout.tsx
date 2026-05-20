@@ -6,7 +6,7 @@ import { getSettings } from "@/lib/content";
 import { manrope, jetbrainsMono } from "./fonts";
 import "./globals.css";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.fastforward.sh";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fastforward.sh";
 
 export function generateMetadata(): Metadata {
   const s = getSettings();

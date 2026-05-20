@@ -237,7 +237,7 @@ git push origin pantheon_live_$(date +%Y%m%d)
 
 - Same shape, different prefix. Live builds at
   `live-fastforward.pantheonsite.io` until DNS cuts over to
-  `www.fastforward.sh`.
+  `fastforward.sh` (apex; `www` 301-redirects).
 - Rolling back is just tagging a prior commit with a fresh
   `pantheon_live_*` tag. There is no separate "undo" path — the git
   log *is* the deploy log.

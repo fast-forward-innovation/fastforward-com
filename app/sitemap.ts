@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllPages, getPublishedProjects } from "@/lib/content";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.fastforward.sh";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fastforward.sh";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date().toISOString();

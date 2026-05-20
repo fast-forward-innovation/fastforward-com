@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllProjects } from "@/lib/content";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.fastforward.sh";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fastforward.sh";
 
 export default function robots(): MetadataRoute.Robots {
   const draftProjectPaths = getAllProjects()

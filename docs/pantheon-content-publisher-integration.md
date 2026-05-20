@@ -237,7 +237,7 @@ New file: `app/api/revalidate/route.ts`.
 
 Via the dashboard or the MCP server's `update_collection` (with `webhookConfig`):
 
-- URL: `https://www.fastforward.sh/api/revalidate?token=<PCC_WEBHOOK_SECRET>` (and Test / Dev environment URLs).
+- URL: `https://fastforward.sh/api/revalidate?token=<PCC_WEBHOOK_SECRET>` (and Test / Dev environment URLs). Use the apex; `www` redirects to apex and webhook senders that don't follow POST redirects will drop the call.
 - Events: `article.publish`, `article.unpublish`, `article.update`. (Verified via `get_available_webhook_events` — names use the bare verb, not `…ed`.)
 
 ### 11. Demo content — one ArchieML article (Phase 1a)
@@ -277,7 +277,7 @@ What we learned mid-implementation: Smart Components are **defined in our Next.j
 
 2. **Mount the PantheonAPI route.** New file: `app/api/pantheoncloud/[...command]/route.ts`. Uses `PantheonAPI` from `@pantheon-systems/pcc-react-sdk` (or `pcc-sdk-core` — confirm at build) with the `SmartComponentMap` passed in. Wires up the endpoints the add-on calls (component map, preview, article fetch). Same pattern as the `nextjs-starter-approuter-ts` reference at github.com/pantheon-systems/content-publisher-sdk.
 
-3. **Connect the PCC collection.** In the PCC dashboard: edit the `lab-projects` collection → set the site/API URL to `https://www.fastforward.sh/api/pantheoncloud` (and the Test URL for the test environment). After this, `get_collection` should return `isSiteConnected: true` and the Google Docs sidebar should list the Smart Components.
+3. **Connect the PCC collection.** In the PCC dashboard: edit the `lab-projects` collection → set the site/API URL to `https://fastforward.sh/api/pantheoncloud` (apex; `www` redirects) and the Test URL for the test environment. After this, `get_collection` should return `isSiteConnected: true` and the Google Docs sidebar should list the Smart Components.
 
 4. **Iterate the PantheonTree walker.** Author one Smart Components article. Fetch via the SDK with `withContent: true`. Inspect the actual `attrs` shape on each component node. Refine `smartComponentToSection` in [../lib/pcc.ts](../lib/pcc.ts) if field naming differs from the map. Expect ≤ 30 minutes of adjustment.
 
