@@ -1,7 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import type { Editorial, EditorialStatus } from "@/lib/types";
+
+const DISMISS_EVENT = "ff-draft-toast-dismissed";
+
+// sessionStorage doesn't fire the native 'storage' event for same-tab writes,
+// so handleDismiss dispatches DISMISS_EVENT to nudge useSyncExternalStore.
+function subscribe(callback: () => void): () => void {
+  window.addEventListener(DISMISS_EVENT, callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    window.removeEventListener(DISMISS_EVENT, callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+
+const getServerSnapshot = () => false;
 
 const DEFAULT_REPO = "fast-forward-innovation/fastforward-com";
 
@@ -29,17 +44,20 @@ export function DraftStatusToast({
   slug: string;
   editorial: Editorial;
 }) {
-  const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
+  const getSnapshot = useCallback(() => {
     try {
-      if (sessionStorage.getItem(dismissKey(slug)) === "1") {
-        setDismissed(true);
-      }
+      return sessionStorage.getItem(dismissKey(slug)) === "1";
     } catch {
-      // sessionStorage unavailable (private mode, etc.) — just show the toast.
+      // sessionStorage unavailable (private mode, etc.) — show the toast.
+      return false;
     }
   }, [slug]);
+
+  const dismissed = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   if (dismissed) return null;
 
@@ -52,9 +70,10 @@ export function DraftStatusToast({
     try {
       sessionStorage.setItem(dismissKey(slug), "1");
     } catch {
-      // No-op; the in-memory state below still hides the toast for this view.
+      // sessionStorage unavailable — dispatch still fires so the store
+      // re-reads and stays at false, which is what we want.
     }
-    setDismissed(true);
+    window.dispatchEvent(new Event(DISMISS_EVENT));
   };
 
   const body = (
