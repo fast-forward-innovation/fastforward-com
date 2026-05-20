@@ -56,28 +56,45 @@ describe("formatPhoneInput", () => {
       expect(formatPhoneInput("+44")).toBe("+44");
     });
 
-    it("preserves the + and digits for a UK number", () => {
-      expect(formatPhoneInput("+44 20 7946 0958")).toBe("+442079460958");
+    it("inserts a space between the country code and the national number", () => {
+      // First digit beyond the CC: space appears.
+      expect(formatPhoneInput("+449")).toBe("+44 9");
+      expect(formatPhoneInput("+1 6")).toBe("+1 6");
     });
 
-    it("preserves the + and digits for a French number", () => {
-      expect(formatPhoneInput("+33 1 42 36 33 33")).toBe("+33142363333");
+    it("groups a UK number after the +44 country code", () => {
+      expect(formatPhoneInput("+44 20 7946 0958")).toBe("+44 207 946 0958");
     });
 
-    it("keeps the + on a +1 number rather than collapsing to US format", () => {
-      // The explicit "+" signals international intent; we don't second-
-      // guess it by stripping the country code. Users who want US format
-      // can simply not type the "+".
-      expect(formatPhoneInput("+1 (617) 555-0000")).toBe("+16175550000");
-      expect(formatPhoneInput("+16175550000")).toBe("+16175550000");
+    it("groups a French number after the +33 country code", () => {
+      expect(formatPhoneInput("+33 1 42 36 33 33")).toBe("+33 142 363 333");
+    });
+
+    it("groups a NANP number after an explicit +1", () => {
+      // The explicit "+" signals international intent; we still detect
+      // the 1-digit NANP country code and group like a US number.
+      expect(formatPhoneInput("+1 (617) 555-0000")).toBe("+1 617 555 0000");
+      expect(formatPhoneInput("+16175550000")).toBe("+1 617 555 0000");
+    });
+
+    it("handles a 3-digit country code (e.g. +852 Hong Kong)", () => {
+      expect(formatPhoneInput("+852 12345678")).toBe("+852 123 456 78");
+      // Just the CC, no national digits yet → no trailing space
+      expect(formatPhoneInput("+852")).toBe("+852");
     });
 
     it("caps at 15 digits (E.164 max)", () => {
-      expect(formatPhoneInput("+123456789012345999")).toBe("+123456789012345");
+      // 15 digits, leading 1 → cc='1', rest='234567890123456' → trimmed
+      // by the slice(0, 15) cap to 14 in the rest.
+      expect(formatPhoneInput("+123456789012345999")).toBe(
+        "+1 234 567 890 123 45",
+      );
     });
 
     it("strips letters and stray characters but keeps the + prefix", () => {
-      expect(formatPhoneInput("+44 abc 20 def 7946 0958")).toBe("+442079460958");
+      expect(formatPhoneInput("+44 abc 20 def 7946 0958")).toBe(
+        "+44 207 946 0958",
+      );
     });
   });
 });
