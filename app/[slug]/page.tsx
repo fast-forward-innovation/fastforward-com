@@ -22,10 +22,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const page = await getPageBySlug(slug);
   if (!page) return {};
-  return {
-    title: page.title,
-    description: page.layout === "landing" ? "Landing page" : undefined,
-  };
+  const description = page.additionalPostFields?.seoDescription;
+  const meta: Metadata = { title: page.title };
+  // Omitting the key (vs. setting undefined) lets the root layout's
+  // siteDescription cascade through when the page has no description.
+  if (description) meta.description = description;
+  return meta;
 }
 
 export default async function DynamicPage({
