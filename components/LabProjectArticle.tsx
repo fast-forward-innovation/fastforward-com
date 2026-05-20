@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type {
   AdditionalPostFields,
+  Editorial,
   FrontmatterImage,
   PageSection,
 } from "@/lib/types";
@@ -10,6 +11,8 @@ import { QuoteBlock } from "./postBlocks/QuoteBlock";
 import { CodeBlock } from "./postBlocks/CodeBlock";
 import { VideoBlock } from "./postBlocks/VideoBlock";
 import { TeamProfile } from "./postBlocks/TeamProfile";
+import { PlaceholderImage } from "./postBlocks/PlaceholderImage";
+import { DraftStatusToast } from "./DraftStatusToast";
 
 function hexToRgba(hex: string, alpha = 0.12) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -24,12 +27,18 @@ export function LabProjectArticle({
   featuredImage,
   additionalPostFields,
   pageSections,
+  draft,
+  editorial,
+  slug,
 }: {
   title: string;
   tagline?: string;
   featuredImage?: FrontmatterImage;
   additionalPostFields?: AdditionalPostFields;
   pageSections: PageSection[];
+  draft?: boolean;
+  editorial?: Editorial;
+  slug?: string;
 }) {
   const backgroundColor = additionalPostFields?.brandColor
     ? hexToRgba(additionalPostFields.brandColor)
@@ -144,20 +153,36 @@ export function LabProjectArticle({
         </div>
         {featuredImage && (
           <div id="featured-image" className="relative mb-[4.5rem] lg:px-6">
-            <Image
-              src={featuredImage.src}
-              alt={featuredImage.alt || title}
-              width={featuredImage.width ?? 1600}
-              height={featuredImage.height ?? 900}
-              priority
-              sizes="100vw"
-              className="max-lg:h-[60vh] object-cover w-full"
-            />
+            {featuredImage.placeholder ? (
+              <PlaceholderImage
+                alt={featuredImage.alt || title}
+                width={featuredImage.width ?? 1600}
+                height={featuredImage.height ?? 900}
+                notes={featuredImage.notes}
+                className="max-lg:h-[60vh] w-full"
+              />
+            ) : (
+              <Image
+                src={featuredImage.src}
+                alt={featuredImage.alt || title}
+                width={featuredImage.width ?? 1600}
+                height={featuredImage.height ?? 900}
+                priority
+                sizes="100vw"
+                className="max-lg:h-[60vh] object-cover w-full"
+              />
+            )}
           </div>
         )}
       </div>
 
       {renderedSections}
+      {draft && slug ? (
+        <DraftStatusToast
+          slug={slug}
+          editorial={editorial ?? { status: "draft" }}
+        />
+      ) : null}
     </article>
   );
 }

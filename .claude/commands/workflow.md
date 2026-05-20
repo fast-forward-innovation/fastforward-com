@@ -35,11 +35,28 @@ editorial:
   notes: "Stakeholder wants the closing line sharpened."  # optional
 ```
 
-The `editorial` block is **not** part of the Page/Project TypeScript schema in
-[lib/types.ts](lib/types.ts) — `gray-matter` parses it but the renderer
-ignores it. When a file reaches `live`, **remove the `editorial` block
-entirely** so production MDX stays clean. State for live content is implicit:
-present on `main`, no `editorial` block.
+The `editorial` block **is** part of the Page/Project TypeScript schema in
+[lib/types.ts](lib/types.ts) (`Editorial` interface). On any non-Live
+environment the renderer surfaces it as a persistent, dismissable toast at
+the bottom-right of every draft project case study and lab project (see
+[components/DraftStatusToast.tsx](components/DraftStatusToast.tsx), mounted
+in [components/Post.tsx](components/Post.tsx) and
+[components/LabProjectArticle.tsx](components/LabProjectArticle.tsx)). The
+toast links to the PR when `editorial.pr` is set. When a file reaches
+`live`, **remove the `editorial` block entirely** so production MDX stays
+clean. State for live content is implicit: present on `main`, no
+`editorial` block.
+
+### Drafts in listings, environment-aware
+
+On any environment other than Live (Pantheon multidev, test, dev, local),
+projects with `draft: true` show up in the home-page featured block, the
+`/our-work` index, and the sitemap exactly like published work — so
+reviewers can browse a multidev and find in-progress pieces without a deep
+link. On Live, drafts stay hidden from those surfaces; only direct URLs
+resolve, with `noindex`. See
+[lib/content.ts#getPublishedProjects](lib/content.ts) and
+[lib/env.ts](lib/env.ts).
 
 ## Subcommands
 

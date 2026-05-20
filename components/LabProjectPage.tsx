@@ -9,6 +9,9 @@ export function LabProjectPage({ page }: { page: PageData }) {
       featuredImage={page.featuredImage}
       additionalPostFields={page.additionalPostFields}
       pageSections={page.pageSections ?? []}
+      draft={page.draft}
+      editorial={page.editorial}
+      slug={page.slug}
     />
   );
 }

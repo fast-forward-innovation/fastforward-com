@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getAllProjects } from "@/lib/content";
+import { getPublishedProjects } from "@/lib/content";
 import { ProjectCard } from "@/components/page_blocks/ProjectCard";
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function OurWorkPage() {
-  const projects = getAllProjects();
+  const projects = getPublishedProjects();
   return (
     <div className="dark-background">
       <div className="min-h-[60vh] md:min-h-[72vh] bg-[url('/Touchscreen-1-denoise-gigapixel.jpg')] bg-cover bg-center">

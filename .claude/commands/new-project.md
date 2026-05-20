@@ -74,7 +74,7 @@ After writing the MDX, remind the user:
 - Frontmatter `width`/`height` must match the actual file dimensions.
 - Compress before commit.
 
-If the user provides image descriptions but no files yet, use placeholder paths in the frontmatter and call out clearly which files they need to drop in before publish.
+**When the real image doesn't exist yet, use a placeholder.** Set `placeholder: true` on the image (works on `featuredImage`, `cardImage`, and any image inside an `ImageBlock`) and the renderer draws a light-gray block at the declared aspect ratio with the alt text on it. Add a `notes:` string for designer guidance — what the final image should depict, composition, palette, anything useful for whoever produces it. Always include `width`/`height` so the placeholder reserves the right space. See the Placeholders section in [CONTENT.md](CONTENT.md) for the exact shape. List the placeholders you used in your handoff to the user so they know what's still pending.
 
 ## 5. Validate
 

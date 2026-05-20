@@ -3,6 +3,17 @@ export interface FrontmatterImage {
   alt: string;
   width: number | null;
   height: number | null;
+  /**
+   * When true, render a styled placeholder (alt text + optional designer
+   * notes on a light-gray background) in place of the image. Use during
+   * drafting when the final image hasn't been produced yet.
+   */
+  placeholder?: boolean;
+  /**
+   * Optional designer guidance — what the eventual image should look like.
+   * Only shown when `placeholder` is true.
+   */
+  notes?: string;
 }
 
 export interface MainSection {
@@ -80,6 +91,15 @@ export interface Project {
   date: string;
   excerpt?: string;
   isSticky: boolean;
+  /**
+   * When true on the Live environment, the project is hidden from public
+   * listings (home page, /our-work index, sitemap) and gets a `noindex`
+   * meta tag; the direct URL still resolves so the page can be shared as
+   * a preview. On any non-Live environment (Pantheon multidev, test, dev,
+   * local) drafts are visible everywhere so reviewers can browse them.
+   */
+  draft?: boolean;
+  editorial?: Editorial;
   featuredImage?: FrontmatterImage;
   cardImage?: FrontmatterImage;
   additionalPostFields?: AdditionalPostFields;
@@ -93,6 +113,13 @@ export interface Page {
   slug: string;
   date: string;
   layout: "default" | "landing" | "case-study" | "lab-project";
+  /**
+   * Same semantics as `Project.draft`. Only the lab-project layout
+   * currently surfaces this in the UI (via `DraftStatusToast`); other
+   * layouts inherit the field but don't filter anywhere (no listing).
+   */
+  draft?: boolean;
+  editorial?: Editorial;
   featuredImage?: FrontmatterImage;
   contentHtml?: string;
   additionalPostFields?: AdditionalPostFields;
@@ -100,6 +127,28 @@ export interface Page {
   pageSections?: PageSection[];
   source?: "mdx" | "pcc-archieml" | "pcc-smart-components";
   pccArticleId?: string;
+}
+
+export type EditorialStatus =
+  | "draft"
+  | "review"
+  | "revisions"
+  | "approved"
+  | "live";
+
+/**
+ * Optional `editorial:` frontmatter block. Tracks where a draft sits in
+ * the review workflow. Surfaced in the UI by `DraftStatusToast` on draft
+ * project case studies and lab projects; written by the `/workflow` skill
+ * during state transitions. Removed entirely when content reaches `live`.
+ */
+export interface Editorial {
+  status: EditorialStatus;
+  branch?: string;
+  pr?: number;
+  updated?: string;
+  reviewers?: string[];
+  notes?: string;
 }
 
 export interface Service {

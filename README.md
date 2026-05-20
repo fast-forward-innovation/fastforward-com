@@ -1,6 +1,6 @@
 # fastforward-com
 
-Production website for **Fast Forward** (www.fastforward.sh). Ported from a Gatsby 4 + headless WordPress setup to a Next.js 16 static site with no runtime CMS — content is plain markdown/YAML in this repo.
+Production website for **Fast Forward** (fastforward.sh). Ported from a Gatsby 4 + headless WordPress setup to a Next.js 16 static site with no runtime CMS — content is plain markdown/YAML in this repo.
 
 - **Framework:** Next.js 16 (App Router) · React 19 · TypeScript
 - **Styling:** Tailwind 4 (CSS-first config in `app/globals.css`)
@@ -192,7 +192,7 @@ git tag -a pantheon_live_$(date +%Y%m%d) -m "Promote to Live"
 git push origin pantheon_live_$(date +%Y%m%d)
 ```
 
-Live is at `live-fastforward.pantheonsite.io` before DNS cutover, and at `www.fastforward.sh` once the domain points here.
+Live is at `live-fastforward.pantheonsite.io` before DNS cutover, and at `fastforward.sh` (apex; `www` 301-redirects to apex) once the domain points here.
 
 ### Typical release flow
 
@@ -205,9 +205,13 @@ Live is at `live-fastforward.pantheonsite.io` before DNS cutover, and at `www.fa
 
 Env vars for each Pantheon environment are managed in **Secrets Manager** in the Pantheon dashboard (not via `.env` files at runtime). At minimum:
 
-- `MONDAY_API_TOKEN` — must be set on every environment where the contact form needs to work (typically all three)
+- `MONDAY_API_TOKEN` — required wherever the contact form needs to work (typically all three environments).
+- `PCC_SITE_ID`, `PCC_TOKEN` — required wherever Lab Project pages from Pantheon Content Publisher should render (any env that's serving the public site).
+- `PCC_WEBHOOK_SECRET` — required on Live (and any env you want to receive PCC webhook calls). Must match the `?token=` query string in the webhook URL configured in PCC's dashboard.
 
-`NEXT_PUBLIC_SITE_URL` is optional and defaults to `https://www.fastforward.sh`. Override it per-environment only if the production domain changes.
+`NEXT_PUBLIC_SITE_URL` is optional and defaults to `https://fastforward.sh` (the canonical apex; the server canonicalizes `www` → apex). Override it per-environment only if the production domain changes.
+
+**Configure all PCC secrets with `Secret Type: Environment` and `Scopes: Job + Web`** (both checked). Despite the dialog text mentioning "Integrated Composer builds", Environment is the type that surfaces secrets as `process.env.X` for Next.js — Runtime-type secrets do not. Pantheon's UI does not allow changing Type after creation; if you pick wrong, delete and recreate. Trigger a redeploy on the env after changes to apply.
 
 ---
 

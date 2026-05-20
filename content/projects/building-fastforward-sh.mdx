@@ -1,0 +1,328 @@
+---
+title: Building fastforward.sh
+slug: building-fastforward-sh
+date: '2026-05-18T12:00:00'
+excerpt: >-
+  How a small team runs a Next.js marketing site without a CMS — by
+  combining a version-controlled MDX repo, Pantheon Content Publisher
+  for non-developer authoring, and a set of Claude Skills that codify
+  the workflows a CMS plugin layer used to enforce.
+isSticky: false
+draft: true
+editorial:
+  status: draft
+  branch: fix/hide-growing-with-pantheon-draft
+  updated: '2026-05-19'
+  notes: First-pass narrative; awaiting hero imagery and editorial review.
+featuredImage:
+  src: ''
+  alt: Three authoring surfaces converging on a single rendered page — a code editor, a Google Doc, and a Claude Code prompt.
+  width: 2880
+  height: 1614
+  placeholder: true
+  notes: >-
+    Hero composite, 16:9. Left third: MDX file open in a dark code editor.
+    Middle third: a Google Doc with the PCC sidebar visible. Right third: a
+    terminal showing a Claude Code prompt. Subtle teal gradient background
+    pulling the three surfaces together; all three should clearly converge
+    toward a single rendered case study page in the foreground.
+cardImage:
+  src: ''
+  alt: A composite card showing three authoring surfaces — MDX, Google Docs, and Claude Code.
+  width: 2880
+  height: 2880
+  placeholder: true
+  notes: >-
+    Square crop of the hero composition, recropped for the /our-work card
+    grid. Same three surfaces, but vertically stacked so they read at small
+    card sizes.
+additionalPostFields:
+  label: Fast Forward Innovation
+  brandColor: '#1a92b8'
+services:
+  - development
+  - digital-strategy
+  - design
+pageSections:
+  - type: MainSection
+    tagline: A repo full of content is great — until a non-developer needs to publish
+    title: The Challenge
+    background: white
+    richText: >
+      <p>The story behind the move from WordPress to a single
+      Next.js repository is told in <strong>Growing with
+      Pantheon</strong>. The short version: editorial work had
+      already moved out of the CMS and into Google Docs, so we
+      moved the site model to match — MDX and YAML in version
+      control, deployed on Pantheon's Next.js platform.</p>
+
+      <p>That solved the editor-edits-content problem for the
+      half of the team that lives in the repo. It left a real
+      gap for the other half. A marketing collaborator wanting
+      to push a copy edit shouldn't have to open a pull
+      request. A client co-authoring a case study shouldn't
+      have to learn MDX. And the routine authoring tasks —
+      drafting a new case study, drafting a new static page,
+      moving a draft through review — were exactly the kind of
+      repeatable work a WordPress site would have leaned on a
+      plugin to scaffold.</p>
+
+      <p>The real question wasn't "how do we put a CMS back" —
+      it was "what does a version-controlled site look like when
+      it has to serve developers, non-developers, and the
+      repeated authoring rituals in between?"</p>
+  - type: ImageBlock
+    images:
+      - src: ''
+        alt: >-
+          A project MDX file open in a code editor next to the
+          rendered case study page in a browser.
+        width: 1600
+        height: 900
+        placeholder: true
+        notes: >-
+          Split-screen screenshot. Left half: VS Code with a project MDX
+          file showing the frontmatter and a MainSection. Right half: the
+          rendered case study page in a browser at the matching section.
+          Pair them so reader's eye can trace YAML field → rendered element.
+  - type: MainSection
+    tagline: Two doors into the same repo, and a set of rituals that don't need a plugin
+    title: The Approach
+    background: white
+    richText: >
+      <p>Three options were on the table.</p>
+
+      <dl class="verdict-list">
+        <div data-verdict="rejected">
+          <dt>Option 01</dt>
+          <dd>Add a headless CMS — Sanity, Contentful, Storyblok —
+          back in front of the site. Solves the non-developer
+          surface, but reintroduces the runtime dependency and
+          the upgrade tax we just paid to get rid of.</dd>
+        </div>
+        <div data-verdict="rejected">
+          <dt>Option 02</dt>
+          <dd>Point non-developer authors at GitHub's web editor.
+          Free, no new dependencies — but YAML frontmatter breaks
+          under casual editing, and "use Git" is not an answer for
+          someone who lives in Google Docs.</dd>
+        </div>
+        <div data-verdict="chosen">
+          <dt>Option 03</dt>
+          <dd>Keep MDX in the repo as the primary surface, layer
+          <strong>Pantheon Content Publisher</strong> over Google
+          Docs as a second surface for non-developers, and replace
+          the repeating-task plugin layer with <strong>Claude
+          Skills</strong> — markdown files in the repo that
+          codify the authoring workflows themselves.</dd>
+        </div>
+      </dl>
+
+      <p>Option three was the only one that kept every benefit
+      of the version-controlled move and still answered the
+      non-developer question. PCC handles the Google Docs path;
+      MDX handles the developer path; the skills handle the
+      <em>processes</em> — drafting, reviewing, deploying — that
+      a CMS would have provided as plugin chrome.</p>
+  - type: MainSection
+    tagline: Next.js, MDX, PCC, and a skills directory
+    title: The Stack
+    background: white
+    richText: >
+      <p>The site runs on <strong>Next.js 16</strong> with the App
+      Router, <strong>React 19</strong>, and
+      <strong>TypeScript</strong>, deployed on Pantheon's Next.js
+      platform — the foundation laid in <strong>Growing with
+      Pantheon</strong>. Content is plain MDX and YAML under
+      <code>content/</code>, loaded at build time and rendered
+      to static HTML.</p>
+
+      <p><strong>Pantheon Content Publisher</strong> sits
+      alongside as the non-developer surface. Authors draft in
+      Google Docs with a Pantheon add-on sidebar; on publish, a
+      webhook fires to <code>/api/revalidate</code> and Next.js
+      refetches that article on the next request. PCC and MDX
+      are merged into a single content list at build time and
+      on every revalidation. On a slug collision, the MDX file
+      wins and we log a warning.</p>
+
+      <p>The third layer is a small directory of
+      <strong>Claude Skills</strong> at
+      <code>.claude/commands/</code> — four markdown files
+      today: <code>/new-project</code>, <code>/new-page</code>,
+      <code>/workflow</code>, and <code>/design-session</code>.
+      Each one codifies a repeated authoring ritual — drafting
+      a case study, drafting a static page, moving a draft
+      through review, working on brand/visuals without
+      touching application code. Authors invoke them from
+      inside Claude Code; the skills read the live schema and
+      voice guides before doing anything.</p>
+  - type: ImageBlock
+    images:
+      - src: ''
+        alt: >-
+          A diagram showing three authoring inputs — MDX, Google
+          Docs via PCC, and Claude Code skills — flowing into the
+          same Next.js build output.
+        width: 1600
+        height: 900
+        placeholder: true
+        notes: >-
+          Three input nodes on the left (MDX file icon, Google Doc icon,
+          Claude Code prompt icon) all flow via labelled arrows into a
+          single "Next.js build" node in the center, which outputs to a
+          static page glyph on the right. Brand teal arrows; monospace
+          labels on every node.
+  - type: MainSection
+    tagline: Three pieces, shipped in order, each reviewable on its own
+    title: How We Built It
+    background: gray
+    richText: >
+      <p>We built the three pieces in sequence, each in its own
+      pull request.</p>
+
+      <p><strong>Skills first.</strong> The skills were the
+      cheapest to ship and the highest leverage — each one is a
+      markdown file with a YAML header declaring its
+      <code>description</code>, <code>argument-hint</code>, and
+      an <code>allowed-tools</code> whitelist, plus a body of
+      instructions written for Claude as the audience. Every
+      skill reads <code>CONTENT.md</code> for voice rules,
+      <code>lib/types.ts</code> for the live schema, and
+      <code>content/services.yml</code> for the current service
+      taxonomy before drafting. When the schema changes, the
+      skill that depends on it gets updated in the same PR. The
+      authoring affordance and the thing it authors live next
+      to each other in the same repository.</p>
+
+      <p><strong>PCC next.</strong> The Pantheon Content
+      Publisher integration was the larger lift. The fetch
+      pipeline in <code>lib/pcc.ts</code> dispatches on the
+      article's <code>authoringApproach</code> metadata —
+      ArchieML for now, Smart Components reserved for a phase
+      1b that isn't wired yet — and feeds the parsed
+      <code>pageSections</code> into the same renderer the MDX
+      pipeline uses. The webhook at
+      <code>app/api/revalidate/route.ts</code> calls
+      <code>revalidateTag</code> on the affected slug; the
+      next visit refetches from PCC with no rebuild. The
+      hardest part was, predictably, the boring part — we
+      started with full HMAC signature verification on the
+      webhook, hit signature drift between PCC and our
+      verifier twice, and eventually simplified to URL-token
+      auth against a tag invalidation. It has been stable
+      since.</p>
+
+      <p><strong>Harness automation last.</strong> The
+      surrounding workflow — PR-only deploys, the
+      <code>scripts/deploy-feature-branch.sh</code> helper that
+      cuts a Pantheon multidev for visual review, the
+      <code>editorial:</code> frontmatter block that tracks
+      draft state without polluting production MDX, the
+      five-point visual spot check from <code>DESIGN.md</code> —
+      was the last piece to settle. It's the connective
+      tissue: skills produce the draft, PCC accepts the
+      Google-Docs path, and the harness moves whichever one
+      came out the other side through review and onto a
+      multidev for visual sign-off before promotion to
+      Live.</p>
+
+      <p>Two things failed worth naming. We tried to express
+      ImageBlocks with nested array fields in ArchieML and
+      gave up — the format can't cleanly represent
+      objects-in-arrays, so the adapter accepts flat
+      <code>imageSrc</code> / <code>imageAlt</code> /
+      <code>imageWidth</code> / <code>imageHeight</code>
+      fields on each ImageBlock row and assembles them at
+      parse time. And we initially tried to share a single
+      "case study" content type between project case studies
+      and capability pages — they look identical visually but
+      need different list-page treatments, and forcing them
+      to share a slug namespace produced collisions. They are
+      now two separate content types served by two layout
+      modes.</p>
+  - type: ImageBlock
+    images:
+      - src: ''
+        alt: >-
+          A flow diagram — Google Doc → Pantheon Content Publisher
+          → webhook to /api/revalidate → Next.js refetches and
+          renders fresh.
+        width: 1600
+        height: 900
+        placeholder: true
+        notes: >-
+          Horizontal four-step flow. Step 1: Google Doc icon labelled
+          "Author". Step 2: PCC logo labelled "Publish". Step 3: webhook
+          glyph pointing at "/api/revalidate". Step 4: Next.js logo
+          labelled "Refetch on next visit". Connecting arrows in brand
+          teal; small monospace caption under each step.
+  - type: MainSection
+    tagline: Three doors, one rendered site, no CMS to patch
+    title: The Result
+    background: white
+    richText: >
+      <p>A developer drafts a case study by typing
+      <code>/new-project</code> in Claude Code and getting a
+      schema-correct MDX file at the end of an interview. A
+      marketing collaborator drafts the same kind of piece in a
+      Google Doc with the PCC sidebar open and publishes
+      without ever cloning the repo. A reviewer moves either
+      one through draft → review → revisions → approved → live
+      via the <code>/workflow</code> skill, which manages the
+      <code>editorial:</code> block and opens the PR. Three
+      surfaces, one rendered site.</p>
+
+      <p>What we didn't build is as important as what we did.
+      There is no CMS database. There are no plugins to patch.
+      There is no admin UI to log into. The skills are four
+      markdown files under <code>.claude/commands/</code>,
+      versioned with the rest of the code, reviewed in
+      pull requests, and changed in the same diff that changes
+      the schema they depend on. When a new authoring ritual
+      becomes worth codifying, the answer is "open a new
+      markdown file" — not "evaluate three vendors."</p>
+
+      <p>The lesson, in one line: <strong>treat the authoring
+      system like the production system — version it, review
+      it, ship it in a PR — and the editorial surface stops
+      being a maintenance line item.</strong></p>
+  - type: MainSection
+    tagline: Technical Notes
+    title: Behind the Curtain
+    background: gray
+    richText: >
+      <p>Skills live in <code>.claude/commands/</code> as
+      markdown files with YAML frontmatter
+      (<code>description</code>, <code>argument-hint</code>,
+      <code>allowed-tools</code>). The bodies are written as
+      numbered workflows with pointers into
+      <code>CONTENT.md</code>, <code>DESIGN.md</code>, and
+      <code>lib/types.ts</code> for the ground truth. Skills
+      reference each other by slash-command name —
+      <code>/new-project</code> ends by handing off to the
+      pre-publish checklist; <code>/workflow</code> picks up
+      from there for review and deploy.</p>
+
+      <p>The PCC adapter is in <code>lib/pcc.ts</code>; the
+      MDX↔PCC merge is in <code>lib/content.ts</code>; the
+      revalidation webhook is at
+      <code>app/api/revalidate/route.ts</code>. PCC bodies
+      flow through ArchieML today and a
+      <code>SmartComponentMap</code> exposed via a
+      <code>PantheonAPI</code> route once phase 1b ships.
+      Cache invalidation uses <code>revalidateTag</code> with
+      per-slug tags, so a publish from PCC busts only the
+      affected article. Background and trade-offs live in
+      <code>docs/pantheon-content-publisher-integration.md</code>.</p>
+
+      <p>Two routes are dynamic at runtime —
+      <code>app/api/contact/route.ts</code> for form
+      submissions and <code>app/api/revalidate/route.ts</code>
+      for PCC webhooks. Everything else, including every
+      page authored in either MDX or PCC, is statically
+      generated at build time and served from Pantheon's
+      CDN.</p>
+contentHtml: ''
+---
+

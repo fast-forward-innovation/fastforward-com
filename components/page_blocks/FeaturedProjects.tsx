@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getAllProjects } from "@/lib/content";
+import { getPublishedProjects } from "@/lib/content";
 import { ProjectCard } from "./ProjectCard";
 
 export function FeaturedProjects({ excludeSlug }: { excludeSlug?: string }) {
-  const toShow = getAllProjects()
+  const toShow = getPublishedProjects()
     .filter((p) => p.slug !== excludeSlug)
     .slice(0, 3);
 
