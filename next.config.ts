@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 import path from "node:path";
 
 const nextConfig: NextConfig = {
+  // Explicit; Next's default is already true but stating it prevents
+  // accidental removal on upgrades and documents intent for Ahrefs/SEMrush
+  // audits that flag the "uncompressed pages" finding.
+  compress: true,
+
   // Next 16 requires explicit allowlist for next/image `quality` values
   // (default was [75]). HomepageBanner + other heroes use 90.
   images: {
@@ -26,6 +31,38 @@ const nextConfig: NextConfig = {
         source: "/page/:num",
         destination: "/",
         permanent: true,
+      },
+    ];
+  },
+
+  async headers() {
+    return [
+      {
+        // HSTS on every response. The 2-year max-age + includeSubDomains
+        // + preload value matches hstspreload.org's submission criteria
+        // so the value is future-proof — we're not submitting today, but
+        // the audit's "missing HSTS on fastforward.sh + www" finding
+        // clears as soon as this lands.
+        source: "/:path*",
+        headers: [
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+        ],
+      },
+      {
+        // Next's /_next/static/* output is content-hashed and therefore
+        // immutable; tell Pantheon's edge it can cache forever. Helps the
+        // Ahrefs/SEMrush "compression/caching" rollup since compressed
+        // copies stay warm in the CDN.
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
       },
     ];
   },
