@@ -1,15 +1,25 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import Script from "next/script";
+import { formatPhoneInput } from "@/lib/phone-format";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const TURNSTILE_ENABLED = Boolean(TURNSTILE_SITE_KEY);
+const TURNSTILE_CALLBACK_NAME = "__ffOnTurnstileSuccess";
+
+declare global {
+  interface Window {
+    __ffOnTurnstileSuccess?: (token: string) => void;
+  }
+}
 
 type FormState = {
   firstName: string;
   lastName: string;
   email: string;
-  phone1: string;
-  phone2: string;
-  phone3: string;
+  phone: string;
   company: string;
   website: string;
   comments: string;
@@ -27,13 +37,15 @@ const INITIAL_STATE: FormState = {
   firstName: "",
   lastName: "",
   email: "",
-  phone1: "",
-  phone2: "",
-  phone3: "",
+  phone: "",
   company: "",
   website: "",
   comments: "",
 };
+
+function digitsOnly(value: string): string {
+  return value.replace(/\D/g, "");
+}
 
 const INITIAL_ERRORS: Errors = {
   firstName: ["First name is required"],
@@ -53,8 +65,26 @@ export function ContactForm() {
   const [errors, setErrors] = useState<Errors>(INITIAL_ERRORS);
   const [displayErrors, setDisplayErrors] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
 
-  function validate(field: string, value: string, current: FormState) {
+  // Cloudflare Turnstile injects this callback by name (data-callback attr).
+  // When the challenge clears (often silently), we capture the token and
+  // un-gate the submit button.
+  useEffect(() => {
+    if (!TURNSTILE_ENABLED) return;
+    window.__ffOnTurnstileSuccess = (token: string) => {
+      setTurnstileToken(token);
+    };
+    return () => {
+      delete window.__ffOnTurnstileSuccess;
+    };
+  }, []);
+
+  const handleTurnstileScriptError = useCallback(() => {
+    console.error("[contact] Turnstile script failed to load");
+  }, []);
+
+  function validate(field: string, value: string) {
     setErrors((prev) => {
       const next = { ...prev };
       switch (field) {
@@ -72,15 +102,22 @@ export function ContactForm() {
           break;
         }
         case "phone": {
-          const combined =
-            (field === "phone" ? value : "") ||
-            current.phone1 + current.phone2 + current.phone3;
+          // Two acceptance windows, switched by whether the user typed
+          // a leading "+":
+          //   US (no +):    exactly 10 digits
+          //   Intl (+...):  7–15 digits (E.164 range)
+          // Empty stays empty (phone is optional on this form).
+          const isIntl = value.trimStart().startsWith("+");
+          const digits = digitsOnly(value);
           const errs: string[] = [];
-          if (combined.length !== 0 && combined.length !== 10) {
-            errs.push("Please enter exactly 10 digits");
-          }
-          if (combined.length !== 0 && !/^\d+$/.test(combined)) {
-            errs.push("Phone number should include digits 0-9 only");
+          if (digits.length !== 0) {
+            if (isIntl) {
+              if (digits.length < 7 || digits.length > 15) {
+                errs.push("Please enter a valid international phone number");
+              }
+            } else if (digits.length !== 10) {
+              errs.push("Please enter a 10-digit US phone number");
+            }
           }
           next.phone = errs;
           break;
@@ -100,14 +137,14 @@ export function ContactForm() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     const { name, value } = e.currentTarget;
+    // Phone is the only field that auto-formats. The formatter strips
+    // non-digit characters, so any letters / symbols the user types are
+    // dropped before they ever land in state — no separate keystroke
+    // filter needed, and paste / autofill go through the same path.
+    const nextValue = name === "phone" ? formatPhoneInput(value) : value;
     setForm((prev) => {
-      const next = { ...prev, [name]: value };
-      if (name === "phone1" || name === "phone2" || name === "phone3") {
-        const combined = next.phone1 + next.phone2 + next.phone3;
-        validate("phone", combined, next);
-      } else {
-        validate(name, value, next);
-      }
+      const next = { ...prev, [name]: nextValue };
+      validate(name, nextValue);
       return next;
     });
   }
@@ -123,7 +160,7 @@ export function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, turnstileToken }),
       });
       if (!res.ok) throw new Error("Submission failed");
       router.push("/contact-submitted?success=true");
@@ -194,44 +231,19 @@ export function ContactForm() {
           {errorOrPlaceholder(errors.email)}
         </div>
 
-        <div>
-          <fieldset className={fieldClass(errors.phone) + " relative"}>
-            <legend>Phone:</legend>
-            <input
-              aria-label="Area code"
-              placeholder="XXX"
-              type="text"
-              name="phone1"
-              id="phone1"
-              maxLength={3}
-              value={form.phone1}
-              onChange={handleChange}
-              className="w-[calc(25%-4px)] mr-2 text-center"
-            />
-            <input
-              aria-label="First three digits of phone number"
-              placeholder="XXX"
-              type="text"
-              name="phone2"
-              id="phone2"
-              maxLength={3}
-              value={form.phone2}
-              onChange={handleChange}
-              className="w-[calc(25%-4px)] mr-2 text-center"
-            />
-            <input
-              aria-label="Last four digits of phone number"
-              placeholder="XXXX"
-              type="text"
-              name="phone3"
-              id="phone3"
-              maxLength={4}
-              value={form.phone3}
-              onChange={handleChange}
-              className="w-[calc(50%-8px)] px-4 text-center"
-            />
-            {errorOrPlaceholder(errors.phone)}
-          </fieldset>
+        <div className={fieldClass(errors.phone)}>
+          <label htmlFor="phone">Phone:</label>
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            placeholder="(617) 555-0000"
+            autoComplete="tel"
+            inputMode="tel"
+            value={form.phone}
+            onChange={handleChange}
+          />
+          {errorOrPlaceholder(errors.phone)}
         </div>
 
         <div className="contact-input">
@@ -278,10 +290,26 @@ export function ContactForm() {
         {errorOrPlaceholder(errors.comments)}
       </div>
 
+      {TURNSTILE_ENABLED && (
+        <>
+          <Script
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            async
+            defer
+            onError={handleTurnstileScriptError}
+          />
+          <div
+            className="cf-turnstile mb-4"
+            data-sitekey={TURNSTILE_SITE_KEY}
+            data-callback={TURNSTILE_CALLBACK_NAME}
+          />
+        </>
+      )}
+
       <div>
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || (TURNSTILE_ENABLED && !turnstileToken)}
           className="btn linear-gradient-background-hover align-middle mr-8 text-white disabled:opacity-60"
         >
           {submitting ? "Sending…" : "Contact Us"}

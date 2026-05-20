@@ -9,9 +9,7 @@ async function fillValidForm(page: import("@playwright/test").Page) {
   await page.fill("#firstName", "Ada");
   await page.fill("#lastName", "Lovelace");
   await page.fill("#email", "ada@example.com");
-  await page.fill("#phone1", "617");
-  await page.fill("#phone2", "555");
-  await page.fill("#phone3", "0000");
+  await page.fill("#phone", "(617) 555-0000");
   await page.fill("#company", "Analytical Engines");
   await page.fill("#comments", "Interested in working together.");
 }
@@ -57,6 +55,25 @@ test.describe("Contact form", () => {
     await fillValidForm(page);
     await page.getByRole("button", { name: /Contact Us/i }).click();
     await page.waitForURL(/\/contact-submitted\?success=false/);
+  });
+
+  test("phone input auto-formats while typing and rejects non-digit characters", async ({ page }) => {
+    await page.goto("/contact-us");
+    const phone = page.locator("#phone");
+    await phone.click();
+    // Type a mix of digits and noise — non-digits should never appear in
+    // the value, and the formatter wraps the digits as the user goes.
+    await page.keyboard.type("abc617def555ghi0000");
+    await expect(phone).toHaveValue("(617) 555-0000");
+  });
+
+  test("phone input formats an international number when the user types a + prefix", async ({ page }) => {
+    await page.goto("/contact-us");
+    const phone = page.locator("#phone");
+    await phone.click();
+    // +44 (UK, 2-digit CC) + 10-digit national number → "+44 207 946 0958"
+    await page.keyboard.type("+442079460958");
+    await expect(phone).toHaveValue("+44 207 946 0958");
   });
 
   test("does not submit and surfaces validation errors when form is empty", async ({ page }) => {
