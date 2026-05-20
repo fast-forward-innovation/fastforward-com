@@ -1,0 +1,10 @@
+{
+  "errors": [
+    {
+      "message": "Simulated upstream rejection",
+      "extensions": {
+        "code": "INVALID_BOARD_ID"
+      }
+    }
+  ]
+}
