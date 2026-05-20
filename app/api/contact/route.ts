@@ -33,9 +33,7 @@ type Payload = {
   firstName?: string;
   lastName?: string;
   email?: string;
-  phone1?: string;
-  phone2?: string;
-  phone3?: string;
+  phone?: string;
   company?: string;
   website?: string;
   comments?: string;
@@ -120,7 +118,10 @@ export async function POST(request: NextRequest) {
   const firstName = sanitize(body.firstName ?? "");
   const lastName = sanitize(body.lastName ?? "");
   const email = sanitize(body.email ?? "");
-  const phone = `${body.phone1 ?? ""}${body.phone2 ?? ""}${body.phone3 ?? ""}`.trim();
+  // Strip everything except digits — accepts "(617) 555-0000", "617-555-0000",
+  // "617.555.0000", "+1 617 555 0000", etc. Monday's lead_phone column wants
+  // digits only.
+  const phone = (body.phone ?? "").replace(/\D/g, "");
   const company = sanitize(body.company ?? "");
   const website = sanitize(body.website ?? "");
   const comments = sanitize(body.comments ?? "");

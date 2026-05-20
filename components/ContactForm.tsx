@@ -18,9 +18,7 @@ type FormState = {
   firstName: string;
   lastName: string;
   email: string;
-  phone1: string;
-  phone2: string;
-  phone3: string;
+  phone: string;
   company: string;
   website: string;
   comments: string;
@@ -38,13 +36,15 @@ const INITIAL_STATE: FormState = {
   firstName: "",
   lastName: "",
   email: "",
-  phone1: "",
-  phone2: "",
-  phone3: "",
+  phone: "",
   company: "",
   website: "",
   comments: "",
 };
+
+function digitsOnly(value: string): string {
+  return value.replace(/\D/g, "");
+}
 
 const INITIAL_ERRORS: Errors = {
   firstName: ["First name is required"],
@@ -83,7 +83,7 @@ export function ContactForm() {
     console.error("[contact] Turnstile script failed to load");
   }, []);
 
-  function validate(field: string, value: string, current: FormState) {
+  function validate(field: string, value: string) {
     setErrors((prev) => {
       const next = { ...prev };
       switch (field) {
@@ -101,15 +101,13 @@ export function ContactForm() {
           break;
         }
         case "phone": {
-          const combined =
-            (field === "phone" ? value : "") ||
-            current.phone1 + current.phone2 + current.phone3;
+          // Accept any format the user types; we strip non-digits before
+          // validating length so "(617) 555-0000", "617-555-0000", etc. all
+          // pass. Empty stays empty (phone is optional).
+          const digits = digitsOnly(value);
           const errs: string[] = [];
-          if (combined.length !== 0 && combined.length !== 10) {
-            errs.push("Please enter exactly 10 digits");
-          }
-          if (combined.length !== 0 && !/^\d+$/.test(combined)) {
-            errs.push("Phone number should include digits 0-9 only");
+          if (digits.length !== 0 && digits.length !== 10) {
+            errs.push("Please enter a 10-digit US phone number");
           }
           next.phone = errs;
           break;
@@ -131,12 +129,7 @@ export function ContactForm() {
     const { name, value } = e.currentTarget;
     setForm((prev) => {
       const next = { ...prev, [name]: value };
-      if (name === "phone1" || name === "phone2" || name === "phone3") {
-        const combined = next.phone1 + next.phone2 + next.phone3;
-        validate("phone", combined, next);
-      } else {
-        validate(name, value, next);
-      }
+      validate(name, value);
       return next;
     });
   }
@@ -223,44 +216,19 @@ export function ContactForm() {
           {errorOrPlaceholder(errors.email)}
         </div>
 
-        <div>
-          <fieldset className={fieldClass(errors.phone) + " relative"}>
-            <legend>Phone:</legend>
-            <input
-              aria-label="Area code"
-              placeholder="XXX"
-              type="text"
-              name="phone1"
-              id="phone1"
-              maxLength={3}
-              value={form.phone1}
-              onChange={handleChange}
-              className="w-[calc(25%-4px)] mr-2 text-center"
-            />
-            <input
-              aria-label="First three digits of phone number"
-              placeholder="XXX"
-              type="text"
-              name="phone2"
-              id="phone2"
-              maxLength={3}
-              value={form.phone2}
-              onChange={handleChange}
-              className="w-[calc(25%-4px)] mr-2 text-center"
-            />
-            <input
-              aria-label="Last four digits of phone number"
-              placeholder="XXXX"
-              type="text"
-              name="phone3"
-              id="phone3"
-              maxLength={4}
-              value={form.phone3}
-              onChange={handleChange}
-              className="w-[calc(50%-8px)] px-4 text-center"
-            />
-            {errorOrPlaceholder(errors.phone)}
-          </fieldset>
+        <div className={fieldClass(errors.phone)}>
+          <label htmlFor="phone">Phone:</label>
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            placeholder="(617) 555-0000"
+            autoComplete="tel"
+            inputMode="tel"
+            value={form.phone}
+            onChange={handleChange}
+          />
+          {errorOrPlaceholder(errors.phone)}
         </div>
 
         <div className="contact-input">
