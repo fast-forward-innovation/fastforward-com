@@ -118,10 +118,19 @@ export async function POST(request: NextRequest) {
   const firstName = sanitize(body.firstName ?? "");
   const lastName = sanitize(body.lastName ?? "");
   const email = sanitize(body.email ?? "");
-  // Strip everything except digits — accepts "(617) 555-0000", "617-555-0000",
-  // "617.555.0000", "+1 617 555 0000", etc. Monday's lead_phone column wants
-  // digits only.
-  const phone = (body.phone ?? "").replace(/\D/g, "");
+  // Phone shape:
+  //   US:           "(617) 555-0000" → "6175550000"  (digits only)
+  //   International: "+44 20 7946 0958" → "+442079460958"
+  // The leading "+" is preserved when the user typed one so the stored
+  // value stays round-trippable. Monday's phone column accepts either.
+  const phoneRaw = (body.phone ?? "").trim();
+  const phoneIsIntl = phoneRaw.startsWith("+");
+  const phoneDigits = phoneRaw.replace(/\D/g, "");
+  const phone = phoneDigits
+    ? phoneIsIntl
+      ? `+${phoneDigits}`
+      : phoneDigits
+    : "";
   const company = sanitize(body.company ?? "");
   const website = sanitize(body.website ?? "");
   const comments = sanitize(body.comments ?? "");
@@ -162,10 +171,18 @@ export async function POST(request: NextRequest) {
   }
 
   const inquiryTypeColumnId = process.env.MONDAY_INQUIRY_TYPE_COLUMN_ID;
+  // For US numbers, Monday wants countryShortName so it formats the value
+  // in the UI. For international numbers, the country is implicit in the
+  // "+" prefix and supplying "US" alongside a non-US number would be
+  // misleading metadata, so omit it.
+  const leadPhone: Record<string, string> = { phone };
+  if (phone && !phoneIsIntl) {
+    leadPhone.countryShortName = "US";
+  }
   const columnValues: Record<string, unknown> = {
     lead_company: company,
     website,
-    lead_phone: { phone, countryShortName: "US" },
+    lead_phone: leadPhone,
     lead_email: { email, text: email },
     long_text: { text: commentsForMonday(comments, inquiryType, inquiryTypeColumnId) },
   };

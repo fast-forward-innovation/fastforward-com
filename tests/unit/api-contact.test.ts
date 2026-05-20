@@ -163,6 +163,37 @@ describe("POST /api/contact — Monday submission", () => {
     expect(cols.long_text.text).not.toContain("<script>");
     expect(cols.long_text.text).toContain("Hello");
   });
+
+  it("sets countryShortName=US for US phone numbers", async () => {
+    const { captured } = stubRoutedFetch({
+      monday: { body: { data: { create_item: { id: "1" } } } },
+    });
+    await POST(buildRequest(VALID_PAYLOAD) as never);
+    const cols = JSON.parse(
+      (captured.mondayBody as { variables: { cols: string } }).variables.cols,
+    );
+    expect(cols.lead_phone).toEqual({
+      phone: "6175550000",
+      countryShortName: "US",
+    });
+  });
+
+  it("preserves the + prefix and omits countryShortName for international numbers", async () => {
+    const { captured } = stubRoutedFetch({
+      monday: { body: { data: { create_item: { id: "1" } } } },
+    });
+    await POST(
+      buildRequest({
+        ...VALID_PAYLOAD,
+        phone: "+44 20 7946 0958",
+      }) as never,
+    );
+    const cols = JSON.parse(
+      (captured.mondayBody as { variables: { cols: string } }).variables.cols,
+    );
+    expect(cols.lead_phone.phone).toBe("+442079460958");
+    expect(cols.lead_phone.countryShortName).toBeUndefined();
+  });
 });
 
 describe("POST /api/contact — Turnstile verification", () => {

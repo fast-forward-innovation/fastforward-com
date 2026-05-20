@@ -102,13 +102,22 @@ export function ContactForm() {
           break;
         }
         case "phone": {
-          // Accept any format the user types; we strip non-digits before
-          // validating length so "(617) 555-0000", "617-555-0000", etc. all
-          // pass. Empty stays empty (phone is optional).
+          // Two acceptance windows, switched by whether the user typed
+          // a leading "+":
+          //   US (no +):    exactly 10 digits
+          //   Intl (+...):  7–15 digits (E.164 range)
+          // Empty stays empty (phone is optional on this form).
+          const isIntl = value.trimStart().startsWith("+");
           const digits = digitsOnly(value);
           const errs: string[] = [];
-          if (digits.length !== 0 && digits.length !== 10) {
-            errs.push("Please enter a 10-digit US phone number");
+          if (digits.length !== 0) {
+            if (isIntl) {
+              if (digits.length < 7 || digits.length > 15) {
+                errs.push("Please enter a valid international phone number");
+              }
+            } else if (digits.length !== 10) {
+              errs.push("Please enter a 10-digit US phone number");
+            }
           }
           next.phone = errs;
           break;

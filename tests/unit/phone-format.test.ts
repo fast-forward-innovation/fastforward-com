@@ -37,9 +37,8 @@ describe("formatPhoneInput", () => {
     expect(formatPhoneInput("617 555 0000")).toBe("(617) 555-0000");
   });
 
-  it("drops a leading 1 country code from 11-digit input", () => {
+  it("drops a leading 1 country code from 11-digit US input (no +)", () => {
     expect(formatPhoneInput("16175550000")).toBe("(617) 555-0000");
-    expect(formatPhoneInput("+1 (617) 555-0000")).toBe("(617) 555-0000");
     expect(formatPhoneInput("1-617-555-0000")).toBe("(617) 555-0000");
   });
 
@@ -48,5 +47,37 @@ describe("formatPhoneInput", () => {
     // for some North American area codes; technically NANP disallows it,
     // but the formatter should respect what the user typed at <11 digits)
     expect(formatPhoneInput("1234567890")).toBe("(123) 456-7890");
+  });
+
+  describe("international (leading +) input", () => {
+    it("keeps the lone + while the user is still typing the country code", () => {
+      expect(formatPhoneInput("+")).toBe("+");
+      expect(formatPhoneInput("+4")).toBe("+4");
+      expect(formatPhoneInput("+44")).toBe("+44");
+    });
+
+    it("preserves the + and digits for a UK number", () => {
+      expect(formatPhoneInput("+44 20 7946 0958")).toBe("+442079460958");
+    });
+
+    it("preserves the + and digits for a French number", () => {
+      expect(formatPhoneInput("+33 1 42 36 33 33")).toBe("+33142363333");
+    });
+
+    it("keeps the + on a +1 number rather than collapsing to US format", () => {
+      // The explicit "+" signals international intent; we don't second-
+      // guess it by stripping the country code. Users who want US format
+      // can simply not type the "+".
+      expect(formatPhoneInput("+1 (617) 555-0000")).toBe("+16175550000");
+      expect(formatPhoneInput("+16175550000")).toBe("+16175550000");
+    });
+
+    it("caps at 15 digits (E.164 max)", () => {
+      expect(formatPhoneInput("+123456789012345999")).toBe("+123456789012345");
+    });
+
+    it("strips letters and stray characters but keeps the + prefix", () => {
+      expect(formatPhoneInput("+44 abc 20 def 7946 0958")).toBe("+442079460958");
+    });
   });
 });
