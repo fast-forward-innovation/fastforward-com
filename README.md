@@ -206,10 +206,14 @@ Live is at `live-fastforward.pantheonsite.io` before DNS cutover, and at `fastfo
 Env vars for each Pantheon environment are managed in **Secrets Manager** in the Pantheon dashboard (not via `.env` files at runtime). At minimum:
 
 - `MONDAY_API_TOKEN` — required wherever the contact form needs to work (typically all three environments).
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` — Cloudflare Turnstile credentials for contact-form bot protection. Required on every deployed environment; the server *skips* verification if the secret is absent (local-dev parity), but production must have both set or the form is wide open to bots. Get them from Cloudflare dashboard → Turnstile.
 - `PCC_SITE_ID`, `PCC_TOKEN` — required wherever Lab Project pages from Pantheon Content Publisher should render (any env that's serving the public site).
 - `PCC_WEBHOOK_SECRET` — required on Live (and any env you want to receive PCC webhook calls). Must match the `?token=` query string in the webhook URL configured in PCC's dashboard.
 
-`NEXT_PUBLIC_SITE_URL` is optional and defaults to `https://fastforward.sh` (the canonical apex; the server canonicalizes `www` → apex). Override it per-environment only if the production domain changes.
+Optional:
+- `ANTHROPIC_API_KEY` — enables Claude-based inquiry classification on `/api/contact`. Submissions get tagged `business` / `job` / `sales_pitch` / `support` / `other` so the leads board can be filtered. When unset, submissions go through untagged (logged warning). Uses Claude Haiku 4.5 — roughly $0.001–0.01 per submission.
+- `MONDAY_INQUIRY_TYPE_COLUMN_ID` — Monday Status-column ID where the classifier writes the tag. When unset, the tag is prepended to the comments column as `[Type: <category>]` instead. See [.env.local.example](.env.local.example) for how to find the column ID.
+- `NEXT_PUBLIC_SITE_URL` — defaults to `https://fastforward.sh` (the canonical apex; the server canonicalizes `www` → apex). Override per-environment only if the production domain changes.
 
 **Configure all PCC secrets with `Secret Type: Environment` and `Scopes: Job + Web`** (both checked). Despite the dialog text mentioning "Integrated Composer builds", Environment is the type that surfaces secrets as `process.env.X` for Next.js — Runtime-type secrets do not. Pantheon's UI does not allow changing Type after creation; if you pick wrong, delete and recreate. Trigger a redeploy on the env after changes to apply.
 
@@ -232,10 +236,14 @@ For deeper reference: [Pantheon Next.js Considerations](https://docs.pantheon.io
 
 See [.env.local.example](.env.local.example) for the canonical list and docs.
 
-| Variable                 | Where                            | Purpose                                                                |
-| ------------------------ | -------------------------------- | ---------------------------------------------------------------------- |
-| `MONDAY_API_TOKEN`       | local `.env.local` + Pantheon Secrets | Contact-form route authenticates to Monday.com with this         |
-| `NEXT_PUBLIC_SITE_URL`   | Pantheon Secrets (optional)      | Overrides the canonical URL in sitemap.xml, robots.txt, and OpenGraph  |
+| Variable                          | Where                                 | Purpose                                                                  |
+| --------------------------------- | ------------------------------------- | ------------------------------------------------------------------------ |
+| `MONDAY_API_TOKEN`                | local `.env.local` + Pantheon Secrets | Contact-form route authenticates to Monday.com with this                 |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY`  | local `.env.local` + Pantheon Secrets | Cloudflare Turnstile public key — gates the contact form's submit button |
+| `TURNSTILE_SECRET_KEY`            | local `.env.local` + Pantheon Secrets | Cloudflare Turnstile secret — server-side token verification             |
+| `ANTHROPIC_API_KEY`               | Pantheon Secrets (optional)           | Enables Claude-based inquiry classification on `/api/contact`            |
+| `MONDAY_INQUIRY_TYPE_COLUMN_ID`   | Pantheon Secrets (optional)           | Monday Status-column ID for the inquiry-type tag                         |
+| `NEXT_PUBLIC_SITE_URL`            | Pantheon Secrets (optional)           | Overrides the canonical URL in sitemap.xml, robots.txt, and OpenGraph    |
 
 ---
 
