@@ -21,6 +21,13 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      # next-env.d.ts is gitignored and only created on `next dev`/`next build`.
+      # tsc needs its `next/image-types/global` reference for the static
+      # image imports in components/HomepageBanner.tsx. Write a minimal stub
+      # so typecheck doesn't need a full Next build first.
+      - name: Stub next-env.d.ts for typecheck
+        run: |
+          printf '/// <reference types="next" />\n/// <reference types="next/image-types/global" />\n' > next-env.d.ts
       - run: npm run lint
       - run: npm run typecheck
 
