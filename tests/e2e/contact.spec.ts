@@ -67,6 +67,15 @@ test.describe("Contact form", () => {
     await expect(phone).toHaveValue("(617) 555-0000");
   });
 
+  test("phone input formats an international number when the user types a + prefix", async ({ page }) => {
+    await page.goto("/contact-us");
+    const phone = page.locator("#phone");
+    await phone.click();
+    // +44 (UK, 2-digit CC) + 10-digit national number → "+44 207 946 0958"
+    await page.keyboard.type("+442079460958");
+    await expect(phone).toHaveValue("+44 207 946 0958");
+  });
+
   test("does not submit and surfaces validation errors when form is empty", async ({ page }) => {
     let calls = 0;
     await page.route("**/api/contact", async (route) => {
