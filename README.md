@@ -213,6 +213,19 @@ Env vars for each Pantheon environment are managed in **Secrets Manager** in the
 
 **Configure all PCC secrets with `Secret Type: Environment` and `Scopes: Job + Web`** (both checked). Despite the dialog text mentioning "Integrated Composer builds", Environment is the type that surfaces secrets as `process.env.X` for Next.js — Runtime-type secrets do not. Pantheon's UI does not allow changing Type after creation; if you pick wrong, delete and recreate. Trigger a redeploy on the env after changes to apply.
 
+### Caching on Pantheon
+
+Pantheon's traditional cache automation (`pantheon.yml` Quicksilver hooks, `terminus env:clear-cache` via PHP scripts) **is not supported on the Next.js platform** — the `pantheon.yml` file is silently ignored. Instead, this site uses Pantheon's official [`@pantheon-systems/nextjs-cache-handler`](https://github.com/pantheon-systems/nextjs-cache-handler), wired up as Next's `cacheHandler` in [next.config.ts](next.config.ts) and exported from [cacheHandler.mjs](cacheHandler.mjs).
+
+What it does for us:
+- **Build-aware route cache.** On every new deploy the handler detects the new build ID and invalidates the Full Route Cache. This is what stops the "post-deploy multidev serves stale HTML referencing old `/_next/static/<hash>.css` paths until I click Clear Caches" failure mode.
+- **Edge purges on `revalidateTag` / `revalidatePath`.** Pantheon sets `OUTBOUND_PROXY_ENDPOINT` on every environment; the handler uses it to purge the CDN whenever cache tags are invalidated server-side. The PCC revalidate webhook at [/api/revalidate](app/api/revalidate/route.ts) goes through this path.
+- **Shared GCS-backed cache across containers.** On Pantheon, `CACHE_BUCKET` is set and the handler stores entries in Google Cloud Storage so every container sees the same cache. Locally `CACHE_BUCKET` is unset and the handler falls back to file-based caching — same code, no setup required.
+
+The handler is configured with `type: "auto"`, so the GCS-vs-file decision is environment-driven and there's nothing to flip per-env.
+
+For deeper reference: [Pantheon Next.js Considerations](https://docs.pantheon.io/nextjs/considerations) (notes the Quicksilver/`pantheon.yml` gap), [Caching Recommendations for Front-End Sites](https://docs.pantheon.io/guides/decoupled/wp-nextjs-frontend-starters/caching), and the [`nextjs-cache-handler` README](https://github.com/pantheon-systems/nextjs-cache-handler).
+
 ---
 
 ## Environment variables
@@ -229,7 +242,7 @@ See [.env.local.example](.env.local.example) for the canonical list and docs.
 ## Troubleshooting
 
 ### `ChunkLoadError` / 404 on `_next/static/chunks/*.js` after deploy
-The browser is loading old HTML from cache that points at chunk filenames no longer on disk. Usually self-resolves once Pantheon's CDN expires; to force it, use **Clear Caches** on the environment in the Pantheon dashboard (or `terminus env:clear-cache fastforward-com.<env>`).
+Should be rare now that the Pantheon cache handler (see [Caching on Pantheon](#caching-on-pantheon)) invalidates the Full Route Cache on every new build ID. If it does happen — usually a fluke where a request lands during the deploy window — hit **Clear Caches** on the environment in the Pantheon dashboard (or `terminus env:clear-cache fastforward-com.<env>`) and refresh.
 
 ### Contact form returns 500 "Server misconfigured"
 `MONDAY_API_TOKEN` isn't set (or wasn't read). For local: check `.env.local` has the token and restart `npm run dev`. For Pantheon: check the env's Secrets Manager.
