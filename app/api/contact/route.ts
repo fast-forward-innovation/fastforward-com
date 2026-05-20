@@ -193,8 +193,20 @@ export async function POST(request: NextRequest) {
     columnValues[inquiryTypeColumnId] = { labels: [inquiryType] };
   }
 
+  // create_labels_if_missing tells Monday to auto-create Dropdown / Status
+  // labels it hasn't seen before. Without it, writing inquiry_type=business
+  // (or any of the other classifier outputs) before that label exists in
+  // the column would silently no-op — the create_item mutation succeeds
+  // but the column stays empty. The flag is harmless on labels Monday
+  // already knows about; it just reuses them.
   const mutation = `mutation CreateItem($board: ID!, $group: String!, $name: String!, $cols: JSON!) {
-    create_item(board_id: $board, group_id: $group, item_name: $name, column_values: $cols) {
+    create_item(
+      board_id: $board,
+      group_id: $group,
+      item_name: $name,
+      column_values: $cols,
+      create_labels_if_missing: true
+    ) {
       id
     }
   }`;
