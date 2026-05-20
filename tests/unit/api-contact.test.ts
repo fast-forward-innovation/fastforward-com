@@ -236,7 +236,7 @@ describe("POST /api/contact — classifier integration", () => {
     expect(cols.long_text.text).toMatch(/^\[Type: sales_pitch\]/);
   });
 
-  it("writes the type as a Monday column value when MONDAY_INQUIRY_TYPE_COLUMN_ID is set", async () => {
+  it("writes the type as a Monday Dropdown column value when MONDAY_INQUIRY_TYPE_COLUMN_ID is set", async () => {
     vi.stubEnv("MONDAY_INQUIRY_TYPE_COLUMN_ID", "inquiry_type__1");
     mockClassify.mockResolvedValueOnce("job");
     const { captured } = stubRoutedFetch({
@@ -245,7 +245,10 @@ describe("POST /api/contact — classifier integration", () => {
     await POST(buildRequest(VALID_PAYLOAD) as never);
     const sent = captured.mondayBody as { variables: { cols: string } };
     const cols = JSON.parse(sent.variables.cols);
-    expect(cols.inquiry_type__1).toEqual({ label: "job" });
+    // Dropdown column wants { labels: ["..."] } (plural, array) —
+    // Status would be { label: "..." }, which Monday rejects against a
+    // Dropdown column with a 200 + GraphQL errors payload.
+    expect(cols.inquiry_type__1).toEqual({ labels: ["job"] });
     // Comments should NOT carry the [Type:] prefix when the column is used
     expect(cols.long_text.text).not.toMatch(/^\[Type:/);
   });

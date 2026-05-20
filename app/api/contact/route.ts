@@ -17,9 +17,10 @@ import { classifyInquiry, type InquiryType } from "@/lib/spam-classifier";
  *     verification is skipped with a warning (dev convenience).
  *   ANTHROPIC_API_KEY — Anthropic API key for intent classification.
  *     Optional — when absent, submissions go through untagged.
- *   MONDAY_INQUIRY_TYPE_COLUMN_ID — optional Monday Status column ID. When
- *     set, the inquiry type rides as a status column value. When unset,
- *     it's prepended to the comments long_text column as `[Type: ...]`.
+ *   MONDAY_INQUIRY_TYPE_COLUMN_ID — optional Monday Dropdown column ID.
+ *     When set, the inquiry type rides as a single-label dropdown value.
+ *     When unset, it's prepended to the comments long_text column as
+ *     `[Type: ...]`.
  */
 
 const BOARD_ID = 3979078971;
@@ -168,7 +169,10 @@ export async function POST(request: NextRequest) {
     long_text: { text: commentsForMonday(comments, inquiryType, inquiryTypeColumnId) },
   };
   if (inquiryTypeColumnId && inquiryType) {
-    columnValues[inquiryTypeColumnId] = { label: inquiryType };
+    // Monday Dropdown column shape — single-label write uses an array.
+    // Status columns use { label: "..." } instead, so if you switch the
+    // column type, update this line to match.
+    columnValues[inquiryTypeColumnId] = { labels: [inquiryType] };
   }
 
   const mutation = `mutation CreateItem($board: ID!, $group: String!, $name: String!, $cols: JSON!) {
