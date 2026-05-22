@@ -37,6 +37,7 @@ export function SiteHeader() {
   }, [menuOpen]);
 
   const toggle = () => setMenuOpen((v) => !v);
+  const close = () => setMenuOpen(false);
 
   return (
     <header
@@ -57,7 +58,12 @@ export function SiteHeader() {
             className="w-16 xl:w-28"
           />
         ) : (
-          <Link href="/" className="inline-block align-middle" tabIndex={1}>
+          <Link
+            href="/"
+            onClick={close}
+            className="inline-block align-middle"
+            tabIndex={1}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/ff-logo.svg"
@@ -101,6 +107,7 @@ export function SiteHeader() {
             >
               <Link
                 href={href}
+                onClick={close}
                 className="text-ff_black hover-linear-gradient-underline"
                 tabIndex={menuOpen ? 2 : undefined}
               >
@@ -111,6 +118,7 @@ export function SiteHeader() {
           <li className="ml-2 inline-block w-fit text-xl xl:text-base max-lg:hover-linear-gradient-underline lg:btn lg:ml-4 lg:align-middle lg:linear-gradient-background-hover">
             <Link
               href="/contact-us"
+              onClick={close}
               className="text-ff_black lg:text-white"
               tabIndex={menuOpen ? 2 : 3}
             >
