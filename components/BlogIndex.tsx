@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Page } from "@/lib/types";
 import { getBlogPosts } from "@/lib/content";
 import { PlaceholderImage } from "./postBlocks/PlaceholderImage";
+import { PageHero } from "./PageHero";
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -87,27 +88,40 @@ function BlogCard({ post }: { post: Page }) {
 
 export async function BlogIndex({ page }: { page: Page }) {
   const posts = await getBlogPosts();
+  const header = page.header;
 
   return (
-    <article className="section main-section wp-page">
-      <div className="mx-auto">
-        <div className="lg:w-4/5 pb-10">
-          <h1>{page.title}</h1>
-          {page.contentHtml ? (
-            <div dangerouslySetInnerHTML={{ __html: page.contentHtml }} />
-          ) : null}
-        </div>
+    <>
+      {header?.background && <PageHero header={header} title={page.title} />}
+      <article className="section main-section wp-page">
+        <div className="mx-auto">
+          {header?.background ? (
+            page.contentHtml ? (
+              <div
+                className="lg:w-4/5 pb-10"
+                dangerouslySetInnerHTML={{ __html: page.contentHtml }}
+              />
+            ) : null
+          ) : (
+            <div className="lg:w-4/5 pb-10">
+              <h1>{page.title}</h1>
+              {page.contentHtml ? (
+                <div dangerouslySetInnerHTML={{ __html: page.contentHtml }} />
+              ) : null}
+            </div>
+          )}
 
-        {posts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-14">
-            {posts.map((post) => (
-              <BlogCard key={post.slug} post={post} />
-            ))}
-          </div>
-        ) : (
-          <p>No posts yet — check back soon.</p>
-        )}
-      </div>
-    </article>
+          {posts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-14">
+              {posts.map((post) => (
+                <BlogCard key={post.slug} post={post} />
+              ))}
+            </div>
+          ) : (
+            <p>No posts yet — check back soon.</p>
+          )}
+        </div>
+      </article>
+    </>
   );
 }

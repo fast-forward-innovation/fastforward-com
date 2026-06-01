@@ -136,6 +136,16 @@ export interface Page {
   draft?: boolean;
   editorial?: Editorial;
   featuredImage?: FrontmatterImage;
+  /**
+   * Optional dark hero header for `default`-layout pages. When present, the
+   * `Page` renderer shows a full-bleed background image with the page title
+   * (and optional intro) on a dark overlay — matching the `/our-work`
+   * header — instead of the plain inline `<h1>`.
+   */
+  header?: {
+    background: string;
+    intro?: string;
+  };
   contentHtml?: string;
   additionalPostFields?: AdditionalPostFields;
   services?: string[];
