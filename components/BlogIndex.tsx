@@ -49,6 +49,11 @@ function BlogCard({ post }: { post: Page }) {
             Pinned
           </span>
         )}
+        {post.layout === "blog-case-study" && (
+          <span className="font-mono text-xs uppercase tracking-wider text-ff_teal border border-ff_teal px-2 py-0.5">
+            Case Study
+          </span>
+        )}
         {formattedDate && (
           <time
             dateTime={date}

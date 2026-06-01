@@ -124,6 +124,7 @@ export interface Page {
     | "case-study"
     | "lab-project"
     | "blog"
+    | "blog-case-study"
     | "blog-index";
   /**
    * Same semantics as `Project.draft`. The lab-project layout surfaces

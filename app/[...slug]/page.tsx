@@ -6,6 +6,7 @@ import { LandingPage } from "@/components/LandingPage";
 import { CaseStudyPage } from "@/components/CaseStudyPage";
 import { LabProjectPage } from "@/components/LabProjectPage";
 import { BlogPost } from "@/components/BlogPost";
+import { BlogCaseStudy } from "@/components/BlogCaseStudy";
 import { BlogIndex } from "@/components/BlogIndex";
 import { DraftStatusToast } from "@/components/DraftStatusToast";
 
@@ -59,6 +60,8 @@ export default async function DynamicPage({
     content = <CaseStudyPage page={page} />;
   } else if (page.layout === "blog") {
     content = <BlogPost page={page} />;
+  } else if (page.layout === "blog-case-study") {
+    content = <BlogCaseStudy page={page} />;
   } else if (page.layout === "blog-index") {
     content = <BlogIndex page={page} />;
   } else {

@@ -185,14 +185,15 @@ export async function getPublishedPages(): Promise<Page[]> {
 }
 
 /**
- * Blog posts for the /blog auto-listing index. Draft-aware like
+ * Blog posts for the /blog auto-listing index. Includes both the simple
+ * `blog` template and the `blog-case-study` template. Draft-aware like
  * getPublishedPages (drafts hidden on Live, visible elsewhere). Sorted
  * pinned-first, then newest date first — mirroring the isSticky sort in
  * getAllProjects().
  */
 export async function getBlogPosts(): Promise<Page[]> {
   const posts = (await getPublishedPages()).filter(
-    (p) => p.layout === "blog",
+    (p) => p.layout === "blog" || p.layout === "blog-case-study",
   );
   return posts.sort((a, b) => {
     if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
