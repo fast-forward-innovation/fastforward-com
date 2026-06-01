@@ -9,9 +9,7 @@ const NAV_LINKS: Array<{ label: string; href: string; mobileOnly?: boolean }> = 
   { label: "Our Work", href: "/our-work" },
   { label: "Experiences", href: "/experiences" },
   { label: "Digital", href: "/digital" },
-  { label: "Blog", href: "/blog" },
-  { label: "Privacy Policy", href: "/privacy-policy", mobileOnly: true },
-  { label: "Accessibility", href: "/accessibility", mobileOnly: true },
+  { label: "Think Fast", href: "/blog" },
 ];
 
 export function SiteHeader() {
