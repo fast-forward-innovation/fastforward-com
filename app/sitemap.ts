@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllPages, getPublishedProjects } from "@/lib/content";
+import { getPublishedPages, getPublishedProjects } from "@/lib/content";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fastforward.sh";
 
@@ -20,7 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   );
 
-  const pages = await getAllPages();
+  const pages = await getPublishedPages();
   const pageRoutes: MetadataRoute.Sitemap = pages.map((p) => ({
     url: `${SITE_URL}/${p.slug}`,
     lastModified: p.date ? new Date(p.date).toISOString() : now,

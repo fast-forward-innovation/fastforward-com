@@ -108,15 +108,29 @@ export interface Project {
   contentHtml?: string;
 }
 
+export interface PageAuthor {
+  name: string;
+  role?: string;
+  avatar?: FrontmatterImage;
+}
+
 export interface Page {
   title: string;
   slug: string;
   date: string;
-  layout: "default" | "landing" | "case-study" | "lab-project";
+  layout:
+    | "default"
+    | "landing"
+    | "case-study"
+    | "lab-project"
+    | "blog"
+    | "blog-index";
   /**
-   * Same semantics as `Project.draft`. Only the lab-project layout
-   * currently surfaces this in the UI (via `DraftStatusToast`); other
-   * layouts inherit the field but don't filter anywhere (no listing).
+   * Same semantics as `Project.draft`. The lab-project layout surfaces
+   * this in the UI (via `DraftStatusToast`). For listing-aware layouts
+   * (e.g. the `blog-index`) drafts are filtered on Live by
+   * `getPublishedPages` / `getBlogPosts`; the `[...slug]` route also adds
+   * a `noindex` robots meta to any draft page.
    */
   draft?: boolean;
   editorial?: Editorial;
@@ -125,6 +139,16 @@ export interface Page {
   additionalPostFields?: AdditionalPostFields;
   services?: string[];
   pageSections?: PageSection[];
+  /**
+   * Blog (`layout: "blog"`) byline. Ignored by other layouts.
+   */
+  author?: PageAuthor;
+  /**
+   * When true on a blog post, floats it to the top of the `/blog`
+   * auto-listing ahead of unpinned posts (then sorted by date). Mirrors
+   * the `isSticky` behavior on projects.
+   */
+  pinned?: boolean;
   source?: "mdx" | "pcc-archieml" | "pcc-smart-components";
   pccArticleId?: string;
 }
