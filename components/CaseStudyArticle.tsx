@@ -5,10 +5,11 @@ import type {
   FrontmatterImage,
   PageSection,
 } from "@/lib/types";
-import { MainSection } from "./postBlocks/MainSection";
-import { ImageBlock } from "./postBlocks/ImageBlock";
-import { QuoteBlock } from "./postBlocks/QuoteBlock";
 import { PlaceholderImage } from "./postBlocks/PlaceholderImage";
+import {
+  renderPageSections,
+  CASE_STUDY_SECTION_TYPES,
+} from "./postBlocks/renderPageSection";
 
 function hexToRgba(hex: string, alpha = 0.17) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -38,20 +39,12 @@ export function CaseStudyArticle({
     .map((s) => getServiceById(s)?.name)
     .filter((n): n is string => !!n);
 
-  let mainCount = 0;
-  const renderedSections = pageSections.map((section, index) => {
-    if (section.type === "MainSection") {
-      mainCount++;
-      return <MainSection key={index} section={section} mainCount={mainCount} />;
-    }
-    if (section.type === "ImageBlock") {
-      return <ImageBlock key={index} block={section} />;
-    }
-    if (section.type === "ClientQuote") {
-      return <QuoteBlock key={index} section={section} />;
-    }
-    return null;
-  });
+  // Case studies render only narrative, imagery, and quote blocks; lab-only
+  // block types (code, video, team) are omitted by the allow-list.
+  const renderedSections = renderPageSections(
+    pageSections,
+    CASE_STUDY_SECTION_TYPES,
+  );
 
   return (
     <article className="our-work-post">

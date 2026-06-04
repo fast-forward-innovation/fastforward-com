@@ -5,13 +5,8 @@ import type {
   FrontmatterImage,
   PageSection,
 } from "@/lib/types";
-import { MainSection } from "./postBlocks/MainSection";
-import { ImageBlock } from "./postBlocks/ImageBlock";
-import { QuoteBlock } from "./postBlocks/QuoteBlock";
-import { CodeBlock } from "./postBlocks/CodeBlock";
-import { VideoBlock } from "./postBlocks/VideoBlock";
-import { TeamProfile } from "./postBlocks/TeamProfile";
 import { PlaceholderImage } from "./postBlocks/PlaceholderImage";
+import { renderPageSections } from "./postBlocks/renderPageSection";
 import { DraftStatusToast } from "./DraftStatusToast";
 
 function hexToRgba(hex: string, alpha = 0.12) {
@@ -50,29 +45,8 @@ export function LabProjectArticle({
   const liveUrl = additionalPostFields?.liveUrl;
   const label = additionalPostFields?.label ?? "Lab Project";
 
-  let mainCount = 0;
-  const renderedSections = pageSections.map((section, index) => {
-    if (section.type === "MainSection") {
-      mainCount++;
-      return <MainSection key={index} section={section} mainCount={mainCount} />;
-    }
-    if (section.type === "ImageBlock") {
-      return <ImageBlock key={index} block={section} />;
-    }
-    if (section.type === "ClientQuote") {
-      return <QuoteBlock key={index} section={section} />;
-    }
-    if (section.type === "CodeBlock") {
-      return <CodeBlock key={index} block={section} />;
-    }
-    if (section.type === "VideoBlock") {
-      return <VideoBlock key={index} block={section} />;
-    }
-    if (section.type === "TeamProfile") {
-      return <TeamProfile key={index} block={section} />;
-    }
-    return null;
-  });
+  // Lab projects render every authorable block type.
+  const renderedSections = renderPageSections(pageSections);
 
   return (
     <article className="our-work-post lab-project-post">
