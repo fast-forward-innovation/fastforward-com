@@ -30,6 +30,28 @@ export interface ImageBlock {
   width?: "full" | "text";
 }
 
+export interface Card {
+  /** Card heading (Title Case noun phrase). */
+  title: string;
+  /** Supporting copy. Plain text or inline HTML. */
+  description?: string;
+  /**
+   * Optional thumbnail / icon shown above the title. Supports `placeholder`
+   * + `notes` like any {@link FrontmatterImage}, so cards can ship with art
+   * pending.
+   */
+  image?: FrontmatterImage;
+}
+
+export interface CardGrid {
+  type: "CardGrid";
+  cards: Card[];
+  /** Columns at desktop width. Mobile is always 1, tablet 2. Default 3. */
+  columns?: 2 | 3 | 4;
+  /** Section background tint, matched to the MainSection it follows. */
+  background?: "white" | "gray";
+}
+
 export interface ClientQuote {
   type: "ClientQuote";
   clientName?: string;
@@ -69,6 +91,7 @@ export interface TeamProfile {
 export type PageSection =
   | MainSection
   | ImageBlock
+  | CardGrid
   | ClientQuote
   | CodeBlock
   | VideoBlock
@@ -106,6 +129,13 @@ export interface Project {
   services: string[];
   pageSections: PageSection[];
   contentHtml?: string;
+}
+
+/** A single breadcrumb. The last crumb in a trail is the current page and is
+ * rendered without a link (no `href`). */
+export interface Crumb {
+  label: string;
+  href?: string;
 }
 
 export interface PageAuthor {

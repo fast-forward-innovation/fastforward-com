@@ -2,9 +2,11 @@ import Image from "next/image";
 import { getServiceById } from "@/lib/content";
 import type {
   AdditionalPostFields,
+  Crumb,
   FrontmatterImage,
   PageSection,
 } from "@/lib/types";
+import { Breadcrumbs } from "./Breadcrumbs";
 import { PlaceholderImage } from "./postBlocks/PlaceholderImage";
 import {
   renderPageSections,
@@ -24,12 +26,14 @@ export function CaseStudyArticle({
   additionalPostFields,
   services = [],
   pageSections,
+  breadcrumbs,
 }: {
   title: string;
   featuredImage?: FrontmatterImage;
   additionalPostFields?: AdditionalPostFields;
   services?: string[];
   pageSections: PageSection[];
+  breadcrumbs?: Crumb[];
 }) {
   const backgroundColor = additionalPostFields?.brandColor
     ? hexToRgba(additionalPostFields.brandColor)
@@ -57,6 +61,7 @@ export function CaseStudyArticle({
       >
         <div className="section-wide md:pt-40 pb-0">
           <div className="mx-auto pb-8 sm:pb-20">
+            <Breadcrumbs items={breadcrumbs} />
             {additionalPostFields?.label ? (
               <div>
                 <div className="sm:inline-block sm:w-fit sm:max-w-4/5 md:w-4/5 sm:mr-6">

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { PageSection } from "@/lib/types";
 import { MainSection } from "./MainSection";
 import { ImageBlock } from "./ImageBlock";
+import { CardGrid } from "./CardGrid";
 import { QuoteBlock } from "./QuoteBlock";
 import { CodeBlock } from "./CodeBlock";
 import { VideoBlock } from "./VideoBlock";
@@ -13,6 +14,7 @@ export type PageSectionType = PageSection["type"];
 export const ALL_SECTION_TYPES: readonly PageSectionType[] = [
   "MainSection",
   "ImageBlock",
+  "CardGrid",
   "ClientQuote",
   "CodeBlock",
   "VideoBlock",
@@ -27,6 +29,7 @@ export const ALL_SECTION_TYPES: readonly PageSectionType[] = [
 export const CASE_STUDY_SECTION_TYPES: readonly PageSectionType[] = [
   "MainSection",
   "ImageBlock",
+  "CardGrid",
   "ClientQuote",
 ];
 
@@ -65,6 +68,8 @@ export function renderPageSection(
     }
     case "ImageBlock":
       return <ImageBlock key={index} block={section} />;
+    case "CardGrid":
+      return <CardGrid key={index} block={section} />;
     case "ClientQuote":
       return <QuoteBlock key={index} section={section} />;
     case "CodeBlock":

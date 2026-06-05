@@ -66,6 +66,8 @@ pageSections: [...]                  # ordered array of MainSection / ImageBlock
 
 **`ImageBlock`** — one or two side-by-side images. Use to break rhythm between long copy sections, especially after dense MainSections. Each image needs `src`, `alt`, `width`, `height`.
 
+**`CardGrid`** — a responsive grid of titled cards (format/audience sets, or text-only feature/value cards). Fields: `cards` (each `{ title, description?, image? }`), `columns` (`2`/`3`/`4`, default `3`), `background`. Place it **directly after** the MainSection it belongs to and give both the **same `background`** so they read as one section — the MainSection carries the auto-number, tagline, and intro; the grid carries the cards. Card `image` supports `placeholder` + `notes` like any image, so a grid can ship before the art exists. Does **not** bump the auto-number.
+
 **`ClientQuote`** — customer quote with attribution. Fields: `clientName`, `tagline`, `quote`.
 
 ### Voice and structure rules
@@ -177,12 +179,13 @@ pageSections: [...]                  # ordered blocks — see below
 
 ### Block types in `pageSections`
 
-All five case-study blocks (`MainSection`, `ImageBlock`, `ClientQuote`) work, plus three lab-specific ones:
+All case-study blocks (`MainSection`, `ImageBlock`, `CardGrid`, `ClientQuote`) work, plus three lab-specific ones:
 
 | Block | Purpose | Key fields |
 | --- | --- | --- |
 | `MainSection` | Prose section with auto-numbered `(01)`/`(02)` left rail | `tagline`, `title`, `background` (`white` or `gray`), `richText` (HTML string) |
 | `ImageBlock` | Screenshots / diagrams | `images: [{src, alt, width, height}]`, `width: "full" \| "text"` |
+| `CardGrid` | Grid of titled cards (formats, audiences, features) under a MainSection | `cards: [{title, description?, image?}]`, `columns` (`2`/`3`/`4`, default `3`), `background` |
 | `ClientQuote` | Pull-quote or takeaway line | `tagline`, `quote` (HTML), `clientName` |
 | `CodeBlock` | Key code snippet in a dark card with filename bar + language pill | `filename` (or `title`), `language` (e.g. `typescript`), `code` (use a YAML `\|` block), `caption` |
 | `VideoBlock` | Screencast — Loom, YouTube, or self-hosted MP4 | `provider: loom \| youtube \| file` (auto-inferred from `src` if omitted), `src`, `title`, `caption`, `aspectRatio` (default `16 / 9`), `poster` (for `file`) |

@@ -5,6 +5,7 @@
  * type-checks against the real schema in `@/lib/types`.
  */
 import type {
+  CardGrid,
   ClientQuote,
   CodeBlock,
   ImageBlock,
@@ -104,6 +105,78 @@ export const sampleImageBlockPlaceholder: ImageBlock = {
       height: 900,
       placeholder: true,
       notes: "Wide shot, warm lighting, people interacting with the screen.",
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
+// CardGrid
+// ---------------------------------------------------------------------------
+
+export const sampleCardGridWithImages: CardGrid = {
+  type: "CardGrid",
+  columns: 3,
+  background: "gray",
+  cards: [
+    {
+      title: "Kiosks & Pedestals",
+      description:
+        "Self-contained, single or multi-touch, built for high-traffic environments.",
+      image: {
+        src: SAMPLE_IMAGE,
+        alt: "A freestanding touchscreen kiosk in a gallery",
+        width: 800,
+        height: 600,
+      },
+    },
+    {
+      title: "Touch Tables",
+      description:
+        "Multi-user, collaborative surfaces, great for exploration and storytelling.",
+      image: {
+        src: "",
+        alt: "A multi-user touch table",
+        width: 800,
+        height: 600,
+        placeholder: true,
+        notes: "Top-down or 3/4 shot of several visitors at the table.",
+      },
+    },
+    {
+      title: "Video Walls",
+      description:
+        "Large-format, high-impact displays — touch or gesture-enabled, built to scale.",
+      image: {
+        src: "",
+        alt: "A large-format video wall",
+        width: 800,
+        height: 600,
+        placeholder: true,
+        notes: "Wide shot showing the scale of the wall against people.",
+      },
+    },
+  ],
+};
+
+export const sampleCardGridTextOnly: CardGrid = {
+  type: "CardGrid",
+  columns: 3,
+  background: "white",
+  cards: [
+    {
+      title: "Early-stage involvement",
+      description:
+        "We shape creative direction from day one — before a pixel is designed.",
+    },
+    {
+      title: "Durability by design",
+      description:
+        "Public installations run all day, every day, for years. We build for that reality.",
+    },
+    {
+      title: "Universal design",
+      description:
+        "ADA compliance is designed in, not bolted on. Every installation works for every visitor.",
     },
   ],
 };
@@ -260,6 +333,22 @@ export const blockGallery: BlockDoc[] = [
       { label: "Single, text width", section: sampleImageBlockNarrow },
       { label: "Pair (side by side)", section: sampleImageBlockPair },
       { label: "Placeholder + designer notes", section: sampleImageBlockPlaceholder },
+    ],
+  },
+  {
+    type: "CardGrid",
+    label: "CardGrid",
+    allowedIn: "case-study, blog-case-study, lab-project",
+    description:
+      "A responsive grid of titled cards — format/audience sets, or text-only feature/value cards. Each card takes an optional thumbnail (placeholder-friendly). Renders full content-width under the MainSection it belongs to; give both the same background to read as one unit.",
+    fields: [
+      { name: "cards", type: "Card[]", required: true, notes: "Each: title (required), description, image (FrontmatterImage, placeholder-friendly)." },
+      { name: "columns", type: "2 | 3 | 4", notes: "Desktop columns. Mobile is 1, tablet 2. Default 3." },
+      { name: "background", type: '"white" | "gray"', notes: "Match the MainSection above it so the pair reads as one section." },
+    ],
+    variants: [
+      { label: "With images (3-up)", section: sampleCardGridWithImages },
+      { label: "Text only (feature cards)", section: sampleCardGridTextOnly },
     ],
   },
   {
