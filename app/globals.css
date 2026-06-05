@@ -722,42 +722,32 @@
   }
 
   /* ----- Breadcrumbs -----
-     Sits above the <h1> in the case-study hero. Mono uppercase eyebrow
-     styling to match the lab eyebrow / pillar-nav tag. */
+     A single "up one level" back-link above the <h1> in the case-study hero
+     (e.g. "← Experiences"). Mono uppercase eyebrow styling to match the lab
+     eyebrow / pillar-nav tag. */
   .breadcrumbs {
     margin-bottom: 1.5rem;
   }
-  .breadcrumbs__list {
-    display: flex;
-    flex-wrap: wrap;
+  .breadcrumbs__up {
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem 0.75rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    gap: 0.5rem;
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     letter-spacing: 0.04em;
     text-transform: uppercase;
-  }
-  .breadcrumbs__item {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem 0.75rem;
-  }
-  .breadcrumbs__link {
     color: var(--color-ff_tealDarker);
     text-decoration: none;
   }
-  .breadcrumbs__link:hover {
+  .breadcrumbs__up:hover {
     text-decoration: underline;
     text-underline-offset: 0.15em;
   }
-  .breadcrumbs__current {
-    color: var(--color-ff_gray);
+  .breadcrumbs__arrow {
+    transition: transform 0.3s ease;
   }
-  .breadcrumbs__sep {
-    color: var(--color-ff_slateGray);
+  .breadcrumbs__up:hover .breadcrumbs__arrow {
+    transform: translateX(-0.2rem);
   }
 
   /* ----- CardGrid block -----

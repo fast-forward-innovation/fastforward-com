@@ -68,6 +68,8 @@ pageSections: [...]                  # ordered array of MainSection / ImageBlock
 
 **`CardGrid`** — a responsive grid of titled cards (format/audience sets, or text-only feature/value cards). Fields: `cards` (each `{ title, description?, image? }`), `columns` (`2`/`3`/`4`, default `3`), `background`. Place it **directly after** the MainSection it belongs to and give both the **same `background`** so they read as one section — the MainSection carries the auto-number, tagline, and intro; the grid carries the cards. Card `image` supports `placeholder` + `notes` like any image, so a grid can ship before the art exists. Does **not** bump the auto-number.
 
+> **Future improvement:** conceptual card sets (values, principles, process steps — e.g. the immersive "What we bring" and museum "principles"/"how we work" grids) are currently **text-only**. The `image` field already exists per card, so they could gain illustrative icons/imagery later; for now plain text reads better than placeholder icon boxes that would never be filled. Revisit once real card art/iconography exists.
+
 **`ClientQuote`** — customer quote with attribution. Fields: `clientName`, `tagline`, `quote`.
 
 ### Voice and structure rules
