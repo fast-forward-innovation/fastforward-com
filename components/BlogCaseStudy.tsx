@@ -1,5 +1,4 @@
 import type { Page } from "@/lib/types";
-import { getPageBreadcrumbs } from "@/lib/content";
 import { CaseStudyArticle } from "./CaseStudyArticle";
 import { FeaturedProjects } from "./page_blocks/FeaturedProjects";
 
@@ -7,8 +6,7 @@ import { FeaturedProjects } from "./page_blocks/FeaturedProjects";
 // (CaseStudyArticle + Featured Projects footer). The draft toast is added
 // by the [...slug] route for any draft page, so it's intentionally omitted
 // here to avoid rendering two toasts.
-export async function BlogCaseStudy({ page }: { page: Page }) {
-  const breadcrumbs = await getPageBreadcrumbs(page);
+export function BlogCaseStudy({ page }: { page: Page }) {
   return (
     <>
       <CaseStudyArticle
@@ -17,7 +15,6 @@ export async function BlogCaseStudy({ page }: { page: Page }) {
         additionalPostFields={page.additionalPostFields}
         services={page.services}
         pageSections={page.pageSections ?? []}
-        breadcrumbs={breadcrumbs}
       />
       <FeaturedProjects />
     </>

@@ -3,7 +3,6 @@ import path from "node:path";
 import matter from "gray-matter";
 import yaml from "js-yaml";
 import type {
-  Crumb,
   Project,
   Page,
   Service,
@@ -171,45 +170,6 @@ export async function getAllPages(): Promise<Page[]> {
 
 export async function getPageBySlug(slug: string): Promise<Page | null> {
   return (await getAllPages()).find((p) => p.slug === slug) ?? null;
-}
-
-/** Title-case a slug segment as a label fallback ("ai-integration" → "Ai
- * Integration") when no real page exists at that path. */
-function titleCaseSlug(segment: string): string {
-  return segment
-    .split("-")
-    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
-    .join(" ");
-}
-
-/**
- * Build a breadcrumb trail for a page from its slug hierarchy:
- * `Home / <ancestors…> / <current>`. Ancestor labels resolve to the real
- * page title at that path when one exists, else a title-cased segment. The
- * current (last) crumb prefers the short `additionalPostFields.label` over the
- * page `title`, since capability pages use `title` for a long headline.
- *
- * Returns `[]` for top-level pages (a single slug segment) — a lone
- * "Home / X" trail isn't worth rendering.
- */
-export async function getPageBreadcrumbs(page: Page): Promise<Crumb[]> {
-  const segments = page.slug.split("/").filter(Boolean);
-  if (segments.length < 2) return [];
-
-  const pages = await getAllPages();
-  const crumbs: Crumb[] = [{ label: "Home", href: "/" }];
-
-  for (let i = 0; i < segments.length - 1; i++) {
-    const path = segments.slice(0, i + 1).join("/");
-    const ancestor = pages.find((p) => p.slug === path);
-    crumbs.push({
-      label: ancestor?.title ?? titleCaseSlug(segments[i]),
-      href: `/${path}`,
-    });
-  }
-
-  crumbs.push({ label: page.additionalPostFields?.label ?? page.title });
-  return crumbs;
 }
 
 /**

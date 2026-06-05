@@ -99,14 +99,7 @@ export default async function ProjectDetailPage({
           },
         }}
       />
-      <Post
-        project={project}
-        breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Our Work", href: "/our-work" },
-          { label: project.title },
-        ]}
-      />
+      <Post project={project} />
     </>
   );
 }

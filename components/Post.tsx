@@ -1,15 +1,9 @@
-import type { Crumb, Project } from "@/lib/types";
+import type { Project } from "@/lib/types";
 import { CaseStudyArticle } from "./CaseStudyArticle";
 import { FeaturedProjects } from "./page_blocks/FeaturedProjects";
 import { DraftStatusToast } from "./DraftStatusToast";
 
-export function Post({
-  project,
-  breadcrumbs,
-}: {
-  project: Project;
-  breadcrumbs?: Crumb[];
-}) {
+export function Post({ project }: { project: Project }) {
   return (
     <>
       <CaseStudyArticle
@@ -18,7 +12,6 @@ export function Post({
         additionalPostFields={project.additionalPostFields}
         services={project.services}
         pageSections={project.pageSections}
-        breadcrumbs={breadcrumbs}
       />
       <FeaturedProjects excludeSlug={project.slug} />
       {project.draft ? (

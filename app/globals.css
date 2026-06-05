@@ -721,35 +721,6 @@
     transform: translateX(0.35rem);
   }
 
-  /* ----- Breadcrumbs -----
-     A single "up one level" back-link above the <h1> in the case-study hero
-     (e.g. "← Experiences"). Mono uppercase eyebrow styling to match the lab
-     eyebrow / pillar-nav tag. */
-  .breadcrumbs {
-    margin-bottom: 1.5rem;
-  }
-  .breadcrumbs__up {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-ff_tealDarker);
-    text-decoration: none;
-  }
-  .breadcrumbs__up:hover {
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
-  }
-  .breadcrumbs__arrow {
-    transition: transform 0.3s ease;
-  }
-  .breadcrumbs__up:hover .breadcrumbs__arrow {
-    transform: translateX(-0.2rem);
-  }
-
   /* ----- CardGrid block -----
      A responsive grid of titled cards (format / audience / feature sets).
      Authored as a `CardGrid` pageSection; renders full content-width under

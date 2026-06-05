@@ -131,13 +131,6 @@ export interface Project {
   contentHtml?: string;
 }
 
-/** A single breadcrumb. The last crumb in a trail is the current page and is
- * rendered without a link (no `href`). */
-export interface Crumb {
-  label: string;
-  href?: string;
-}
-
 export interface PageAuthor {
   name: string;
   role?: string;
