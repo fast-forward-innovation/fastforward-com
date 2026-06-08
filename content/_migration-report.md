@@ -40,4 +40,6 @@ gh pr create --base main --head <branch> --title "<conventional-commit-style tit
 
 **Reference:** PR #1 (`docs/expand-readme`) is the first PR opened against this repo and is a working example of the flow.
 
-**What this means for Pantheon Dev deploys:** Pantheon's auto-deploy is wired to commits on `main`, not to PR branches. So a PR sitting open does not preview on Dev — Dev only updates after merge. If you need to QA a branch on Pantheon before merging, use Multidev (one environment per branch) per [Pantheon Next.js docs](https://docs.pantheon.io/nextjs).
+**What this means for Pantheon Dev deploys:** Pantheon's auto-deploy is wired to commits on `main`, not to PR branches. So a PR sitting open does not preview on Dev.  It previews on a PR environmen — Dev only updates after merge. If you need to QA a branch on Pantheon before merging, use Multidev (one environment per branch) per [Pantheon Next.js docs](https://docs.pantheon.io/nextjs).
+
+For content reviews, you can use a persistent mutli dev by naming a branch `multi-<env>`, but these won't be PRs.
