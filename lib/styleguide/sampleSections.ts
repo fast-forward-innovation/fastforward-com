@@ -14,6 +14,7 @@ import type {
   PageSection,
   TeamProfile,
   VideoBlock,
+  ZigZag,
 } from "@/lib/types";
 import type { PageSectionType } from "@/components/postBlocks/renderPageSection";
 
@@ -309,6 +310,45 @@ export const sampleMainSectionWithCards: MainSection = {
 };
 
 // ---------------------------------------------------------------------------
+// ZigZag
+// ---------------------------------------------------------------------------
+
+export const sampleZigZag: ZigZag = {
+  type: "ZigZag",
+  items: [
+    {
+      href: "/digital/web-design-and-development",
+      title: "Web Design and Development",
+      description:
+        "Looking for a rebrand, a refresh, or an extension of your current site?",
+      tag: "Web Design & Development",
+      image: {
+        src: SAMPLE_IMAGE,
+        alt: "Abstract data-stream visualization.",
+        width: 1200,
+        height: 800,
+      },
+    },
+    {
+      href: "/digital/pantheon-partnership",
+      title: "Pantheon Partnership",
+      description:
+        "A decade-long Pantheon partnership that streamlines hosting and WebOps.",
+      tag: "Hosting & WebOps",
+      diagram: true,
+      image: {
+        src: "",
+        alt: "Decoupled Next.js front end deploying to Pantheon.",
+        width: 1200,
+        height: 800,
+        placeholder: true,
+        notes: "Architecture diagram — contained on a soft brand panel.",
+      },
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
 // Gallery descriptor — drives the /styleguide page. Each entry groups the
 // block's variants with author-facing documentation. Field references are
 // sourced from `lib/types.ts` + `CONTENT.md`.
@@ -472,5 +512,16 @@ export const blockGallery: BlockDoc[] = [
       { name: "slugs", type: "string[]", required: true, notes: "Project slugs to feature, in display order (e.g. demonstrating-innovation-with-a-gamified-microsite)." },
     ],
     variants: [{ label: "Carousel (shown standalone)", section: sampleFeaturedWork }],
+  },
+  {
+    type: "ZigZag",
+    label: "ZigZag",
+    allowedIn: "default, case-study, blog-case-study, lab-project",
+    description:
+      "A stack of linked rows that alternate copy / media side to side automatically (authors just list items in order). Used for section navigation (the digital/ & experiences/ index pages) and 'explore these areas' sets. Carries its own full-width section. Set `diagram: true` on a row to contain an SVG/diagram on a soft brand panel instead of cover-cropping.",
+    fields: [
+      { name: "items", type: "ZigZagItem[]", required: true, notes: "Each: href (required), title (required), description, tag (mono uppercase, gets a trailing arrow), image (placeholder-friendly), diagram (bool)." },
+    ],
+    variants: [{ label: "Nav rows (photo + diagram)", section: sampleZigZag }],
   },
 ];

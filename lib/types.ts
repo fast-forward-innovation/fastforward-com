@@ -113,6 +113,33 @@ export interface FeaturedWork {
   slugs: string[];
 }
 
+/** One row of a {@link ZigZag} block: copy on one side, media on the other. */
+export interface ZigZagItem {
+  /** Destination. Internal paths (`/…`) use `next/link`; absolute URLs render a plain anchor. */
+  href: string;
+  /** Row heading. */
+  title: string;
+  /** Supporting copy (plain text). */
+  description?: string;
+  /** Mono uppercase category tag shown below the copy, with a trailing arrow. */
+  tag?: string;
+  /** Row media. Supports `placeholder` + `notes` like any image. */
+  image: FrontmatterImage;
+  /** Contain the art on a soft brand panel instead of cover-cropping — for diagrams / SVGs. */
+  diagram?: boolean;
+}
+
+/**
+ * A vertical stack of linked rows that alternate sides — copy left / media
+ * right, then media left / copy right, automatically. Used for section
+ * navigation (the digital/ and experiences/ index "pillar" pages) and any
+ * "explore these areas" set.
+ */
+export interface ZigZag {
+  type: "ZigZag";
+  items: ZigZagItem[];
+}
+
 export type PageSection =
   | MainSection
   | ImageBlock
@@ -121,7 +148,8 @@ export type PageSection =
   | CodeBlock
   | VideoBlock
   | TeamProfile
-  | FeaturedWork;
+  | FeaturedWork
+  | ZigZag;
 
 export interface AdditionalPostFields {
   label?: string;

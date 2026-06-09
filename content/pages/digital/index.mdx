@@ -16,70 +16,57 @@ additionalPostFields:
 contentHtml: >
   <p class="section-tagline">Five ways we build and run the web side of your
   organization — pick the one that fits where you are.</p>
-
-  <div class="pillar-nav">
-
-  <a class="pillar-nav__item" href="/digital/web-design-and-development">
-      <div class="pillar-nav__body">
-        <h2 class="pillar-nav__title">Web Design and Development</h2>
-        <p class="pillar-nav__desc">Looking for a rebrand, a refresh, or just an extension and update of your current site?</p>
-        <span class="pillar-nav__tag">Web Design & Development</span>
-      </div>
-      <div class="pillar-nav__media">
-        <img src="/content/images/git-commit-stream/git-commit-stream-visualization-3.jpg" alt="Abstract data-stream visualization." />
-      </div>
-    </a>
-
-
-    <a class="pillar-nav__item" href="/digital/pantheon-partnership">
-      <div class="pillar-nav__body">
-        <h2 class="pillar-nav__title">Pantheon Partnership</h2>
-        <p class="pillar-nav__desc">For more than a decade, we have been an Pantheon partner —
-        with Pantheon, we are able to streamline all of our web hosting and WebOps.</p>
-        <span class="pillar-nav__tag">Hosting &amp; WebOps</span>
-      </div>
-      <div class="pillar-nav__media pillar-nav__media--diagram">
-        <img src="/content/images/architecture/new_architecture_pantheon_nextjs.svg" alt="Decoupled Next.js front end deploying to Pantheon, with content sources behind it." />
-      </div>
-    </a>
-
-    <a class="pillar-nav__item" href="/digital/content-management-systems">
-      <div class="pillar-nav__body">
-        <h2 class="pillar-nav__title">Content Management Systems</h2>
-        <p class="pillar-nav__desc">Choosing, configuring, and connecting the
-        right CMS — Drupal, WordPress, or decoupled — to how your team actually
-        works.</p>
-        <span class="pillar-nav__tag">Content Platforms</span>
-      </div>
-      <div class="pillar-nav__media pillar-nav__media--diagram">
-        <img src="/content/images/architecture/future_architecture_headless_cms.svg" alt="Headless CMS architecture feeding a decoupled front end." />
-      </div>
-    </a>
-
-    <a class="pillar-nav__item" href="/digital/site-migration-upgrades">
-      <div class="pillar-nav__body">
-        <h2 class="pillar-nav__title">Site Migration &amp; Upgrades</h2>
-        <p class="pillar-nav__desc">Re-runnable migrations and platform upgrades
-        run against real content, not a sample.</p>
-        <span class="pillar-nav__tag">Migration</span>
-      </div>
-      <div class="pillar-nav__media pillar-nav__media--diagram">
-        <img src="/content/images/mit-haiti-pantheon-migration/before-after-page-delivery.svg" alt="Before-and-after comparison of page delivery from a site migration." />
-      </div>
-    </a>
-
-    <a class="pillar-nav__item" href="/digital/interactive-apps">
-      <div class="pillar-nav__body">
-        <h2 class="pillar-nav__title">Interactive Apps</h2>
-        <p class="pillar-nav__desc">Custom interactive web applications — from
-        configurators to dashboards to gamified microsites.</p>
-        <span class="pillar-nav__tag">Applications</span>
-      </div>
-      <div class="pillar-nav__media">
-        <img src="/content/images/2023/06/northeastern-course-registraion-website-screenshots.png" alt="Course registration web application screens across devices." />
-      </div>
-    </a>
-
-    
-  </div>
+pageSections:
+  - type: ZigZag
+    items:
+      - href: /digital/web-design-and-development
+        title: Web Design and Development
+        description: >-
+          Looking for a rebrand, a refresh, or just an extension and update of
+          your current site?
+        tag: Web Design & Development
+        image:
+          src: /content/images/git-commit-stream/git-commit-stream-visualization-3.jpg
+          alt: Abstract data-stream visualization.
+      - href: /digital/pantheon-partnership
+        title: Pantheon Partnership
+        description: >-
+          For more than a decade, we have been a Pantheon partner — with
+          Pantheon, we streamline all of our web hosting and WebOps.
+        tag: Hosting & WebOps
+        diagram: true
+        image:
+          src: /content/images/architecture/new_architecture_pantheon_nextjs.svg
+          alt: >-
+            Decoupled Next.js front end deploying to Pantheon, with content
+            sources behind it.
+      - href: /digital/content-management-systems
+        title: Content Management Systems
+        description: >-
+          Choosing, configuring, and connecting the right CMS — Drupal,
+          WordPress, or decoupled — to how your team actually works.
+        tag: Content Platforms
+        diagram: true
+        image:
+          src: /content/images/architecture/future_architecture_headless_cms.svg
+          alt: Headless CMS architecture feeding a decoupled front end.
+      - href: /digital/site-migration-upgrades
+        title: Site Migration & Upgrades
+        description: >-
+          Re-runnable migrations and platform upgrades run against real
+          content, not a sample.
+        tag: Migration
+        diagram: true
+        image:
+          src: /content/images/mit-haiti-pantheon-migration/before-after-page-delivery.svg
+          alt: Before-and-after comparison of page delivery from a site migration.
+      - href: /digital/interactive-apps
+        title: Interactive Apps
+        description: >-
+          Custom interactive web applications — from configurators to dashboards
+          to gamified microsites.
+        tag: Applications
+        image:
+          src: /content/images/2023/06/northeastern-course-registraion-website-screenshots.png
+          alt: Course registration web application screens across devices.
 ---

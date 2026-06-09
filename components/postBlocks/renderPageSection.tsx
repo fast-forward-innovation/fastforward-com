@@ -8,6 +8,7 @@ import { CodeBlock } from "./CodeBlock";
 import { VideoBlock } from "./VideoBlock";
 import { TeamProfile } from "./TeamProfile";
 import { FeaturedWorkBlock } from "./FeaturedWorkBlock";
+import { ZigZag } from "./ZigZag";
 
 export type PageSectionType = PageSection["type"];
 
@@ -21,6 +22,7 @@ export const ALL_SECTION_TYPES: readonly PageSectionType[] = [
   "VideoBlock",
   "TeamProfile",
   "FeaturedWork",
+  "ZigZag",
 ];
 
 /**
@@ -34,6 +36,7 @@ export const CASE_STUDY_SECTION_TYPES: readonly PageSectionType[] = [
   "CardGrid",
   "ClientQuote",
   "FeaturedWork",
+  "ZigZag",
 ];
 
 export interface RenderSectionContext {
@@ -84,6 +87,8 @@ export function renderPageSection(
       return <TeamProfile key={index} block={section} />;
     case "FeaturedWork":
       return <FeaturedWorkBlock key={index} block={section} />;
+    case "ZigZag":
+      return <ZigZag key={index} block={section} />;
     default:
       return null;
   }

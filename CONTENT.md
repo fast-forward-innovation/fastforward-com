@@ -117,6 +117,28 @@ contentHtml: "<p>...</p>\n<h2>...</h2>\n<p>...</p>"
 
 `contentHtml` is a single HTML string. The body of the MDX file below the frontmatter is currently unused for default-layout pages — the renderer reads `contentHtml` from frontmatter only. See [components/Page.tsx](components/Page.tsx).
 
+Default-layout pages may **also** carry `pageSections`, rendered full-width below the `contentHtml` prose. This is how the section index pages (`digital/index`, `experiences/index`) render their `ZigZag` navigation: a short `contentHtml` intro line, then a `ZigZag` block. Example:
+
+```yaml
+contentHtml: >
+  <p class="section-tagline">Five ways we build the web side of your organization.</p>
+pageSections:
+  - type: ZigZag
+    items:
+      - href: /digital/web-design-and-development
+        title: Web Design and Development
+        description: Looking for a rebrand, a refresh, or an update of your current site?
+        tag: Web Design & Development
+        image: { src: /content/images/…​.jpg, alt: "…" }
+      - href: /digital/pantheon-partnership
+        title: Pantheon Partnership
+        tag: Hosting & WebOps
+        diagram: true        # contain an SVG/diagram on a soft brand panel
+        image: { src: /content/images/architecture/…​.svg, alt: "…" }
+```
+
+**`ZigZag`** — a stack of linked rows that alternate copy / media side to side automatically (authors just list `items` in order). Each item: `href` (required; internal `/…` paths use the router), `title` (required), `description`, `tag` (mono uppercase, gets a trailing → arrow), `image` (placeholder-friendly; rendered with a native `<img>` so SVG diagrams work), and `diagram: true` to contain the art on a soft brand panel instead of cover-cropping. Use `&` directly in titles/tags (rendered as text). Works in any layout (it brings its own section).
+
 ## Case-study-layout static page
 
 For services / capabilities pages that need the full case-study visual treatment — gradient hero with brand color tint, label above the title, services list, full-bleed featured image, and auto-numbered `(01)`/`(02)` MainSections with alternating gray/white backgrounds. Use this for pages like Museum Experiences, Drupal Services, Pantheon Hosting — anything that's a top-level capability deserving the same visual weight as a project page.
@@ -198,7 +220,7 @@ pageSections: [...]                  # ordered blocks — see below
 
 ### Block types in `pageSections`
 
-All case-study blocks (`MainSection`, `ImageBlock`, `CardGrid`, `ClientQuote`, `FeaturedWork`) work, plus three lab-specific ones:
+All case-study blocks (`MainSection`, `ImageBlock`, `CardGrid`, `ClientQuote`, `FeaturedWork`, `ZigZag`) work, plus three lab-specific ones:
 
 | Block | Purpose | Key fields |
 | --- | --- | --- |
@@ -210,6 +232,7 @@ All case-study blocks (`MainSection`, `ImageBlock`, `CardGrid`, `ClientQuote`, `
 | `VideoBlock` | Screencast — Loom, YouTube, or self-hosted MP4 | `provider: loom \| youtube \| file` (auto-inferred from `src` if omitted), `src`, `title`, `caption`, `aspectRatio` (default `16 / 9`), `poster` (for `file`) |
 | `TeamProfile` | Who built it — individual or team, with avatar + bio | `kind: individual \| team` (sets eyebrow to "Built by" or "Team"), `name`, `role`, `bio` (HTML or plain), `avatar` (omit for the default outline-cartoon SVG), `links: [{label, url}]` |
 | `FeaturedWork` | Curated "recent work" carousel of `ProjectCard`s, hand-picked by slug. **Embed inside a `MainSection`'s `blocks`** (renders inline in the content column); scrolls horizontally | `slugs: string[]` (required, in order) |
+| `ZigZag` | Stack of linked rows that alternate copy / media side to side — section nav / "explore these areas." Brings its own full-width section | `items: [{href, title, description?, tag?, image, diagram?}]` |
 
 ### Recommended section arc
 

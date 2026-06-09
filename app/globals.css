@@ -598,28 +598,27 @@
     color: var(--color-ff_gray);
   }
 
-  /* ----- Pillar navigation: alternating content / media rows -----
+  /* ----- ZigZag block: alternating content / media rows -----
      A vertical stack of "feature" rows that act as major calls to navigation
-     for sub-pillar pages (Digital, Experiences). Each row is a single <a>:
-     content on one side, image on the other, alternating sides automatically
-     via :nth-child — authors just list items in order. Visual language mirrors
-     the site's existing card/section blocks: mono uppercase category tags and
-     opacity-on-hover (ProjectCard), and clean square-cornered object-cover
-     imagery (ImageBlock). Authored as HTML in a page's `contentHtml`; lives
-     inside `.section.main-section`. */
-  .pillar-nav {
+     (Digital, Experiences index pages) or any "explore these areas" set. Each
+     row is a single <a>: content on one side, image on the other, alternating
+     sides automatically via :nth-child — authors just list items in order.
+     Visual language mirrors the site's card/section blocks: mono uppercase
+     category tags and opacity-on-hover (ProjectCard), and clean square-cornered
+     object-cover imagery (ImageBlock). Rendered by the `ZigZag` page block,
+     which brings its own `.section` wrapper. */
+  .zigzag {
     display: flex;
     flex-direction: column;
     gap: 4rem;
-    margin-top: 3rem;
   }
   @media (min-width: 768px) {
-    .pillar-nav {
+    .zigzag {
       gap: 7rem;
     }
   }
 
-  .pillar-nav__item {
+  .zigzag__item {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -628,96 +627,96 @@
     opacity: 0.85;
     transition: opacity 0.3s ease;
   }
-  .pillar-nav__item:hover {
+  .zigzag__item:hover {
     opacity: 1;
   }
   @media (min-width: 768px) {
-    .pillar-nav__item {
+    .zigzag__item {
       grid-template-columns: 1fr 1fr;
       gap: 4.5rem;
     }
     /* Default: content left (col 1), media right (col 2). */
-    .pillar-nav__item .pillar-nav__body {
+    .zigzag__item .zigzag__body {
       grid-column: 1;
       grid-row: 1;
     }
-    .pillar-nav__item .pillar-nav__media {
+    .zigzag__item .zigzag__media {
       grid-column: 2;
       grid-row: 1;
     }
     /* Alternate: even rows swap sides. */
-    .pillar-nav__item:nth-child(even) .pillar-nav__body {
+    .zigzag__item:nth-child(even) .zigzag__body {
       grid-column: 2;
     }
-    .pillar-nav__item:nth-child(even) .pillar-nav__media {
+    .zigzag__item:nth-child(even) .zigzag__media {
       grid-column: 1;
     }
   }
 
   /* Clean, square-cornered, full-bleed imagery — matches ImageBlock /
      ProjectCard. No card chrome. */
-  .pillar-nav__media {
+  .zigzag__media {
     position: relative;
     aspect-ratio: 3 / 2;
     overflow: hidden;
   }
-  .pillar-nav__media img {
+  .zigzag__media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
     transition: transform 0.5s cubic-bezier(0.45, 0, 0.55, 1);
   }
-  .pillar-nav__item:hover .pillar-nav__media img {
+  .zigzag__item:hover .zigzag__media img {
     transform: scale(1.04);
   }
   /* Diagram variant — architecture SVGs are contained on a soft brand panel
      so they stay legible (placeholder imagery; swap for real art). */
-  .pillar-nav__media--diagram {
+  .zigzag__media--diagram {
     background: linear-gradient(158.44deg, #eef3f5 0%, #ebf2f6 100%);
   }
-  .pillar-nav__media--diagram img {
+  .zigzag__media--diagram img {
     object-fit: contain;
     padding: 1.5rem;
   }
   @media (min-width: 768px) {
-    .pillar-nav__media--diagram img {
+    .zigzag__media--diagram img {
       padding: 2.5rem;
     }
   }
-  .pillar-nav__media--diagram:hover img {
+  .zigzag__media--diagram:hover img {
     transform: scale(1.02);
   }
 
-  .pillar-nav__body {
+  .zigzag__body {
     max-width: 38rem;
   }
-  .pillar-nav__title {
+  .zigzag__title {
     @apply text-2xl sm:text-3xl;
     color: var(--color-ff_black);
     padding-bottom: 1rem;
   }
-  .pillar-nav__item:hover .pillar-nav__title {
+  .zigzag__item:hover .zigzag__title {
     text-decoration: underline;
     text-underline-offset: 0.15em;
   }
-  .pillar-nav__desc {
+  .zigzag__desc {
     color: var(--color-ff_black);
     line-height: 1.6;
     margin: 0;
   }
   /* Mono uppercase category tag — same treatment as ProjectCard service
      tags / lab eyebrow. */
-  .pillar-nav__tag {
+  .zigzag__tag {
     @apply inline-flex items-center font-mono text-sm uppercase tracking-wider mt-5;
     color: var(--color-ff_teal);
   }
-  .pillar-nav__tag::after {
+  .zigzag__tag::after {
     content: "\2192";
     margin-left: 0.6rem;
     transition: transform 0.3s ease;
   }
-  .pillar-nav__item:hover .pillar-nav__tag::after {
+  .zigzag__item:hover .zigzag__tag::after {
     transform: translateX(0.35rem);
   }
 
