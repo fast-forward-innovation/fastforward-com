@@ -22,7 +22,20 @@ export interface MainSection {
   title?: string;
   background?: string;
   richText?: string;
+  /**
+   * Blocks embedded inside this section's content column, rendered after
+   * `richText`. Lets a block like {@link FeaturedWork} live *inside* a section
+   * (sharing its number + heading) rather than being its own top-level section.
+   */
+  blocks?: EmbeddableBlock[];
 }
+
+/**
+ * Blocks that may be nested inside a {@link MainSection}'s `blocks` array,
+ * rendered bare in the section's content column. Widen as more blocks become
+ * embeddable.
+ */
+export type EmbeddableBlock = CardGrid | FeaturedWork;
 
 export interface ImageBlock {
   type: "ImageBlock";
@@ -88,6 +101,18 @@ export interface TeamProfile {
   links?: { label: string; url: string }[];
 }
 
+/**
+ * A curated "recent work" carousel of `ProjectCard`s — a hand-picked, ordered
+ * set of projects (unlike the auto-picked home page block). Designed to be
+ * embedded inside a {@link MainSection}'s `blocks`, where it renders inline in
+ * the content column and scrolls horizontally.
+ */
+export interface FeaturedWork {
+  type: "FeaturedWork";
+  /** Project slugs to feature, in display order. */
+  slugs: string[];
+}
+
 export type PageSection =
   | MainSection
   | ImageBlock
@@ -95,7 +120,8 @@ export type PageSection =
   | ClientQuote
   | CodeBlock
   | VideoBlock
-  | TeamProfile;
+  | TeamProfile
+  | FeaturedWork;
 
 export interface AdditionalPostFields {
   label?: string;

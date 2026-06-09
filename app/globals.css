@@ -785,6 +785,87 @@
     padding: 0.625rem 1.5rem 1.5rem;
   }
 
+  /* ----- FeaturedWork carousel -----
+     The "recent work" scroll variant of FeaturedProjects: a single-line,
+     fixed-width-card row that always scrolls. It sits inline in the page,
+     aligned to the case-study content column, and inherits the surrounding
+     background (no dark band) with default dark text. Layout (flex / gap /
+     widths) lives on the elements as utilities; this class adds snap + a
+     subtle scrollbar. */
+  .featured-projects--inline {
+    /* Tuck under the intro MainSection above, like .card-grid does. */
+    padding-top: 0;
+  }
+  /* `min-width: 0` keeps the scroller from forcing the column wider than the
+     page when embedded in a MainSection's content column. */
+  .featured-projects--embedded {
+    min-width: 0;
+  }
+  /* Embedded card grid: render self-contained, not as MainSection prose.
+     Tuck under the intro copy with breathing room, and reset the inherited
+     prose font scale so card text matches the standalone grid. */
+  .card-grid--embedded {
+    margin-top: 3rem;
+    font-size: 1rem;
+  }
+  /* A CardGrid or the work carousel embedded in a MainSection opts out of the
+     `.main-section ul` prose list treatment — teal square markers + hanging
+     indent — on its *structural* lists (grid track / carousel row) so the
+     cards read as cards. Selectors carry class names so they outrank
+     `.main-section ul li…`. */
+  .main-section ul.card-grid__list,
+  .main-section ul.featured-projects__scroller {
+    padding-left: 0 !important;
+  }
+  .main-section ul.card-grid__list > li.card-grid__card::before,
+  .main-section ul.featured-projects__scroller > li::before {
+    content: none;
+  }
+  .main-section ul.card-grid__list > li.card-grid__card + li.card-grid__card,
+  .main-section ul.featured-projects__scroller > li + li {
+    margin-top: 0;
+  }
+  /* Card *description* lists: drop the teal squares + deep hanging indent the
+     section adds; use compact disc bullets and tight spacing instead. */
+  .card-grid--embedded .card-grid__desc p:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+  .card-grid--embedded .card-grid__desc ul {
+    list-style: disc;
+    padding-left: 1.1rem;
+    margin-bottom: 0;
+  }
+  .card-grid--embedded .card-grid__desc ul li::before {
+    content: none;
+  }
+  .card-grid--embedded .card-grid__desc ul li + li {
+    margin-top: 0.25rem;
+  }
+  .featured-projects__scroller {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+    scroll-snap-type: x proximity;
+    scroll-padding-left: 0;
+    -webkit-overflow-scrolling: touch;
+    /* Firefox — dark thumb for the light background it now sits on. */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  }
+  .featured-projects__scroller::-webkit-scrollbar {
+    height: 8px;
+  }
+  .featured-projects__scroller::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .featured-projects__scroller::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 9999px;
+  }
+  .featured-projects__scroller:hover::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.35);
+  }
+
   /* ----- Contact form ----- */
   .contact-input {
     @apply mb-2;

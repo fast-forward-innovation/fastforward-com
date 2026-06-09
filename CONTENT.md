@@ -63,10 +63,11 @@ pageSections: [...]                  # ordered array of MainSection / ImageBlock
 - `tagline` — the **descriptive headline** rendered as the section H3 (e.g., "When the site model drifts from the editorial reality"). Sentence case.
 - `background` — `white` (default) or `gray`. Alternate them; never two grays in a row.
 - `richText` — HTML string (paragraphs, `<strong>`, `<code>`, `<dl>`, etc.). YAML block scalar (`>`) for readability.
+- `blocks` — optional embedded blocks rendered **inside this section's content column** (the right ¾), after `richText`. Lets a block live *inside* a numbered section (sharing its `(0N)` marker and heading) and inherit the section's background, instead of being its own top-level section. Embeddable types: `CardGrid` and `FeaturedWork`. Embedded blocks render bare — no section wrapper or own background — so set the **MainSection's** `background`, not the block's.
 
 **`ImageBlock`** — one or two side-by-side images. Use to break rhythm between long copy sections, especially after dense MainSections. Each image needs `src`, `alt`, `width`, `height`.
 
-**`CardGrid`** — a responsive grid of titled cards (format/audience sets, or text-only feature/value cards). Fields: `cards` (each `{ title, description?, image? }`), `columns` (`2`/`3`/`4`, default `3`), `background`. Place it **directly after** the MainSection it belongs to and give both the **same `background`** so they read as one section — the MainSection carries the auto-number, tagline, and intro; the grid carries the cards. Card `image` supports `placeholder` + `notes` like any image, so a grid can ship before the art exists. Does **not** bump the auto-number.
+**`CardGrid`** — a responsive grid of titled cards (format/audience sets, or text-only feature/value cards). Fields: `cards` (each `{ title, description?, image? }`), `columns` (`2`/`3`/`4`, default `3`), `background`. **Preferred:** embed it in the owning MainSection's `blocks` array — it renders bare in the content column and inherits the section's background (drop the grid's own `background`; the MainSection carries the auto-number, tagline, and intro). It can also stand alone as a top-level section directly after a MainSection (give both the **same `background`**), but embedding keeps the pair as one numbered section. Card `image` supports `placeholder` + `notes`. Card `description` may contain inline lists, which keep the standard teal-square bullets. Does **not** bump the auto-number.
 
 > **Future improvement:** conceptual card sets (values, principles, process steps — e.g. the immersive "What we bring" and museum "principles"/"how we work" grids) are currently **text-only**. The `image` field already exists per card, so they could gain illustrative icons/imagery later; for now plain text reads better than placeholder icon boxes that would never be filled. Revisit once real card art/iconography exists.
 
@@ -140,7 +141,20 @@ pageSections: [...]                  # ordered MainSection / ImageBlock — same
 
 The same section / voice rules from the project case-study guide apply: lead with the human reality, push tech specs to the back, alternate `white`/`gray` backgrounds, no two grays in a row. Rendered by [components/CaseStudyPage.tsx](components/CaseStudyPage.tsx) → [components/CaseStudyArticle.tsx](components/CaseStudyArticle.tsx) (shared with [components/Post.tsx](components/Post.tsx)).
 
-Unlike project detail pages, case-study-layout *pages* do **not** auto-render a `Featured Projects` block at the bottom — curate a "Recent Work" MainSection inside `pageSections` if you want to highlight relevant projects, so the selection is topic-relevant rather than auto-rotated.
+Unlike project detail pages, case-study-layout *pages* do **not** auto-render a `Featured Projects` block at the bottom. To highlight relevant projects, embed a `FeaturedWork` block in a `MainSection`'s `blocks` array and list the project slugs you want. It renders as a single-line, horizontally-scrolling carousel of `ProjectCard`s **inline in that section's content column** (no dark band, inherits the page background, dark text) — a hand-picked, topic-relevant selection rather than the home page's auto-rotated latest three. Field: `slugs` (required, in display order). Example:
+
+```yaml
+- type: MainSection
+  tagline: Proof, not promises.
+  title: See Our Work
+  richText: >
+    <p>A short lead-in to recent work.</p>
+  blocks:
+    - type: FeaturedWork
+      slugs:
+        - some-project-slug
+        - another-project-slug
+```
 
 ## Lab-project-layout static page
 
@@ -181,7 +195,7 @@ pageSections: [...]                  # ordered blocks — see below
 
 ### Block types in `pageSections`
 
-All case-study blocks (`MainSection`, `ImageBlock`, `CardGrid`, `ClientQuote`) work, plus three lab-specific ones:
+All case-study blocks (`MainSection`, `ImageBlock`, `CardGrid`, `ClientQuote`, `FeaturedWork`) work, plus three lab-specific ones:
 
 | Block | Purpose | Key fields |
 | --- | --- | --- |
@@ -192,6 +206,7 @@ All case-study blocks (`MainSection`, `ImageBlock`, `CardGrid`, `ClientQuote`) w
 | `CodeBlock` | Key code snippet in a dark card with filename bar + language pill | `filename` (or `title`), `language` (e.g. `typescript`), `code` (use a YAML `\|` block), `caption` |
 | `VideoBlock` | Screencast — Loom, YouTube, or self-hosted MP4 | `provider: loom \| youtube \| file` (auto-inferred from `src` if omitted), `src`, `title`, `caption`, `aspectRatio` (default `16 / 9`), `poster` (for `file`) |
 | `TeamProfile` | Who built it — individual or team, with avatar + bio | `kind: individual \| team` (sets eyebrow to "Built by" or "Team"), `name`, `role`, `bio` (HTML or plain), `avatar` (omit for the default outline-cartoon SVG), `links: [{label, url}]` |
+| `FeaturedWork` | Curated "recent work" carousel of `ProjectCard`s, hand-picked by slug. **Embed inside a `MainSection`'s `blocks`** (renders inline in the content column); scrolls horizontally | `slugs: string[]` (required, in order) |
 
 ### Recommended section arc
 

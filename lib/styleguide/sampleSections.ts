@@ -8,6 +8,7 @@ import type {
   CardGrid,
   ClientQuote,
   CodeBlock,
+  FeaturedWork,
   ImageBlock,
   MainSection,
   PageSection,
@@ -271,6 +272,43 @@ export const sampleTeamNoAvatar: TeamProfile = {
 };
 
 // ---------------------------------------------------------------------------
+// FeaturedWork
+// ---------------------------------------------------------------------------
+
+export const sampleFeaturedWork: FeaturedWork = {
+  type: "FeaturedWork",
+  slugs: [
+    "demonstrating-innovation-with-a-gamified-microsite",
+    "northeastern-simplifying-online-course-registration",
+    "real-time-advice-for-expectant-parents",
+  ],
+};
+
+// A MainSection with the carousel embedded in its content column — the
+// intended way to use FeaturedWork.
+export const sampleMainSectionWithWork: MainSection = {
+  type: "MainSection",
+  tagline: "Proof, not promises.",
+  title: "See Our Work",
+  background: "white",
+  richText:
+    "<p>The clearest way to understand how we work is to see what we've shipped. Here's a selection of recent projects.</p>",
+  blocks: [sampleFeaturedWork],
+};
+
+// A MainSection with a card grid embedded in its content column — the cards
+// inherit the section's gray background.
+export const sampleMainSectionWithCards: MainSection = {
+  type: "MainSection",
+  tagline: "One practice, four disciplines.",
+  title: "Our Services",
+  background: "gray",
+  richText:
+    "<p>These services are stronger together, but each can also stand on its own.</p>",
+  blocks: [{ ...sampleCardGridTextOnly, background: undefined }],
+};
+
+// ---------------------------------------------------------------------------
 // Gallery descriptor — drives the /styleguide page. Each entry groups the
 // block's variants with author-facing documentation. Field references are
 // sourced from `lib/types.ts` + `CONTENT.md`.
@@ -310,11 +348,14 @@ export const blockGallery: BlockDoc[] = [
       { name: "tagline", type: "string", notes: "Rendered as the section H3 heading." },
       { name: "background", type: '"white" | "gray"', notes: "Section background tint." },
       { name: "richText", type: "HTML string", notes: "Body copy. Supports inline HTML (<p>, <ul>, <strong>…)." },
+      { name: "blocks", type: "EmbeddableBlock[]", notes: "Blocks embedded in the content column after richText (CardGrid, FeaturedWork). They render bare and inherit this section's background." },
     ],
     variants: [
       { label: "With tagline + title", section: sampleMainSection },
       { label: "Gray background + list", section: sampleMainSectionGray },
       { label: "Title only (no tagline)", section: sampleMainSectionPlain },
+      { label: "With embedded CardGrid", section: sampleMainSectionWithCards },
+      { label: "With embedded FeaturedWork", section: sampleMainSectionWithWork },
     ],
   },
   {
@@ -340,7 +381,7 @@ export const blockGallery: BlockDoc[] = [
     label: "CardGrid",
     allowedIn: "case-study, blog-case-study, lab-project",
     description:
-      "A responsive grid of titled cards — format/audience sets, or text-only feature/value cards. Each card takes an optional thumbnail (placeholder-friendly). Renders full content-width under the MainSection it belongs to; give both the same background to read as one unit.",
+      "A responsive grid of titled cards — format/audience sets, or text-only feature/value cards. Each card takes an optional thumbnail (placeholder-friendly). Preferably embedded in a MainSection's `blocks` (renders bare in the content column, inherits the section background — see MainSection › 'With embedded CardGrid'); can also stand alone full-width under a MainSection with a matching background.",
     fields: [
       { name: "cards", type: "Card[]", required: true, notes: "Each: title (required), description, image (FrontmatterImage, placeholder-friendly)." },
       { name: "columns", type: "2 | 3 | 4", notes: "Desktop columns. Mobile is 1, tablet 2. Default 3." },
@@ -420,5 +461,16 @@ export const blockGallery: BlockDoc[] = [
       { label: "Team", section: sampleTeamGroup },
       { label: "No avatar (default)", section: sampleTeamNoAvatar },
     ],
+  },
+  {
+    type: "FeaturedWork",
+    label: "FeaturedWork",
+    allowedIn: "embedded in a MainSection's blocks (case-study, blog-case-study, lab-project)",
+    description:
+      "A curated 'recent work' carousel of ProjectCards, hand-picked by slug. Embed it in a MainSection's `blocks` — it renders inline in that section's content column and scrolls horizontally (see MainSection › 'With embedded FeaturedWork'). Slugs that don't resolve to a published project are skipped.",
+    fields: [
+      { name: "slugs", type: "string[]", required: true, notes: "Project slugs to feature, in display order (e.g. demonstrating-innovation-with-a-gamified-microsite)." },
+    ],
+    variants: [{ label: "Carousel (shown standalone)", section: sampleFeaturedWork }],
   },
 ];
