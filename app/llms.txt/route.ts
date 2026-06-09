@@ -27,7 +27,9 @@ export async function GET(): Promise<Response> {
     (p) => !p.draft && !EXCLUDED_PAGE_SLUGS.has(p.slug),
   );
 
-  const caseStudyPages = pages.filter((p) => p.layout === "case-study");
+  const caseStudyPages = pages.filter(
+    (p) => p.layout === "case-study" || p.layout === "pillar-page",
+  );
   const defaultPages = pages.filter((p) => p.layout === "default");
 
   const lines: string[] = [

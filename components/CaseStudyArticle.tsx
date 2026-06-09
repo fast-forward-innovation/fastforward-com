@@ -24,12 +24,15 @@ export function CaseStudyArticle({
   additionalPostFields,
   services = [],
   pageSections,
+  numbered = true,
 }: {
   title: string;
   featuredImage?: FrontmatterImage;
   additionalPostFields?: AdditionalPostFields;
   services?: string[];
   pageSections: PageSection[];
+  /** Auto-number MainSections `(01)/(02)…`. False for the pillar-page layout. */
+  numbered?: boolean;
 }) {
   const backgroundColor = additionalPostFields?.brandColor
     ? hexToRgba(additionalPostFields.brandColor)
@@ -44,6 +47,7 @@ export function CaseStudyArticle({
   const renderedSections = renderPageSections(
     pageSections,
     CASE_STUDY_SECTION_TYPES,
+    { numbered },
   );
 
   return (

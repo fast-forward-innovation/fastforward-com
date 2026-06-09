@@ -11,6 +11,7 @@ The schema is the source of truth. Always check [lib/types.ts](lib/types.ts) bef
 | Project case study | `content/projects/<slug>.mdx` | `Project` in [lib/types.ts](lib/types.ts) | [content/projects/growing-with-pantheon.mdx](content/projects/growing-with-pantheon.mdx) |
 | Default-layout static page | `content/pages/<slug>.mdx` (`layout: default`) | `Page` in [lib/types.ts](lib/types.ts) | [content/pages/accessibility.mdx](content/pages/accessibility.mdx) |
 | Case-study-layout static page | `content/pages/<slug>.mdx` (`layout: case-study`) | `Page` in [lib/types.ts](lib/types.ts) | [content/pages/museum-experiences.mdx](content/pages/museum-experiences.mdx) |
+| Pillar-page-layout static page | `content/pages/<slug>.mdx` (`layout: pillar-page`) | `Page` in [lib/types.ts](lib/types.ts) | [content/pages/digital/design-and-development.mdx](content/pages/digital/design-and-development.mdx) |
 | Lab-project-layout static page | `content/pages/<slug>.mdx` (`layout: lab-project`) | `Page` in [lib/types.ts](lib/types.ts) | [content/pages/lab-project-sample.mdx](content/pages/lab-project-sample.mdx) |
 
 **Note on landing pages:** [components/LandingPage.tsx](components/LandingPage.tsx) renders the `layout: landing` page type but the hero copy, three feature cards, and CTA are currently hard-coded in JSX, not driven by frontmatter. Until that component is refactored, do not author new pages with `layout: landing` — they will not render the campaign-specific content. Use `layout: default` instead and call this out to the user.
@@ -140,6 +141,8 @@ pageSections: [...]                  # ordered MainSection / ImageBlock — same
 ```
 
 The same section / voice rules from the project case-study guide apply: lead with the human reality, push tech specs to the back, alternate `white`/`gray` backgrounds, no two grays in a row. Rendered by [components/CaseStudyPage.tsx](components/CaseStudyPage.tsx) → [components/CaseStudyArticle.tsx](components/CaseStudyArticle.tsx) (shared with [components/Post.tsx](components/Post.tsx)).
+
+**`layout: pillar-page`** is identical to `case-study` — same component, hero, blocks, and voice rules — **except MainSections are not auto-numbered** (no `(01)`/`(02)` rail). Use it for capability / "pillar" pages (the `digital/*` and `experiences/*` section pages) where the numbered, sequential reading of a case study isn't wanted. Everything else in this section applies verbatim.
 
 Unlike project detail pages, case-study-layout *pages* do **not** auto-render a `Featured Projects` block at the bottom. To highlight relevant projects, embed a `FeaturedWork` block in a `MainSection`'s `blocks` array and list the project slugs you want. It renders as a single-line, horizontally-scrolling carousel of `ProjectCard`s **inline in that section's content column** (no dark band, inherits the page background, dark text) — a hand-picked, topic-relevant selection rather than the home page's auto-rotated latest three. Field: `slugs` (required, in display order). Example:
 

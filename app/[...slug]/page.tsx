@@ -58,6 +58,8 @@ export default async function DynamicPage({
     content = <LandingPage page={page} />;
   } else if (page.layout === "case-study") {
     content = <CaseStudyPage page={page} />;
+  } else if (page.layout === "pillar-page") {
+    content = <CaseStudyPage page={page} numbered={false} />;
   } else if (page.layout === "blog") {
     content = <BlogPost page={page} />;
   } else if (page.layout === "blog-case-study") {

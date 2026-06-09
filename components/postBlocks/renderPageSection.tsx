@@ -59,15 +59,16 @@ export function renderPageSection(
   index: number,
   ctx: RenderSectionContext,
   allowedTypes?: readonly PageSectionType[],
+  numbered = true,
 ): ReactNode {
   if (allowedTypes && !allowedTypes.includes(section.type)) return null;
 
   switch (section.type) {
     case "MainSection": {
-      ctx.mainCount++;
-      return (
-        <MainSection key={index} section={section} mainCount={ctx.mainCount} />
-      );
+      // `numbered: false` (pillar pages) leaves the count at 0, which
+      // MainSection treats as "no marker". Default keeps the (01)/(02)… rail.
+      const n = numbered ? ++ctx.mainCount : 0;
+      return <MainSection key={index} section={section} mainCount={n} />;
     }
     case "ImageBlock":
       return <ImageBlock key={index} block={section} />;
@@ -94,9 +95,11 @@ export function renderPageSection(
 export function renderPageSections(
   sections: PageSection[],
   allowedTypes?: readonly PageSectionType[],
+  opts?: { numbered?: boolean },
 ): ReactNode[] {
+  const numbered = opts?.numbered ?? true;
   const ctx: RenderSectionContext = { mainCount: 0 };
   return sections.map((section, index) =>
-    renderPageSection(section, index, ctx, allowedTypes),
+    renderPageSection(section, index, ctx, allowedTypes, numbered),
   );
 }

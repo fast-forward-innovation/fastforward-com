@@ -171,6 +171,7 @@ export interface Page {
     | "default"
     | "landing"
     | "case-study"
+    | "pillar-page"
     | "lab-project"
     | "blog"
     | "blog-case-study"

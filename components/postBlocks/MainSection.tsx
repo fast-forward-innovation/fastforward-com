@@ -22,7 +22,10 @@ export function MainSection({
             ({mainCount < 10 ? `0${mainCount}` : mainCount})
           </span>
         ) : null}
-          <span className="text-sm md:text-md font-bold">{section.title}</span>
+          <span
+            className="text-sm md:text-md font-bold"
+            dangerouslySetInnerHTML={{ __html: section.title ?? "" }}
+          />
         </h2>
         <div className="md:inline-block md:w-3/4">
           {section.tagline ? (
