@@ -70,17 +70,23 @@ export function Footer() {
                 <Link href="/">Home</Link>
               </li>
               <li>
-                <Link href="/privacy-policy">Privacy Policy</Link>
-              </li>
-              <li>
                 <Link href="/our-work">Our Work</Link>
               </li>
               <li>
-                <Link href="/accessibility">Accessibility</Link>
+                <Link href="/experiences">Experiences</Link>
+              </li>
+              <li>
+                <Link href="/digital">Digital</Link>
+              </li>
+                  <li>
+                <Link href="/blog">Think Fast</Link>
+              </li>
+                  <li>
+                <Link href="/contact-us">Contact Us</Link>
               </li>
             </ul>
-            <p className="text-xs leading-loose w-fit">
-              © Copyright {new Date().getFullYear()} &mdash; Fast Forward LLC{" "}
+            <p className="text-xs leading-loose w-fit text-center">
+              © Copyright {new Date().getFullYear()} &mdash; Fast Forward LLC{" "}<br/><Link href="/privacy-policy">Privacy Policy</Link> • <Link href="/accessibility">Accessibility</Link>
               <br className="sm:hidden" />
             </p>
           </div>
