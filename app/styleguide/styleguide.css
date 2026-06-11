@@ -134,6 +134,14 @@
   background: #fff;
 }
 
+/* Live previews render real components that style their own code (e.g. the
+   CodeBlock dark card). Don't apply the doc inline-code chip background/padding
+   to code inside a preview. */
+.sg-preview code {
+  background: transparent;
+  padding: 0;
+}
+
 .sg-source {
   margin-top: 0.75rem;
 }

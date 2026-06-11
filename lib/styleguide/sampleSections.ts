@@ -223,6 +223,36 @@ export const sampleCodeBlockBare: CodeBlock = {
 pnpm advice build`,
 };
 
+// Setting `language: claude` styles the card as a Claude conversation / agent
+// log (warm palette, wrapping prose). Structure comes from literal glyphs at
+// line starts: "•" a turn, "▸" a tool/section, "☐"/"☑" todos.
+export const sampleCodeBlockClaude: CodeBlock = {
+  type: "CodeBlock",
+  title: "Conversation with Claude",
+  language: "claude",
+  code: `Thought for 29s
+
+• I have the complete source. Now I'll execute the parity port — starting
+  with the highest-impact piece: porting all 7 CSS partials into the
+  Tailwind v4 globals.css.
+
+▸ Update Todos
+  ☑ Port 7 CSS partials into Tailwind v4 globals.css (typography, .section,
+    .btn, gradients, banner, posts, contact-form)
+  ☐ Update data files (footer address/links, banner, our-work + contact
+    intros, submitted text)
+  ☐ Layout offset wrapper + SiteHeader (exact markup + hamburger) +
+    Footer / ContactBlock / FooterBlock
+  ☐ Build + screenshot verify against old site
+
+▸ Write globals.css  ·  311 lines
+
+    @import 'tailwindcss';
+    @plugin '@tailwindcss/typography';`,
+  caption:
+    'A CodeBlock with language set to "claude". Glyphs at line starts (•, ▸, ☐, ☑) carry the structure.',
+};
+
 // ---------------------------------------------------------------------------
 // VideoBlock (lab projects only)
 // ---------------------------------------------------------------------------
@@ -456,12 +486,13 @@ export const blockGallery: BlockDoc[] = [
     fields: [
       { name: "code", type: "string", required: true, notes: "The snippet (preserve newlines/indentation)." },
       { name: "filename", type: "string", notes: "Shown in the card title bar; falls back to title." },
-      { name: "language", type: "string", notes: "Language label + code class (e.g. typescript)." },
+      { name: "language", type: "string", notes: "Language label + code class (e.g. typescript). Set to \"claude\" for the conversation/agent-log style." },
       { name: "caption", type: "string", notes: "Caption below the card." },
     ],
     variants: [
       { label: "Filename + language + caption", section: sampleCodeBlock },
       { label: "Bare snippet", section: sampleCodeBlockBare },
+      { label: "Claude conversation log (language: claude)", section: sampleCodeBlockClaude },
     ],
   },
   {
