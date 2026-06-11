@@ -9,7 +9,7 @@ afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-function firstRule(result: ReturnType<typeof robots>) {
+function firstRule(result: Awaited<ReturnType<typeof robots>>) {
   const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
   return rules[0];
 }
@@ -19,17 +19,17 @@ describe("robots (Live env)", () => {
     vi.stubEnv("PANTHEON_ENVIRONMENT", "live");
   });
 
-  it("disallows every draft project URL", () => {
-    const rule = firstRule(robots());
+  it("disallows every draft URL", async () => {
+    const rule = firstRule(await robots());
     const disallow = Array.isArray(rule.disallow)
       ? rule.disallow
       : [rule.disallow].filter(Boolean);
-    expect(disallow).toContain("/our-work/building-fastforward-sh");
-    expect(disallow).toContain("/our-work/growing-with-pantheon");
+    expect(disallow).toContain("/blog/building-fastforward-sh");
+    expect(disallow).toContain("/blog/growing-with-pantheon");
   });
 
-  it("disallows /contact-submitted and /api/", () => {
-    const rule = firstRule(robots());
+  it("disallows /contact-submitted and /api/", async () => {
+    const rule = firstRule(await robots());
     const disallow = Array.isArray(rule.disallow)
       ? rule.disallow
       : [rule.disallow].filter(Boolean);
@@ -37,14 +37,14 @@ describe("robots (Live env)", () => {
     expect(disallow).toContain("/api/");
   });
 
-  it("uses the apex domain for the sitemap pointer", () => {
-    const sitemap = robots().sitemap;
+  it("uses the apex domain for the sitemap pointer", async () => {
+    const sitemap = (await robots()).sitemap;
     const sitemapUrl = Array.isArray(sitemap) ? sitemap[0] : sitemap;
     expect(sitemapUrl).toBe("https://fastforward.sh/sitemap.xml");
   });
 
-  it("targets all user agents", () => {
-    const rule = firstRule(robots());
+  it("targets all user agents", async () => {
+    const rule = firstRule(await robots());
     expect(rule.userAgent).toBe("*");
   });
 });

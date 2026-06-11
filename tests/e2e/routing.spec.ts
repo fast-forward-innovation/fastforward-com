@@ -44,10 +44,10 @@ test.describe("Static routes render", () => {
 });
 
 test.describe("Project case studies render", () => {
-  test("architecture-and-release-workflow renders header content", async ({ page }) => {
-    await page.goto("/our-work/architecture-and-release-workflow");
+  test("northeastern-simplifying-online-course-registration renders header content", async ({ page }) => {
+    await page.goto("/our-work/northeastern-simplifying-online-course-registration");
     await expect(
-      page.getByRole("heading", { name: /Architecture and Release Workflow/i }),
+      page.getByRole("heading", { name: /Simplifying Online Course Registration/i }),
     ).toBeVisible();
   });
 
