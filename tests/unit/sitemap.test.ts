@@ -21,20 +21,20 @@ describe("sitemap (Live env)", () => {
     expect(urls).toContain("https://fastforward.sh/contact-us");
   });
 
-  it("excludes draft project URLs", async () => {
+  it("excludes draft URLs", async () => {
     const urls = (await sitemap()).map((e) => e.url);
     expect(urls).not.toContain(
-      "https://fastforward.sh/our-work/building-fastforward-sh",
+      "https://fastforward.sh/blog/building-fastforward-sh",
     );
     expect(urls).not.toContain(
-      "https://fastforward.sh/our-work/growing-with-pantheon",
+      "https://fastforward.sh/blog/growing-with-pantheon",
     );
   });
 
   it("includes published project URLs", async () => {
     const urls = (await sitemap()).map((e) => e.url);
     expect(urls).toContain(
-      "https://fastforward.sh/our-work/architecture-and-release-workflow",
+      "https://fastforward.sh/our-work/northeastern-simplifying-online-course-registration",
     );
     expect(urls).toContain(
       "https://fastforward.sh/our-work/real-time-advice-for-expectant-parents",
@@ -53,13 +53,13 @@ describe("sitemap (non-Live env)", () => {
     vi.stubEnv("PANTHEON_ENVIRONMENT", "feat-multidev");
   });
 
-  it("includes draft project URLs so reviewers can browse them", async () => {
+  it("includes draft URLs so reviewers can browse them", async () => {
     const urls = (await sitemap()).map((e) => e.url);
     expect(urls).toContain(
-      "https://fastforward.sh/our-work/building-fastforward-sh",
+      "https://fastforward.sh/blog/building-fastforward-sh",
     );
     expect(urls).toContain(
-      "https://fastforward.sh/our-work/growing-with-pantheon",
+      "https://fastforward.sh/blog/growing-with-pantheon",
     );
   });
 });

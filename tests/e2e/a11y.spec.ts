@@ -10,7 +10,7 @@ import { expect, test } from "@playwright/test";
 const PAGES = [
   { path: "/", name: "home" },
   { path: "/our-work", name: "our-work index" },
-  { path: "/our-work/architecture-and-release-workflow", name: "project page" },
+  { path: "/our-work/northeastern-simplifying-online-course-registration", name: "project page" },
   { path: "/contact-us", name: "contact form" },
   { path: "/accessibility", name: "accessibility statement" },
   { path: "/privacy-policy", name: "privacy policy" },

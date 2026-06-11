@@ -55,10 +55,10 @@ test.describe("SEO meta tags", () => {
     }
   });
 
-  test("draft project page (direct URL) renders with noindex meta", async ({ page }) => {
+  test("draft page (direct URL) renders with noindex meta", async ({ page }) => {
     // On Live, draft slugs still resolve so previews can be shared, but the
     // page must carry noindex,nofollow so search engines won't index it.
-    const response = await page.goto("/our-work/building-fastforward-sh");
+    const response = await page.goto("/blog/building-fastforward-sh");
     expect(response?.status()).toBe(200);
     const robots = await page
       .locator('meta[name="robots"]')
@@ -78,15 +78,15 @@ test.describe("sitemap.xml", () => {
     expect(body).not.toContain("www.fastforward.sh");
   });
 
-  test("excludes draft project URLs on Live", async ({ request }) => {
+  test("excludes draft URLs on Live", async ({ request }) => {
     const body = await (await request.get("/sitemap.xml")).text();
-    expect(body).not.toContain("/our-work/building-fastforward-sh");
-    expect(body).not.toContain("/our-work/growing-with-pantheon");
+    expect(body).not.toContain("/blog/building-fastforward-sh");
+    expect(body).not.toContain("/blog/growing-with-pantheon");
   });
 
   test("includes published project URLs", async ({ request }) => {
     const body = await (await request.get("/sitemap.xml")).text();
-    expect(body).toContain("/our-work/architecture-and-release-workflow");
+    expect(body).toContain("/our-work/northeastern-simplifying-online-course-registration");
     expect(body).toContain("/our-work/real-time-advice-for-expectant-parents");
   });
 });
@@ -98,8 +98,8 @@ test.describe("robots.txt", () => {
     const body = await res.text();
     expect(body).toMatch(/User-Agent:\s*\*/i);
     expect(body).toContain(`Sitemap: ${APEX}/sitemap.xml`);
-    expect(body).toMatch(/Disallow:\s*\/our-work\/building-fastforward-sh/);
-    expect(body).toMatch(/Disallow:\s*\/our-work\/growing-with-pantheon/);
+    expect(body).toMatch(/Disallow:\s*\/blog\/building-fastforward-sh/);
+    expect(body).toMatch(/Disallow:\s*\/blog\/growing-with-pantheon/);
     expect(body).toMatch(/Disallow:\s*\/contact-submitted/);
     expect(body).toMatch(/Disallow:\s*\/api\//);
   });
@@ -112,7 +112,7 @@ test.describe("llms.txt", () => {
     expect(res.headers()["content-type"]).toMatch(/markdown/);
     const body = await res.text();
     expect(body.split("\n")[0]).toBe("# Fast Forward");
-    expect(body).toContain(`${APEX}/our-work/architecture-and-release-workflow`);
+    expect(body).toContain(`${APEX}/our-work/northeastern-simplifying-online-course-registration`);
     expect(body).not.toContain("www.fastforward.sh");
     expect(body).not.toContain("building-fastforward-sh");
     expect(body).not.toContain("lab-project-sample");
@@ -129,7 +129,7 @@ test.describe("Security headers", () => {
   });
 
   test("Strict-Transport-Security present on a project page", async ({ request }) => {
-    const res = await request.get("/our-work/architecture-and-release-workflow");
+    const res = await request.get("/our-work/northeastern-simplifying-online-course-registration");
     expect(res.headers()["strict-transport-security"]).toBeTruthy();
   });
 });
@@ -171,7 +171,7 @@ test.describe("JSON-LD structured data", () => {
   });
 
   test("project page emits BreadcrumbList + CreativeWork schemas", async ({ page }) => {
-    const slug = "architecture-and-release-workflow";
+    const slug = "northeastern-simplifying-online-course-registration";
     await page.goto(`/our-work/${slug}`);
     const scripts = await page
       .locator('script[type="application/ld+json"]')
@@ -189,6 +189,6 @@ test.describe("JSON-LD structured data", () => {
 
     const work = parsed.find((d) => d["@type"] === "CreativeWork");
     expect(work?.url).toBe(`${APEX}/our-work/${slug}`);
-    expect(work?.name).toMatch(/Architecture and Release Workflow/);
+    expect(work?.name).toMatch(/Simplifying Online Course Registration/);
   });
 });
