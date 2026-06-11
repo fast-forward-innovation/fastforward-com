@@ -7,8 +7,9 @@ import { trapFocus } from "@/lib/trapFocus";
 
 const NAV_LINKS: Array<{ label: string; href: string; mobileOnly?: boolean }> = [
   { label: "Our Work", href: "/our-work" },
-  { label: "Privacy Policy", href: "/privacy-policy", mobileOnly: true },
-  { label: "Accessibility", href: "/accessibility", mobileOnly: true },
+  { label: "Experiences", href: "/experiences" },
+  { label: "Digital", href: "/digital" },
+  { label: "Think Fast", href: "/blog" },
 ];
 
 export function SiteHeader() {

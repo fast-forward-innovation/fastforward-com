@@ -23,14 +23,27 @@ function readMdx(filePath: string): { data: Record<string, unknown>; content: st
   return { data: data as Record<string, unknown>, content };
 }
 
+// Walks `subdir` recursively so section content can live in nested folders
+// (e.g. content/pages/experiences/*.mdx). Routing is slug-driven, so the
+// directory layout is purely organizational.
 function listMdx(subdir: string): string[] {
-  try {
-    return readdirSync(path.join(CONTENT_DIR, subdir))
-      .filter((f) => f.endsWith(".mdx"))
-      .map((f) => path.join(CONTENT_DIR, subdir, f));
-  } catch {
-    return [];
-  }
+  const root = path.join(CONTENT_DIR, subdir);
+  const out: string[] = [];
+  const walk = (dir: string) => {
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (entry.name.endsWith(".mdx")) out.push(full);
+    }
+  };
+  walk(root);
+  return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -157,4 +170,33 @@ export async function getAllPages(): Promise<Page[]> {
 
 export async function getPageBySlug(slug: string): Promise<Page | null> {
   return (await getAllPages()).find((p) => p.slug === slug) ?? null;
+}
+
+/**
+ * Pages intended for public surfaces (sitemap). On Live, filters out
+ * drafts; on every other environment returns everything so reviewers can
+ * browse in-progress work. getAllPages() stays unfiltered either way so
+ * draft URLs continue to resolve for preview-sharing.
+ */
+export async function getPublishedPages(): Promise<Page[]> {
+  const all = await getAllPages();
+  if (!isLiveEnvironment()) return all;
+  return all.filter((p) => !p.draft);
+}
+
+/**
+ * Blog posts for the /blog auto-listing index. Includes both the simple
+ * `blog` template and the `blog-case-study` template. Draft-aware like
+ * getPublishedPages (drafts hidden on Live, visible elsewhere). Sorted
+ * pinned-first, then newest date first — mirroring the isSticky sort in
+ * getAllProjects().
+ */
+export async function getBlogPosts(): Promise<Page[]> {
+  const posts = (await getPublishedPages()).filter(
+    (p) => p.layout === "blog" || p.layout === "blog-case-study",
+  );
+  return posts.sort((a, b) => {
+    if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
+    return (b.date || "").localeCompare(a.date || "");
+  });
 }

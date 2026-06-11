@@ -1,0 +1,294 @@
+---
+title: Migrating Fast Forward to Pantheon Next.js with Claude Code
+slug: blog/migrating-with-claude-code
+date: '2026-06-10T12:00:00'
+layout: blog
+draft: false
+pinned: true
+author:
+  name: Jason Yarrington
+  role: Web Solutions
+editorial:
+  status: needs images
+  branch: multi-content
+  updated: '2026-06-10'
+  notes: First-pass narrative; conclusion drafted from brief material, awaiting review; hero + two screenshots are placeholders.
+additionalPostFields:
+  seoDescription: >-
+    A one-weekend experiment migrating our headless WordPress + Gatsby site to
+    Next.js on Pantheon — with Claude Code doing the heavy lifting through
+    discovery, export, scaffolding, and the grind toward visual parity.
+  tags:
+    - Migration
+    - Claude Code
+    - WordPress
+    - Gatsby
+contentHtml: |
+  <p>Our current site workflow just wasn't keeping up with our needs. As a services company we spend all our time on our clients' projects, and our own site often becomes the cobbler's kids' shoes.</p>
+  <p>I'd wanted to update the site for a while. We built the current one in collaboration with some of the biggest leaders in technology several years ago. It needed to be fast, it needed to be secure, and it needed to stay up to date. We went with a static site generator and hosted it on Netlify. It worked great.</p>
+  <p>When Pantheon announced their Next.js hosting support, I was excited to migrate our site to it and use the same approach for <strong>fastforward.sh</strong>. So I sat down one weekend and tried to see if I could migrate the whole site using Claude Code to do the heavy lifting. The plan:</p>
+
+  <ul>
+    <li>Migrate from our headless setup — a WordPress CMS with a Gatsby front end.</li>
+    <li>Make sure we got all the content — 100% parity.</li>
+    <li>Improve our site load speeds.</li>
+    <li>Move to using MDX files for our content editing.</li>
+  </ul>
+
+  <h2>Every migration follows the same plan</h2>
+  <p>Migrations all follow the same arc:</p>
+  <ul class="check-list">
+    <li>Discovery</li>
+    <li>Plan</li>
+    <li>Export</li>
+    <li>Content Mapping / Architecture</li>
+    <li>Import</li>
+    <li>Test &amp; iterate</li>
+  </ul>
+
+  <p>We've been doing migrations for over a decade now. They always involve the same process, but they are very labor- and time-intensive. There are lots of tools, plugins, and services that can help — and invariably we still involve a lot of human interaction to review and edit the work. Because it takes so long, the scope generally increases along the way. If you're going to put this much work into a replatform, you might as well review all the content, fix any issues, and add the features you were always hoping for.</p>
+
+  <p>I wanted to see if I could keep this as tight a scope as possible. That was a little easier here because I'm the developer — and one of the founders of the company, and therefore one of the key stakeholders.</p>
+
+  <p>I started by creating a new project on my computer in a sibling folder to where the code for my existing site lived. Then I put Claude in plan mode and gave it a set of instructions to start our plan.</p>
+
+  <figure class="code-card">
+    <figcaption class="code-card__bar">
+      <span class="code-card__filename">The plan-mode prompt</span>
+      <span class="code-card__lang">text</span>
+    </figcaption>
+    <pre class="code-card__pre"><code class="language-text">Help me plan a migration of our existing website
+  (https://live-fastforward.pantheonsite.io) to a new environment.
+
+  The existing site is a headless WordPress CMS with a Gatsby front end.
+
+  The new site should be a Next.js 16 site that has the same front end as
+  the old site. I want full visual parity and I'm OK using the same
+  approach to CSS as the old site.
+
+  The old site is on Pantheon and the new site will be hosted on Pantheon.
+
+  Break up the migration into repeatable steps:
+
+  - Discovery
+  - Plan
+  - Content Mapping and Architecture
+  - Export / Import
+  - Test</code></pre>
+  </figure>
+  <p class="code-card__caption">Plan mode lets Claude research and propose before touching a single file.</p>
+
+  <h2>Feedback from Claude</h2>
+  <p>Claude came back with research that confirmed the key facts and de-risked the stack before committing to a plan.</p>
+  <figure class="code-card">
+    <figcaption class="code-card__bar">
+      <span class="code-card__filename">Claude — research findings</span>
+      <span class="code-card__lang">claude</span>
+    </figcaption>
+    <pre class="code-card__pre"><code class="language-claude">Research confirms the key facts and de-risks the stack:
+
+  ▸ Pantheon Front-End Sites supports Next.js 16 — the default for new sites since March 2026 (Node 18/20 via package.json engines). One hard requirement: the code must come from a GitHub repo. There's even an official WordPress + Next.js Front-End starter.
+
+  ▸ Velite + Next.js 16 + Tailwind is a validated, type-safe MDX content-layer pattern (Zod-validated frontmatter at build time).
+
+  ▸ WPGraphQL → MDX is best done with the unified pipeline (rehype-parse → rehype-remark → remark-stringify/remark-mdx), with explicit handling for WordPress HTML quirks (captions, galleries, block markup, relative links/images).
+
+  One thing I'll defer per your instruction: I'll have Discovery inventory the forms and we'll pick an approach (Formspree/Basin/etc.) at the end rather than now.
+
+  Let me write the plan.</code></pre>
+  </figure>
+  <p class="code-card__caption">It also flagged the one thing I'd asked it to hold — our contact form — for later.</p>
+
+  <h2>Discovery</h2>
+  <p>As it kicked off discovery, Claude prompted me for the location of the repos for the CMS and the Gatsby site. From there it cloned the code into its sandbox and explored how the site was structured. It also checked for security issues and flagged the following:</p>
+  <figure class="code-card">
+    <figcaption class="code-card__bar">
+      <span class="code-card__filename">Claude — security finding</span>
+      <span class="code-card__lang">claude</span>
+    </figcaption>
+    <pre class="code-card__pre"><code class="language-claude">WP GraphQL endpoint (from .env.example): https://dev-fast-forward-cms.pantheonsite.io/wp/graphql
+
+  ⚠️  The file contains a committed WP application password (node-query / Ogfy pwpb…). That's a leaked credential in a public repo; flag for rotation. I won't use it.</code></pre>
+  </figure>
+  <p class="code-card__caption">A committed application password — exactly the kind of thing a rushed launch leaves behind.</p>
+  <p>This phase kind of blew my mind. On most migration projects we plan on weeks just to explore how the site is architected and how the environments are set up. We use multiple tools to crawl and evaluate the site — Screaming Frog, Semrush, linters, our own export tools, and a lot of regexes that look for issues. Claude seemed to reach all of those pieces of functionality in one place.</p>
+  <figure class="code-card">
+    <figcaption class="code-card__bar">
+      <span class="code-card__filename">Claude — auditing the templates</span>
+      <span class="code-card__lang">claude</span>
+    </figcaption>
+    <pre class="code-card__pre"><code class="language-claude">The remaining gold is in src/templates/* (the full field schema for frontmatter) and the contact-form handler. Let me audit src/ thoroughly and introspect the live GraphQL endpoint in parallel.</code></pre>
+  </figure>
+  <p class="code-card__caption">It read our templates for the field schema and introspected the live GraphQL endpoint at the same time.</p>
+  <p>It found content hard-coded in our templates as well as in our post structure. It compared what was in our CMS against our sitemap and found gaps that we might have missed if we'd only crawled the site — more embarrassing evidence of our cobbler's site. It also pointed out technical challenges, such as needing to change how Tailwind is configured and dependencies that would need to be updated. And it let me defer working on our contact form for now. I know that's custom code I want to address, and I'm going to work on it later.</p>
+
+  <h2>Scaffolding the new site</h2>
+  <p>From here I could tell it to just proceed to the next step. It asked whether I wanted to pause and review the discovery findings or press on. I took a careful look, and since this is a pretty simple site and I'm a team of one, I pressed on. On a larger site, this would be a good moment to pause and review the findings with the broader team or the client.</p>
+  <figure class="code-card">
+    <figcaption class="code-card__bar">
+      <span class="code-card__filename">Claude — scaffold plan</span>
+      <span class="code-card__lang">claude</span>
+    </figcaption>
+    <pre class="code-card__pre"><code class="language-claude">Update Todos
+  ☐ Scaffold root config (package.json, tsconfig, next.config, postcss, velite, gitignore)
+  ☐ Tailwind v4 globals.css with ported ff_* tokens + fonts
+  ☐ Velite collections + Zod schemas (caseStudies, pages)
+  ☐ App Router routes (home, our-work, [slug], contact, sitemap/robots)
+  ☐ Component skeletons ported from Gatsby (header/footer/blocks/form)
+  ☐ Site copy data files + lib loaders
+  ☐ WPGraphQL export pipeline skeleton (scripts/export)
+  ☐ Copy static assets to public/; install deps; verify clean build</code></pre>
+  </figure>
+  <p class="code-card__caption">A concrete, checkable plan for the scaffold — each item reviewable on its own.</p>
+
+  <h2>Exports</h2>
+  <p>Our site had content in two places. We had ACF flexible layouts for our case studies, and we had some hard-coded blocks in our Gatsby templates for a few of our pages. This is definitely not best practice, but I remember launching this site in a hurry while also trying to build it as a team. That's not uncommon with any site.</p>
+  <p>There are so many ways to structure content on sites these days. I think WordPress in particular suffers from its own flexibility. Content can live in ACF shapes, in custom content types, hard-coded in template files, in Gutenberg, in reusable WP patterns, or in page builders like WPBakery, Kadence Blocks, and Elementor — to name a few.</p>
+  <p>This is where Claude seems to have a ton of potential. Sniffing out all those patterns and rationalizing and normalizing them back into content, stripping out visual decoration where appropriate, is really powerful. There are a lot of tools we've worked with for this, including some pretty good scraping tools, but adding AI to the mix is a real workhorse. There are just so many opportunities for variability in a site that LLMs can address on a page-by-page basis without human intervention.</p>
+  <p>While I was sitting here writing this, Claude came back with this:</p>
+  <figure class="code-card">
+    <figcaption class="code-card__bar">
+      <span class="code-card__filename">Claude — build status</span>
+      <span class="code-card__lang">claude</span>
+    </figcaption>
+    <pre class="code-card__pre"><code class="language-claude">▸ What's working
+
+  A clean `npm run build` produces 18 static pages with URLs matching the old site exactly:
+
+    Route                      Source                 Render
+    /                          bespoke (home blocks)  Static
+    /our-work                  bespoke listing        Static
+    /our-work/&lt;slug&gt; ×8        WP posts → MDX         SSG
+    /privacy-policy            WP pages → MDX         SSG
+    /accessibility             WP pages → MDX         SSG
+    /contact-us                bespoke                Static
+    /contact-submitted, /404   bespoke                Static / dynamic
+    /sitemap.xml, /robots.txt  generated              Static
+
+  The export pipeline ran for real against the live CMS: `npm run export:wp` pulled 8 case studies + 2 pages + 46 media files into the repo, and re-running it is idempotent (zero diff). Case studies serialize to clean structured frontmatter (ordered sections, local /media/... paths, preserved alt text, richText → Markdown).
+
+  ▸ Stack &amp; layout
+  Next 16.2.9 · React 19 · Tailwind v4 · Velite · TypeScript · Node 20 — all current, build green. Git is initialized and everything is staged but not committed (I don't commit unless you ask).
+
+  ▸ Honest status &amp; next step
+  Components are functional ports, not yet pixel-parity. The remaining work to reach full visual parity (clearly marked TODO(parity) in the code):
+  ☐ Port the 7 src/css partials (Tailwind v3 → v4 syntax)
+  ☐ Homepage banner rotation/animation + hamburger-menu flyout
+  ☐ Full footer link grid + contact-page intro copy
+  ☐ Swap content &lt;img&gt; → next/image (capture mediaDetails.width/height)
+
+  I'd suggest the visual-parity pass next, then push to GitHub and create the Pantheon Front-End Site. Want me to start the parity pass, or commit this scaffold first?
+
+  One housekeeping note: the leaked WP Application Password in the old repo's .env.example should still be rotated.</code></pre>
+  </figure>
+  <p class="code-card__caption">Eighteen static pages, the export run for real against the live CMS, and an honest list of what still wasn't pixel-perfect.</p>
+
+  <h2>A look at the local dev</h2>
+  <p>Pretty good. I stopped to take a look at the site on a local dev server. We had our grid and our case studies. Not visual parity yet — but I'd only been working for about an hour at this point.</p>
+  <figure class="ff-screenshot">
+    <div class="ff-screenshot__frame" style="aspect-ratio:16/9;background:#eef1f3;border:1px solid rgba(0,0,0,0.08);border-radius:0.5rem;display:flex;align-items:center;justify-content:center;text-align:center;padding:1.5rem;">
+      <span style="font-family:var(--font-mono);font-size:0.8rem;color:#7a8290;">[ Screenshot placeholder — local dev (localhost:3000), ~1 hour in: work grid and case-study cards with real content, before the visual-parity pass. ]</span>
+    </div>
+    <figcaption class="code-card__caption">The bones are there; parity isn't yet.</figcaption>
+  </figure>
+  <p>I pressed on.</p>
+  <figure class="code-card">
+    <figcaption class="code-card__bar">
+      <span class="code-card__filename">Claude — starting the visual-parity pass</span>
+      <span class="code-card__lang">claude</span>
+    </figcaption>
+    <pre class="code-card__pre"><code class="language-claude">Dev server stopped. Continuing with the visual-parity pass. First I need the real styling sources — the 7 CSS partials and the exact component markup from the old site. Let me pull them in.
+
+  I have all the CSS — it's highly portable (mostly @apply + the ff_* tokens I already defined). Now the exact component markup to match. Let me read the remaining components.</code></pre>
+  </figure>
+  <p class="code-card__caption">Highly portable CSS — mostly @apply plus the design tokens it had already ported.</p>
+
+  <h2>Reading the work as it happens</h2>
+  <p>Behind each of these steps is actual script code being run to get the information Claude needs to evaluate. Reviewing this as we go is really useful — it's a gut check that it's doing what we would do, and a reminder that we can regenerate these scripts ourselves.</p>
+  <figure class="code-card">
+    <figcaption class="code-card__bar">
+      <span class="code-card__filename">read-old-components.sh</span>
+      <span class="code-card__lang">bash</span>
+    </figcaption>
+    <pre class="code-card__pre"><code class="language-bash">cd reference/fastforward-web/src
+  for f in components/layout.jsx components/footer/footer.jsx \
+    components/post.jsx components/page.jsx \
+    templates/index.jsx pages/our-work.jsx pages/contact-us.jsx \
+    pages/contact-submitted.jsx pages/404.jsx \
+    components/page_blocks/projectCard.jsx \
+    components/page_blocks/featuredProjects.jsx \
+    components/postBlocks/mainSection.jsx \
+    components/postBlocks/imageBlock.jsx \
+    components/postBlocks/quoteBlock.jsx \
+    components/seo.jsx; do
+    echo "############ $f"; cat "$f"; echo
+  done</code></pre>
+  </figure>
+  <p class="code-card__caption">A plain shell loop dumping the old components so Claude can match the markup exactly — nothing magic underneath.</p>
+  <p>With the styling sources in hand, the parity work broke down into a clear punch list:</p>
+  <figure class="code-card">
+    <figcaption class="code-card__bar">
+      <span class="code-card__filename">Claude — visual-parity plan</span>
+      <span class="code-card__lang">claude</span>
+    </figcaption>
+    <pre class="code-card__pre"><code class="language-claude">Update Todos
+  ☐ Port 7 CSS partials into Tailwind v4 globals.css (typography, .section, .btn, gradients, banner, posts, contact-form)
+  ☐ Update data files (footer address/links, banner, our-work + contact intros, submitted text)
+  ☐ Layout offset wrapper + SiteHeader (exact markup + hamburger) + Footer/ContactBlock/FooterBlock
+  ☐ Home blocks: HomepageBanner (animated), TextBlock, ServiceBlock, ProjectCard, FeaturedProjects
+  ☐ Case study: CaseStudyArticle header (brandColor), MainSection, ImageBlock, QuoteBlock, Markdown
+  ☐ Pages: our-work, contact-us (address + radial footer), contact-submitted, [slug] wp-page, 404
+  ☐ Build + screenshot verify against old site</code></pre>
+  </figure>
+  <p class="code-card__caption">A punch list I could leave running while I went to get lunch.</p>
+
+  <h2>Back from lunch</h2>
+  <p>At this point I was off to get some lunch, to see what things looked like when I returned. When I came back, all of our visual elements were in and things looked pretty good. It looked like we had a few layout issues, though. The menu was missing — I inspected it and found it floating off on the left side. I also found some other issues, mostly padding and a few grid layouts that weren't quite right. I spent about an hour taking screenshots and logging the issues so I could tackle them one by one.</p>
+  <figure class="ff-screenshot">
+    <div class="ff-screenshot__frame" style="aspect-ratio:16/9;background:#eef1f3;border:1px solid rgba(0,0,0,0.08);border-radius:0.5rem;display:flex;align-items:center;justify-content:center;text-align:center;padding:1.5rem;">
+      <span style="font-family:var(--font-mono);font-size:0.8rem;color:#7a8290;">[ Screenshot placeholder — post-lunch parity pass with layout issues annotated: nav menu floating to the left, plus padding / grid-spacing fixes. ]</span>
+    </div>
+    <figcaption class="code-card__caption">Close, with a few layout gremlins to chase down.</figcaption>
+  </figure>
+  <figure class="code-card">
+    <figcaption class="code-card__bar">
+      <span class="code-card__filename">Claude — what changed in the parity pass</span>
+      <span class="code-card__lang">claude</span>
+    </figcaption>
+    <pre class="code-card__pre"><code class="language-claude">👉 Look again at http://localhost:3000
+
+  What changed in this pass — components are now ported 1:1 from the Gatsby source, not approximations:
+
+  ▸ Global CSS: all 7 src/css partials ported to Tailwind v4 — real typography scale (h1 up to 5.6rem), .section spacing, the signature red → blue diagonal gradient (buttons/underlines), radial footer gradients, ff-entire-background, .section-tagline.
+
+  ▸ Header/footer: exact nav with mobile slide-in + CSS hamburger; full 3-column footer (logo, "Design. Develop. Experience.", real address/LinkedIn, links grid, red bar). Most pages get the "Let's Work Together" CTA footer; /contact-us and 404 get the plain radial footer (matching the old route-by-route behavior, via Next route groups).
+
+  ▸ Home: animated hero banner (cross-fading images + sweeping gradient underline, respects reduced-motion), the real mission copy, the 4-column Services block, and Featured Projects.
+
+  ▸ Case studies: brand-color gradient header, numbered MainSections with alternating gray backgrounds, 1-/2-up image blocks, styled client quotes.
+
+  ▸ Contact: the full form with 3-part phone, client-side validation, error states, gradient button.
+
+  Still intentionally TODO (honest gaps): content images use &lt;img&gt; not next/image (needs width/height captured in the export); the banner animation is a faithful simplification; exact pixel diffs vs. the live old site haven't been machine-compared.
+
+  Take a look and tell me what's off — I can fine-tune specific components. I'll stop the dev server when you're done.</code></pre>
+  </figure>
+  <p class="code-card__caption">Components ported 1:1 from the Gatsby source — with an honest list of what was still simplified.</p>
+
+  <h2>Initial impressions</h2>
+  <p>For our site, this was a pretty great way to get where we wanted to go. I've wanted to consolidate our content into our site for a while now. The majority of the writing is done by a few of us, and we're all developers. When we do work with a collaborator, we draft in Google Docs or Office 365, and then it falls on me or Rob to put the final content in the page.</p>
+  <p>A static site generator paired with the multidev workflow on Pantheon is perfect for this. We write drafts in Google Docs, set the draft into an MDX file, and publish to a multidev with placeholders for our images. Then our creative director sources and touches up the images for the page. We drop those in when we're done and publish.</p>
+
+  <h2>Other considerations</h2>
+  <p>This approach isn't free. There are a few things we give up by leaving WordPress behind:</p>
+  <ul>
+    <li><strong>Plugin functionality.</strong> We lose a lot of functionality that's already available in plugins. We don't have a form plugin like Gravity Forms, so we'll have to figure out the best way to replace that. For us, we don't spend much time building forms — a simple contact form that securely passes data to Monday.com would go a long way.</li>
+    <li><strong>Scaffolding new content.</strong> We still need to address writing new content. Even WordPress's simplification tools — like a post-clone plugin — make it really easy to stub out a new page and give the editor a clear view of what to do. I'm thinking about setting up some Claude skills, such as <code>/new-page</code>, <code>/new-case-study</code>, or <code>/edit-content</code>, that would drop in some lorem ipsum and set up a new page for editing.</li>
+    <li><strong>Draft versus public content.</strong> We lose that functionality from WordPress, which we used a lot. We're going to have to see if we can build it into the frontmatter of a page and hide the content by environment.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>Would I recommend this for everyone? Not as a drop-in replacement for WordPress. You trade a familiar plugin ecosystem for version control, speed, and simplicity — and you rebuild the conveniences you relied on, like forms, content scaffolding, and draft-versus-public, on your own terms.</p>
+  <p>But for a small, developer-led team whose writing already lives in Google Docs, that trade is exactly the one we wanted to make. The weekend proved the part I most wanted to test: the migration itself — discovery, export, scaffolding, and the grind toward visual parity — is dramatically compressed when Claude Code does the heavy lifting. What used to take weeks of crawling, scripting, and hand-checking happened in an afternoon, with the scripts and findings sitting right in front of me the whole time, reviewable and regenerable.</p>
+  <p>The honest gaps are still gaps. Forms, new-content authoring, and draft state are real work we've deliberately deferred — and each one is its own next experiment. But the cobbler's kids finally have new shoes, and for the first time in years, keeping them new feels like it'll fit the way we actually work.</p>
+---

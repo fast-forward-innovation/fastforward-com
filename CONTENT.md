@@ -11,6 +11,7 @@ The schema is the source of truth. Always check [lib/types.ts](lib/types.ts) bef
 | Project case study | `content/projects/<slug>.mdx` | `Project` in [lib/types.ts](lib/types.ts) | [content/projects/growing-with-pantheon.mdx](content/projects/growing-with-pantheon.mdx) |
 | Default-layout static page | `content/pages/<slug>.mdx` (`layout: default`) | `Page` in [lib/types.ts](lib/types.ts) | [content/pages/accessibility.mdx](content/pages/accessibility.mdx) |
 | Case-study-layout static page | `content/pages/<slug>.mdx` (`layout: case-study`) | `Page` in [lib/types.ts](lib/types.ts) | [content/pages/museum-experiences.mdx](content/pages/museum-experiences.mdx) |
+| Pillar-page-layout static page | `content/pages/<slug>.mdx` (`layout: pillar-page`) | `Page` in [lib/types.ts](lib/types.ts) | [content/pages/digital/design-and-development.mdx](content/pages/digital/design-and-development.mdx) |
 | Lab-project-layout static page | `content/pages/<slug>.mdx` (`layout: lab-project`) | `Page` in [lib/types.ts](lib/types.ts) | [content/pages/lab-project-sample.mdx](content/pages/lab-project-sample.mdx) |
 
 **Note on landing pages:** [components/LandingPage.tsx](components/LandingPage.tsx) renders the `layout: landing` page type but the hero copy, three feature cards, and CTA are currently hard-coded in JSX, not driven by frontmatter. Until that component is refactored, do not author new pages with `layout: landing` — they will not render the campaign-specific content. Use `layout: default` instead and call this out to the user.
@@ -63,8 +64,13 @@ pageSections: [...]                  # ordered array of MainSection / ImageBlock
 - `tagline` — the **descriptive headline** rendered as the section H3 (e.g., "When the site model drifts from the editorial reality"). Sentence case.
 - `background` — `white` (default) or `gray`. Alternate them; never two grays in a row.
 - `richText` — HTML string (paragraphs, `<strong>`, `<code>`, `<dl>`, etc.). YAML block scalar (`>`) for readability.
+- `blocks` — optional embedded blocks rendered **inside this section's content column** (the right ¾), after `richText`. Lets a block live *inside* a numbered section (sharing its `(0N)` marker and heading) and inherit the section's background, instead of being its own top-level section. Embeddable types: `CardGrid` and `FeaturedWork`. Embedded blocks render bare — no section wrapper or own background — so set the **MainSection's** `background`, not the block's.
 
 **`ImageBlock`** — one or two side-by-side images. Use to break rhythm between long copy sections, especially after dense MainSections. Each image needs `src`, `alt`, `width`, `height`.
+
+**`CardGrid`** — a responsive grid of titled cards (format/audience sets, or text-only feature/value cards). Fields: `cards` (each `{ title, description?, image? }`), `columns` (`2`/`3`/`4`, default `3`), `background`. **Preferred:** embed it in the owning MainSection's `blocks` array — it renders bare in the content column and inherits the section's background (drop the grid's own `background`; the MainSection carries the auto-number, tagline, and intro). It can also stand alone as a top-level section directly after a MainSection (give both the **same `background`**), but embedding keeps the pair as one numbered section. Card `image` supports `placeholder` + `notes`. Card `description` may contain inline lists, which keep the standard teal-square bullets. Does **not** bump the auto-number.
+
+> **Future improvement:** conceptual card sets (values, principles, process steps — e.g. the immersive "What we bring" and museum "principles"/"how we work" grids) are currently **text-only**. The `image` field already exists per card, so they could gain illustrative icons/imagery later; for now plain text reads better than placeholder icon boxes that would never be filled. Revisit once real card art/iconography exists.
 
 **`ClientQuote`** — customer quote with attribution. Fields: `clientName`, `tagline`, `quote`.
 
@@ -111,6 +117,28 @@ contentHtml: "<p>...</p>\n<h2>...</h2>\n<p>...</p>"
 
 `contentHtml` is a single HTML string. The body of the MDX file below the frontmatter is currently unused for default-layout pages — the renderer reads `contentHtml` from frontmatter only. See [components/Page.tsx](components/Page.tsx).
 
+Default-layout pages may **also** carry `pageSections`, rendered full-width below the `contentHtml` prose. This is how the section index pages (`digital/index`, `experiences/index`) render their `ZigZag` navigation: a short `contentHtml` intro line, then a `ZigZag` block. Example:
+
+```yaml
+contentHtml: >
+  <p class="section-tagline">Five ways we build the web side of your organization.</p>
+pageSections:
+  - type: ZigZag
+    items:
+      - href: /digital/web-design-and-development
+        title: Web Design and Development
+        description: Looking for a rebrand, a refresh, or an update of your current site?
+        tag: Web Design & Development
+        image: { src: /content/images/…​.jpg, alt: "…" }
+      - href: /digital/pantheon-partnership
+        title: Pantheon Partnership
+        tag: Hosting & WebOps
+        diagram: true        # contain an SVG/diagram on a soft brand panel
+        image: { src: /content/images/architecture/…​.svg, alt: "…" }
+```
+
+**`ZigZag`** — a stack of linked rows that alternate copy / media side to side automatically (authors just list `items` in order). Each item: `href` (required; internal `/…` paths use the router), `title` (required), `description`, `tag` (mono uppercase, gets a trailing → arrow), `image` (placeholder-friendly; rendered with a native `<img>` so SVG diagrams work), and `diagram: true` to contain the art on a soft brand panel instead of cover-cropping. Use `&` directly in titles/tags (rendered as text). Works in any layout (it brings its own section).
+
 ## Case-study-layout static page
 
 For services / capabilities pages that need the full case-study visual treatment — gradient hero with brand color tint, label above the title, services list, full-bleed featured image, and auto-numbered `(01)`/`(02)` MainSections with alternating gray/white backgrounds. Use this for pages like Museum Experiences, Drupal Services, Pantheon Hosting — anything that's a top-level capability deserving the same visual weight as a project page.
@@ -136,7 +164,22 @@ pageSections: [...]                  # ordered MainSection / ImageBlock — same
 
 The same section / voice rules from the project case-study guide apply: lead with the human reality, push tech specs to the back, alternate `white`/`gray` backgrounds, no two grays in a row. Rendered by [components/CaseStudyPage.tsx](components/CaseStudyPage.tsx) → [components/CaseStudyArticle.tsx](components/CaseStudyArticle.tsx) (shared with [components/Post.tsx](components/Post.tsx)).
 
-Unlike project detail pages, case-study-layout *pages* do **not** auto-render a `Featured Projects` block at the bottom — curate a "Recent Work" MainSection inside `pageSections` if you want to highlight relevant projects, so the selection is topic-relevant rather than auto-rotated.
+**`layout: pillar-page`** is identical to `case-study` — same component, hero, blocks, and voice rules — **except MainSections are not auto-numbered** (no `(01)`/`(02)` rail). Use it for capability / "pillar" pages (the `digital/*` and `experiences/*` section pages) where the numbered, sequential reading of a case study isn't wanted. Everything else in this section applies verbatim.
+
+Unlike project detail pages, case-study-layout *pages* do **not** auto-render a `Featured Projects` block at the bottom. To highlight relevant projects, embed a `FeaturedWork` block in a `MainSection`'s `blocks` array and list the project slugs you want. It renders as a single-line, horizontally-scrolling carousel of `ProjectCard`s **inline in that section's content column** (no dark band, inherits the page background, dark text) — a hand-picked, topic-relevant selection rather than the home page's auto-rotated latest three. Field: `slugs` (required, in display order). Example:
+
+```yaml
+- type: MainSection
+  tagline: Proof, not promises.
+  title: See Our Work
+  richText: >
+    <p>A short lead-in to recent work.</p>
+  blocks:
+    - type: FeaturedWork
+      slugs:
+        - some-project-slug
+        - another-project-slug
+```
 
 ## Lab-project-layout static page
 
@@ -177,16 +220,19 @@ pageSections: [...]                  # ordered blocks — see below
 
 ### Block types in `pageSections`
 
-All five case-study blocks (`MainSection`, `ImageBlock`, `ClientQuote`) work, plus three lab-specific ones:
+All case-study blocks (`MainSection`, `ImageBlock`, `CardGrid`, `ClientQuote`, `FeaturedWork`, `ZigZag`) work, plus three lab-specific ones:
 
 | Block | Purpose | Key fields |
 | --- | --- | --- |
 | `MainSection` | Prose section with auto-numbered `(01)`/`(02)` left rail | `tagline`, `title`, `background` (`white` or `gray`), `richText` (HTML string) |
 | `ImageBlock` | Screenshots / diagrams | `images: [{src, alt, width, height}]`, `width: "full" \| "text"` |
+| `CardGrid` | Grid of titled cards (formats, audiences, features) under a MainSection | `cards: [{title, description?, image?}]`, `columns` (`2`/`3`/`4`, default `3`), `background` |
 | `ClientQuote` | Pull-quote or takeaway line | `tagline`, `quote` (HTML), `clientName` |
 | `CodeBlock` | Key code snippet in a dark card with filename bar + language pill | `filename` (or `title`), `language` (e.g. `typescript`), `code` (use a YAML `\|` block), `caption` |
 | `VideoBlock` | Screencast — Loom, YouTube, or self-hosted MP4 | `provider: loom \| youtube \| file` (auto-inferred from `src` if omitted), `src`, `title`, `caption`, `aspectRatio` (default `16 / 9`), `poster` (for `file`) |
 | `TeamProfile` | Who built it — individual or team, with avatar + bio | `kind: individual \| team` (sets eyebrow to "Built by" or "Team"), `name`, `role`, `bio` (HTML or plain), `avatar` (omit for the default outline-cartoon SVG), `links: [{label, url}]` |
+| `FeaturedWork` | Curated "recent work" carousel of `ProjectCard`s, hand-picked by slug. **Embed inside a `MainSection`'s `blocks`** (renders inline in the content column); scrolls horizontally | `slugs: string[]` (required, in order) |
+| `ZigZag` | Stack of linked rows that alternate copy / media side to side — section nav / "explore these areas." Brings its own full-width section | `items: [{href, title, description?, tag?, image, diagram?}]` |
 
 ### Recommended section arc
 

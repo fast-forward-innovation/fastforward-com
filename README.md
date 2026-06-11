@@ -162,6 +162,15 @@ Pantheon's Dev environment rebuilds automatically from `main`. See next section 
 
 Pantheon's Next.js hosting uses the same **Dev → Test → Live** three-environment model as their WordPress product, driven by GitHub.
 
+Github repo
+
+```
+https://github.com/fast-forward-innovation/fastforward-com
+```
+
+### Content
+
+Every push to the `multi-content` branch on GitHub auto-deploys to **content** environment:
 ### Dev
 
 Every push to the `main` branch on GitHub auto-deploys to the **Dev** environment:

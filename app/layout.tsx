@@ -44,6 +44,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-screen flex flex-col font-sans bg-white pt-[82px] lg:pt-[92px] xl:pt-[114px]">
         <JsonLd

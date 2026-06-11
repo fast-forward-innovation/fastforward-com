@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r \"hamburger\" /Users/jasonyarrington/dev/fastforward-web-next --path \"*/node_modules\" -prune -o --include=\"*.tsx\" --include=\"*.ts\" --include=\"*.css\" -print)",
+      "Bash(npm run *)",
+      "Bash(npx eslint *)",
+      "Bash(chromium-cli help *)",
+      "Bash(git fetch *)",
+      "Bash(git stash *)",
+      "Bash(git checkout *)",
+      "Bash(git push *)",
+      "Bash(gh pr create --title 'fix\\(nav\\): close mobile menu after navigation' --body ' *)",
+      "Bash(git ls-remote *)",
+      "Bash(git tag *)"
+    ]
+  }
+}

@@ -1,0 +1,166 @@
+/* Styling for the internal /styleguide block gallery. Scoped under `.sg`.
+   Uses the brand tokens defined in app/globals.css (--color-ff_*). */
+
+.sg {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: 3rem 1.5rem 6rem;
+}
+
+.sg-header {
+  border-bottom: 1px solid var(--color-ff_lightGray);
+  padding-bottom: 2rem;
+  margin-bottom: 3rem;
+}
+
+.sg-lede {
+  max-width: 70ch;
+  margin-top: 1rem;
+  line-height: 1.6;
+  color: var(--color-ff_gray);
+}
+
+.sg code {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85em;
+  background: var(--color-ff_lightGray);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.sg-req {
+  color: var(--color-ff_red);
+  font-weight: 700;
+}
+
+.sg-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.sg-toc__link {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid var(--color-ff_slateGray);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  text-decoration: none;
+  color: var(--color-ff_black);
+}
+
+.sg-toc__link:hover {
+  background: var(--color-ff_black);
+  color: #fff;
+}
+
+.sg-block {
+  scroll-margin-top: 120px;
+  padding-block: 3rem;
+  border-top: 1px solid var(--color-ff_lightGray);
+}
+
+.sg-block__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sg-block__title {
+  font-family: var(--font-mono, monospace);
+  font-size: 1.5rem;
+}
+
+.sg-block__where {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ff_gray);
+}
+
+.sg-block__desc {
+  max-width: 75ch;
+  margin-top: 0.75rem;
+  line-height: 1.6;
+  color: var(--color-ff_gray);
+}
+
+.sg-fields {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.sg-fields th,
+.sg-fields td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-ff_lightGray);
+}
+
+.sg-fields th {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ff_gray);
+}
+
+.sg-variant {
+  margin-top: 2.5rem;
+}
+
+.sg-variant__label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ff_gray);
+  margin-bottom: 0.75rem;
+}
+
+.sg-preview {
+  border: 1px solid var(--color-ff_lightGray);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.sg-source {
+  margin-top: 0.75rem;
+}
+
+.sg-source > summary {
+  cursor: pointer;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ff_gray);
+}
+
+.sg-code {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background: var(--color-ff_black, #111);
+  color: #e6e6e6;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.sg-code code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}

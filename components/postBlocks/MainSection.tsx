@@ -1,4 +1,6 @@
 import type { MainSection as MainSectionData } from "@/lib/types";
+import { FeaturedWorkBlock } from "./FeaturedWorkBlock";
+import { CardGrid } from "./CardGrid";
 
 export function MainSection({
   section,
@@ -15,10 +17,15 @@ export function MainSection({
     >
       <div className="mx-auto">
         <h2 className="md:inline-block md:w-1/4 align-top text-md pb-6 md:pb-0">
+        {mainCount ? (
           <span className="block font-mono text-xs md:text-md tracking-wider pb-2 md:pt-2 md:pb-8">
             ({mainCount < 10 ? `0${mainCount}` : mainCount})
           </span>
-          <span className="text-sm md:text-md font-bold">{section.title}</span>
+        ) : null}
+          <span
+            className="text-sm md:text-md font-bold"
+            dangerouslySetInnerHTML={{ __html: section.title ?? "" }}
+          />
         </h2>
         <div className="md:inline-block md:w-3/4">
           {section.tagline ? (
@@ -27,6 +34,16 @@ export function MainSection({
           <div
             dangerouslySetInnerHTML={{ __html: section.richText ?? "" }}
           />
+          {section.blocks?.map((block, i) => {
+            switch (block.type) {
+              case "FeaturedWork":
+                return <FeaturedWorkBlock key={i} block={block} embedded />;
+              case "CardGrid":
+                return <CardGrid key={i} block={block} embedded />;
+              default:
+                return null;
+            }
+          })}
         </div>
       </div>
     </div>

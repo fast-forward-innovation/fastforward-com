@@ -22,12 +22,47 @@ export interface MainSection {
   title?: string;
   background?: string;
   richText?: string;
+  /**
+   * Blocks embedded inside this section's content column, rendered after
+   * `richText`. Lets a block like {@link FeaturedWork} live *inside* a section
+   * (sharing its number + heading) rather than being its own top-level section.
+   */
+  blocks?: EmbeddableBlock[];
 }
+
+/**
+ * Blocks that may be nested inside a {@link MainSection}'s `blocks` array,
+ * rendered bare in the section's content column. Widen as more blocks become
+ * embeddable.
+ */
+export type EmbeddableBlock = CardGrid | FeaturedWork;
 
 export interface ImageBlock {
   type: "ImageBlock";
   images: FrontmatterImage[];
   width?: "full" | "text";
+}
+
+export interface Card {
+  /** Card heading (Title Case noun phrase). */
+  title: string;
+  /** Supporting copy. Plain text or inline HTML. */
+  description?: string;
+  /**
+   * Optional thumbnail / icon shown above the title. Supports `placeholder`
+   * + `notes` like any {@link FrontmatterImage}, so cards can ship with art
+   * pending.
+   */
+  image?: FrontmatterImage;
+}
+
+export interface CardGrid {
+  type: "CardGrid";
+  cards: Card[];
+  /** Columns at desktop width. Mobile is always 1, tablet 2. Default 3. */
+  columns?: 2 | 3 | 4;
+  /** Section background tint, matched to the MainSection it follows. */
+  background?: "white" | "gray";
 }
 
 export interface ClientQuote {
@@ -66,13 +101,55 @@ export interface TeamProfile {
   links?: { label: string; url: string }[];
 }
 
+/**
+ * A curated "recent work" carousel of `ProjectCard`s — a hand-picked, ordered
+ * set of projects (unlike the auto-picked home page block). Designed to be
+ * embedded inside a {@link MainSection}'s `blocks`, where it renders inline in
+ * the content column and scrolls horizontally.
+ */
+export interface FeaturedWork {
+  type: "FeaturedWork";
+  /** Project slugs to feature, in display order. */
+  slugs: string[];
+}
+
+/** One row of a {@link ZigZag} block: copy on one side, media on the other. */
+export interface ZigZagItem {
+  /** Destination. Internal paths (`/…`) use `next/link`; absolute URLs render a plain anchor. */
+  href: string;
+  /** Row heading. */
+  title: string;
+  /** Supporting copy (plain text). */
+  description?: string;
+  /** Mono uppercase category tag shown below the copy, with a trailing arrow. */
+  tag?: string;
+  /** Row media. Supports `placeholder` + `notes` like any image. */
+  image: FrontmatterImage;
+  /** Contain the art on a soft brand panel instead of cover-cropping — for diagrams / SVGs. */
+  diagram?: boolean;
+}
+
+/**
+ * A vertical stack of linked rows that alternate sides — copy left / media
+ * right, then media left / copy right, automatically. Used for section
+ * navigation (the digital/ and experiences/ index "pillar" pages) and any
+ * "explore these areas" set.
+ */
+export interface ZigZag {
+  type: "ZigZag";
+  items: ZigZagItem[];
+}
+
 export type PageSection =
   | MainSection
   | ImageBlock
+  | CardGrid
   | ClientQuote
   | CodeBlock
   | VideoBlock
-  | TeamProfile;
+  | TeamProfile
+  | FeaturedWork
+  | ZigZag;
 
 export interface AdditionalPostFields {
   label?: string;
@@ -108,23 +185,59 @@ export interface Project {
   contentHtml?: string;
 }
 
+export interface PageAuthor {
+  name: string;
+  role?: string;
+  avatar?: FrontmatterImage;
+}
+
 export interface Page {
   title: string;
   slug: string;
   date: string;
-  layout: "default" | "landing" | "case-study" | "lab-project";
+  layout:
+    | "default"
+    | "landing"
+    | "case-study"
+    | "pillar-page"
+    | "lab-project"
+    | "blog"
+    | "blog-case-study"
+    | "blog-index";
   /**
-   * Same semantics as `Project.draft`. Only the lab-project layout
-   * currently surfaces this in the UI (via `DraftStatusToast`); other
-   * layouts inherit the field but don't filter anywhere (no listing).
+   * Same semantics as `Project.draft`. The lab-project layout surfaces
+   * this in the UI (via `DraftStatusToast`). For listing-aware layouts
+   * (e.g. the `blog-index`) drafts are filtered on Live by
+   * `getPublishedPages` / `getBlogPosts`; the `[...slug]` route also adds
+   * a `noindex` robots meta to any draft page.
    */
   draft?: boolean;
   editorial?: Editorial;
   featuredImage?: FrontmatterImage;
+  /**
+   * Optional dark hero header for `default`-layout pages. When present, the
+   * `Page` renderer shows a full-bleed background image with the page title
+   * (and optional intro) on a dark overlay — matching the `/our-work`
+   * header — instead of the plain inline `<h1>`.
+   */
+  header?: {
+    background: string;
+    intro?: string;
+  };
   contentHtml?: string;
   additionalPostFields?: AdditionalPostFields;
   services?: string[];
   pageSections?: PageSection[];
+  /**
+   * Blog (`layout: "blog"`) byline. Ignored by other layouts.
+   */
+  author?: PageAuthor;
+  /**
+   * When true on a blog post, floats it to the top of the `/blog`
+   * auto-listing ahead of unpinned posts (then sorted by date). Mirrors
+   * the `isSticky` behavior on projects.
+   */
+  pinned?: boolean;
   source?: "mdx" | "pcc-archieml" | "pcc-smart-components";
   pccArticleId?: string;
 }

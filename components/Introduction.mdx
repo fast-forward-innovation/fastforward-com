@@ -1,0 +1,58 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Introduction" />
+
+# Fast Forward — Component Catalog
+
+This Storybook is the **developer-facing** catalog of the site's React
+components, rendered in isolation with the real Tailwind theme and fonts.
+
+> **Authoring content?** The companion you want is the in-app **Block Gallery**
+> at [`/styleguide`](/styleguide) (run `npm run dev`). It shows every
+> `pageSections` block rendered through the real pipeline beside the
+> frontmatter you write. The narrative guidance lives in `CONTENT.md`.
+
+## How stories are organized
+
+- **Blocks** — the `pageSections` building blocks (`MainSection`, `ImageBlock`,
+  `QuoteBlock`, `CodeBlock`, `VideoBlock`, `TeamProfile`) plus the
+  `PlaceholderImage` / `DefaultAvatar` helpers. These render through the same
+  `renderPageSection` dispatcher used in production.
+- **Articles** — the full article renderers (`CaseStudyArticle`,
+  `LabProjectArticle`).
+- **Pages** — whole-page layouts (`Post`, `LandingPage`, `BlogPost`,
+  `BlogIndex`).
+- **Layout** — global chrome (`SiteHeader`, `PageHero`, `HomepageBanner`,
+  `DraftStatusToast`).
+- **Page Blocks** — composable sections (`ServiceBlock`, `TextBlock`,
+  `FeaturedProjects`, `ProjectCard`).
+- **Forms** — `ContactForm`.
+- **Footer** — the global footer region.
+
+Each story's **Docs** tab includes a *"where used"* note describing which
+routes/layouts render the component.
+
+## Sample data
+
+Block-level samples come from `lib/styleguide/sampleSections.ts` (which also
+powers the `/styleguide` gallery, so the two stay in sync); whole-page/project
+fixtures live in `lib/styleguide/samplePages.ts`.
+
+## Mocked content & special cases
+
+- **Mocked content** — data-fetching components (`FeaturedProjects`,
+  `ProjectCard`, `LandingPage`, `Post`, `BlogIndex`) call `@/lib/content`,
+  which reads the filesystem. Storybook aliases that module to
+  `lib/content.mock.ts` (see `.storybook/main.ts`).
+- **Routing** — components using `next/navigation` (`SiteHeader`,
+  `ContactForm`) work via `nextjs: { appDirectory: true }`; set the active
+  route per story with `parameters.nextjs.navigation.pathname`.
+- **Server components** — async server components (`BlogIndex`) render thanks
+  to `features.experimentalRSC` in `.storybook/main.ts`.
+
+## Adding a new component
+
+Follow the same pattern: add a fixture (extend `sampleSections.ts` /
+`samplePages.ts`, or the content mock if it fetches), then a colocated
+`*.stories.tsx` with a *"where used"* note in
+`parameters.docs.description.component`.

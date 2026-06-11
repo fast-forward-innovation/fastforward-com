@@ -32,7 +32,6 @@ test.describe("Static routes render", () => {
   for (const path of [
     "/accessibility",
     "/privacy-policy",
-    "/pantheon-partnership",
     "/museum-experiences",
     "/mit-haiti-pantheon-migration",
   ]) {
