@@ -19,7 +19,7 @@ export function BlogPost({ page }: { page: Page }) {
   const formattedDate = date ? formatDate(date) : "";
 
   return (
-    <article className="wp-page">
+    <article className="wp-page blog-post">
       {featuredImage && (
         <div id="featured-image" className="relative mb-10 lg:px-6">
           {featuredImage.placeholder ? (
@@ -108,7 +108,10 @@ export function BlogPost({ page }: { page: Page }) {
           </div>
 
           {contentHtml ? (
-            <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+            <div
+              className="ff-article"
+              dangerouslySetInnerHTML={{ __html: contentHtml }}
+            />
           ) : (
             <p>Sorry, no post content was found.</p>
           )}

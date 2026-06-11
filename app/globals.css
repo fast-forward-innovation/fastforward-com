@@ -293,6 +293,99 @@
     background: var(--color-ff_teal);
   }
 
+  /* Empty-checkbox list — for process / step lists that should read as a
+     to-do rail. Swaps the teal square bullet for an outlined empty box. */
+  .main-section ul.check-list {
+    padding-left: 1.9rem;
+  }
+  .main-section ul.check-list li::before {
+    top: 0.25em;
+    left: -1.6rem;
+    width: 1rem;
+    height: 1rem;
+    background: transparent;
+    border: 2px solid var(--color-ff_teal);
+    border-radius: 0.2rem;
+  }
+
+  /* Inline tag / service rows (e.g. a post's header tags) are a meta row, not
+     a bulleted list: they use "•" separators from `.inline-services-style`.
+     Drop the content-list left indent and the square markers that otherwise
+     bleed in from the `.main-section ul` rules above. */
+  .main-section ul:has(> li.inline-services-style) {
+    padding-left: 0;
+  }
+  .main-section li.inline-services-style::before {
+    display: none;
+  }
+
+  /* ----- Blog post typography (caps + body floor) -----
+     `.blog-post` is the BlogPost article root. The post H1 and content H2s
+     are capped as maxima — mobile keeps its smaller scale, the desktop step
+     is what gets pulled down. `.blog-post …` outspecifies the base `h1`/`h2`
+     element rules, so these win even inside the base responsive @media blocks.
+       H1: was 2.5 / 3.75 / 5.6rem  → 2.5rem, capped at 3.6rem from md up.
+       H2: was 2 / 3.75rem          → 2rem, capped at 3.0rem from sm up.
+     Body copy is floored at 16px with max(1rem, 16px): scales up with the
+     root size for accessibility, but never renders below 16px. */
+  .blog-post h1 {
+    font-size: 2.5rem;
+  }
+  .blog-post h2 {
+    font-size: 2rem;
+  }
+  @media (min-width: 640px) {
+    .blog-post h2 {
+      font-size: 3rem;
+    }
+  }
+  @media (min-width: 768px) {
+    .blog-post h1 {
+      font-size: 3.6rem;
+    }
+  }
+  .blog-post .ff-article {
+    font-size: max(1rem, 18px);
+  }
+
+  /* ----- Blog / article content insets -----
+     `.ff-article` is the contentHtml body of the blog layout (BlogPost). Block
+     elements step in from the paragraph measure with an equal gutter on both
+     sides: code cards, figures/screenshots, inline images, and lists.
+     Paragraphs and headings keep the full measure, so the prose reads as the
+     spine and these blocks indent off it. Scoped to `.ff-article` (not the
+     whole `.wp-page` article) so post chrome like the tag row stays aligned
+     with the title. The inset is a symmetric inline margin (not padding) so a
+     code card's border/shadow and a figure's frame move in as a unit. */
+  .ff-article figure,
+  .ff-article ul,
+  .ff-article ol,
+  .ff-article > img,
+  .ff-article p > img,
+  /* Captions that sit as siblings after a figure (the `<p class="code-card__
+     caption">` form) — match their figure's inset. The `<figcaption>` form
+     lives inside the figure and already inherits it, so only the direct-child
+     paragraph captions need this. */
+  .ff-article > .code-card__caption {
+    margin-inline: 1rem;
+  }
+  /* Bare <img> in the flow needs to be a block for the inset to read. */
+  .ff-article > img,
+  .ff-article p > img {
+    display: block;
+    height: auto;
+  }
+  @media (min-width: 768px) {
+    .ff-article figure,
+    .ff-article ul,
+    .ff-article ol,
+    .ff-article > img,
+    .ff-article p > img,
+    .ff-article > .code-card__caption {
+      margin-inline: 2.5rem;
+    }
+  }
+
   /* Definition lists — mono-rail labels with row dividers.
      Stacks on mobile; switches to a fixed-label / fluid-body grid at md. */
   .main-section dl {
@@ -485,6 +578,59 @@
   .code-card__caption {
     @apply text-sm md:text-md mt-3;
     color: var(--color-ff_gray);
+  }
+
+  /* ----- Claude conversation / agent-log variant -----
+     Author a CodeBlock with `language: claude` and paste a transcript into
+     `code:`. `:has()` restyles the whole card off the inner
+     <code class="language-claude"> — a warm Claude-clay palette over the
+     default terminal-blue card. Long prose wraps instead of scrolling.
+     For structure, start lines with literal glyphs in the source text:
+       •  a turn / message     ☐ ☑  todo items     ▸  a tool or section
+     Anything else renders as plain transcript text. */
+  .code-card:has(code.language-claude) {
+    border-color: rgba(217, 119, 87, 0.22);
+    background: #262421;
+    box-shadow: 0 18px 50px -24px rgba(0, 0, 0, 0.55);
+  }
+  .code-card:has(code.language-claude) .code-card__bar {
+    background: #1f1d1b;
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+  }
+  .code-card:has(code.language-claude) .code-card__filename {
+    color: #ece9e2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  .code-card:has(code.language-claude) .code-card__filename::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: #d97757;
+    box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.18);
+  }
+  .code-card:has(code.language-claude) .code-card__filename--muted {
+    color: #8a847b;
+  }
+  .code-card:has(code.language-claude) .code-card__lang {
+    color: #d97757;
+    border-color: rgba(217, 119, 87, 0.45);
+  }
+  .code-card:has(code.language-claude) .code-card__pre {
+    background: #262421;
+    color: #ece9e2;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    padding: 1.4rem 1.5rem 1.5rem 1.75rem;
+    border-left: 2px solid rgba(217, 119, 87, 0.3);
+  }
+  .code-card:has(code.language-claude) .code-card__pre code {
+    /* Wrap long prose lines the way a real transcript does, rather than
+       forcing a horizontal scrollbar. */
+    white-space: pre-wrap;
+    word-break: break-word;
   }
 
   /* ----- Team / individual profile block ----- */

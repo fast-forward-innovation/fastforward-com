@@ -1,0 +1,57 @@
+---
+title: Claude Conversation Log — Block Demo
+slug: claude-log-demo
+date: '2026-06-10T12:00:00'
+layout: lab-project
+additionalPostFields:
+  label: Block Demo
+  tagline: A reusable code-block style that renders like a Claude conversation / agent log.
+  brandColor: '#d97757'
+editorial:
+  status: draft
+  branch: multi-content
+  updated: 2026-06-10
+  notes: "Demo of the language:claude CodeBlock variant. Safe to delete."
+pageSections:
+  - type: MainSection
+    tagline: How to use it
+    title: Claude log block
+    background: white
+    richText: >
+      <p>Add a <strong>CodeBlock</strong> section, set
+      <strong>language: claude</strong>, and paste a transcript into
+      <strong>code</strong>. The card adopts a warm Claude-clay palette and
+      wraps long prose like a real conversation. Start lines with literal
+      glyphs for structure: <strong>&bull;</strong> for a turn,
+      <strong>&#9744;/&#9745;</strong> for todos,
+      <strong>&#9656;</strong> for a tool or section.</p>
+  - type: CodeBlock
+    title: Conversation with Claude
+    language: claude
+    code: |
+      Thought for 29s
+
+      • I have the complete source. Now I'll execute the parity port — starting
+        with the highest-impact piece: porting all 7 CSS partials into the
+        Tailwind v4 globals.css.
+
+      ▸ Update Todos
+        ☑ Port 7 CSS partials into Tailwind v4 globals.css (typography, .section,
+          .btn, gradients, banner, posts, contact-form)
+        ☐ Update data files (footer address/links, banner, our-work + contact
+          intros, submitted text)
+        ☐ Layout offset wrapper + SiteHeader (exact markup + hamburger) +
+          Footer / ContactBlock / FooterBlock
+        ☐ Home blocks: HomepageBanner (animated), TextBlock, ServiceBlock,
+          ProjectCard, FeaturedProjects
+        ☐ Case study: CaseStudyArticle header (brandColor), MainSection,
+          ImageBlock, QuoteBlock, Markdown
+        ☐ Pages: our-work, contact-us, contact-submitted, [slug] wp-page, 404
+        ☐ Build + screenshot verify against old site
+
+      ▸ Write globals.css  ·  311 lines
+
+          @import 'tailwindcss';
+          @plugin '@tailwindcss/typography';
+    caption: A CodeBlock with language set to "claude". Glyphs at line starts (•, ▸, ☐, ☑) carry the structure.
+---
