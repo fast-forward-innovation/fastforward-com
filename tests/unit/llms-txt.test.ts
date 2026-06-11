@@ -37,17 +37,17 @@ describe("llms.txt route (Live env)", () => {
   it("includes published project URLs", async () => {
     const { body } = await fetchBody();
     expect(body).toContain(
-      "https://fastforward.sh/our-work/architecture-and-release-workflow",
+      "https://fastforward.sh/our-work/northeastern-simplifying-online-course-registration",
     );
     expect(body).toContain(
       "https://fastforward.sh/our-work/real-time-advice-for-expectant-parents",
     );
   });
 
-  it("excludes draft project URLs", async () => {
+  it("excludes draft URLs", async () => {
     const { body } = await fetchBody();
-    expect(body).not.toContain("/our-work/building-fastforward-sh");
-    expect(body).not.toContain("/our-work/growing-with-pantheon");
+    expect(body).not.toContain("/blog/building-fastforward-sh");
+    expect(body).not.toContain("/blog/growing-with-pantheon");
   });
 
   it("excludes the lab-project-sample scaffolding slug", async () => {
