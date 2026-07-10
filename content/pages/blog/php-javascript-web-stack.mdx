@@ -1,0 +1,68 @@
+---
+title: PHP, JavaScript, and the Quiet Reshuffling of the Web Stack
+slug: blog/php-javascript-web-stack
+date: '2026-07-10T12:00:00'
+layout: blog
+draft: true
+author:
+  name: Jason Yarrington
+  role: Web Solutions
+featuredImage:
+  src: ''
+  alt: >-
+    Two diverging trend lines — PHP a high, slowly-descending plateau and
+    JavaScript a low but steeply-rising line.
+  width: 1600
+  height: 900
+  placeholder: true
+  notes: >-
+    Hero for the PHP vs JavaScript trends post — an abstract two-line chart
+    motif: a high plateau line (PHP, brand blue) easing downward and a low line
+    (JavaScript/Node, amber) climbing steeply, on a light background. Should
+    echo the in-article charts without duplicating one exactly.
+additionalPostFields:
+  seoDescription: >-
+    PHP isn't collapsing — it's aging into infrastructure, while JavaScript
+    surges on the server. What the W3Techs data actually shows, and what it
+    means if you run Drupal or WordPress at scale.
+  tags:
+    - PHP
+    - JavaScript
+    - Web Platforms
+    - Trends
+contentHtml: |
+  <p>If you follow developer Twitter, you'd think PHP was on life support and everyone had moved to a JavaScript-everywhere stack years ago. The data tells a more interesting — and more nuanced — story. As a platform, PHP isn't collapsing. It's aging into something more like infrastructure. Meanwhile JavaScript is genuinely surging, including on the server. The two trends aren't the same story, and conflating them is where most hot takes go wrong.</p>
+
+  <h2>PHP the platform: stable, not sinking</h2>
+  <p>Start with what actually runs the web. According to <a href="https://w3techs.com/technologies/details/pl-php" target="_blank" rel="noopener noreferrer">W3Techs</a>, PHP still powers roughly <strong>72% of all websites with a known server-side language</strong> as of mid-2026 — down only slightly from 72.4% in January. Rewind further and the decline is real but gentle: PHP sat around <strong>80% in 2017–2018</strong> (<a href="https://w3techs.com/technologies/history_overview/programming_language" target="_blank" rel="noopener noreferrer">W3Techs historical trends</a>) and has drifted down to the low 70s over roughly eight years. That's a decline of about one percentage point a year, from a position so dominant that no other language is remotely close. The nearest competitors in W3Techs' server-side tracking sit in the single digits.</p>
+  <p>The better word for that curve isn't "dying." It's "stable." WordPress, Laravel, and a deep bench of mature CMS and commerce platforms keep PHP entrenched, and the ecosystem is modernizing rather than stagnating — <a href="https://blog.jetbrains.com/research/2025/10/state-of-developer-ecosystem-2025/" target="_blank" rel="noopener noreferrer">JetBrains' 2025 survey</a> found <strong>89% of PHP developers are now on PHP 8.x</strong>, with Laravel used by 64% of them. This is what a mature platform looks like: reliable, well-tooled, widely deployed, and no longer chasing hype.</p>
+  <p>Zoom out to the full arc and the shape is even clearer. PHP didn't just hold steady — it <em>climbed</em> through the late 2000s and early 2010s, peaking near 82% around 2013 as the LAMP stack and WordPress swallowed the web, before beginning its gentle descent. Node.js, by contrast, barely registered until 2013 or so. The long view is a story of one platform maturing at altitude, not one platform crashing.</p>
+
+  <div data-ff-chart="php-js-share-long-view"></div>
+
+  <h2>PHP the language choice: trending down</h2>
+  <p>Platform share and <em>mindshare</em> are two different measurements, and here the story flips. As something developers actively choose for new work, PHP is losing ground. JetBrains groups PHP with the languages that have "reached their maturity plateau" and notes it continues a steady, slow decline in developer preference. The popularity indices agree: PHP has fallen to around <strong>18th on the <a href="https://www.tiobe.com/tiobe-index/" target="_blank" rel="noopener noreferrer">TIOBE Index</a></strong> (down from 3rd in 2010) and sits near <strong>3% on <a href="https://pypl.github.io/" target="_blank" rel="noopener noreferrer">PYPL</a></strong>. On GitHub, PHP holds a stable but unremarkable <strong>6th place</strong> among languages by contributor count (<a href="https://github.blog/news-insights/octoverse/octoverse-a-new-developer-joins-github-every-second-as-ai-leads-typescript-to-1/" target="_blank" rel="noopener noreferrer">Octoverse 2025</a>).</p>
+  <p>The takeaway: a huge amount of the web runs on PHP, but fewer and fewer <em>new</em> projects start there. Existing PHP keeps humming; the growth is happening elsewhere.</p>
+
+  <h2>JavaScript: up and to the right — including on the server</h2>
+  <p>JavaScript's rise is the least controversial claim in web development. It remains the most-used language in the <a href="https://survey.stackoverflow.co/2025/technology" target="_blank" rel="noopener noreferrer">Stack Overflow 2025 Developer Survey</a> at roughly <strong>66%</strong>, and the broader ecosystem — TypeScript, React, Node — dominates the "what developers reach for" conversation. TypeScript just overtook Python and JavaScript to become the <strong>#1 language on GitHub</strong> in 2025.</p>
+  <p>The more relevant question for a full-stack decision is the server side, and the answer there is also up. Node.js has climbed from <strong>3.1% of tracked sites in 2023 to about 4.6% in 2025</strong> (<a href="https://w3techs.com/technologies/details/ws-nodejs" target="_blank" rel="noopener noreferrer">W3Techs Node.js</a>), and its footprint is meaningfully larger among high-traffic sites (roughly 9% of the top 1M). It's a small absolute number next to PHP's 70-plus percent — but it's one of the few server-side platforms whose curve is clearly pointing up, while most others are flat or declining. Node, React, and Express lead the web-framework rankings in Stack Overflow's survey year after year.</p>
+  <p>That's the crux of the graph: PHP is a high, slowly-descending plateau; JavaScript on the server is a low but steadily-rising line. Different altitudes, opposite trajectories.</p>
+
+  <div data-ff-chart="php-js-share-recent"></div>
+
+  <p>Absolute share, though, undersells how <em>fast</em> things are moving. Because Node starts from such a small base, its growth is dramatic in relative terms even while PHP's decline stays modest. Re-index both lines to their 2017 level and the divergence is stark: since 2017, PHP's share of the web has slipped about 10%, while JavaScript/Node's has grown on the order of 400%. Same data — but relative change reframes the "small" server-side JavaScript number as the fastest-moving line on the board.</p>
+
+  <div data-ff-chart="php-js-percent-change"></div>
+
+  <h2>The talent question (opinion)</h2>
+  <p>Here's where I'll step past the data and into a hunch — because I think it matters more than the charts.</p>
+  <p>The numbers above measure code and preferences, not the pipeline of people. But if you connect the dots, there's a workforce story forming. PHP isn't the language new developers are excited to learn. Bootcamps, university projects, and side projects skew heavily toward JavaScript and Python. When PHP shows up in surveys, it's framed as mature or legacy — reliable, but not aspirational.</p>
+  <p>Play that forward. The engineers with deep, full-stack PHP experience — the ones who can reason about a large Laravel or WordPress codebase end to end — are a finite and aging group. As they get promoted into architecture and leadership, retire, or move to other stacks, there's a thinning cohort coming up behind them who chose PHP as a first love. I suspect the PHP talent pool doesn't fall off a cliff, but it slowly tightens: plenty of code to maintain, fewer and fewer people who genuinely want to maintain it.</p>
+  <p>If that's right, the strategic implication isn't "abandon PHP." It's the opposite of the hype-cycle advice. The platform will be around for a decade-plus; the scarcity — and therefore the value — may increasingly be in the <em>people</em> who know it well.</p>
+
+  <h2>So what if you're running Drupal or WordPress at scale?</h2>
+  <p>For most organizations the practical question isn't "PHP or JavaScript" in the abstract — it's "I have a mature Drupal or WordPress footprint, maybe hundreds of sites, so what now?" The answer is neither panic nor a rip-and-replace. Start by planning around what you already have and leveraging it: these platforms are stable, proven, and full of accumulated business logic and content, and that's an asset, not a liability. From there, extend a shared design system and component library across both your legacy and your new-build platforms, so a button, a card, or a form looks and behaves the same whether it's rendered by PHP or by a JavaScript front end — that's what lets old and new coexist without the estate fragmenting into a dozen disconnected looks. And explore decentralizing your content management: a decoupled or "headless" approach lets Drupal or WordPress keep doing what it's good at — editing and governing content — while modern JavaScript front ends consume that content through APIs. You get to ride PHP's stability and JavaScript's momentum at once, instead of betting the whole estate on either one.</p>
+
+  <p class="ff-article__sources"><em>Sources: <a href="https://w3techs.com/technologies/details/pl-php" target="_blank" rel="noopener noreferrer">W3Techs PHP usage</a>, <a href="https://w3techs.com/technologies/history_overview/programming_language" target="_blank" rel="noopener noreferrer">W3Techs server-side language history</a>, <a href="https://w3techs.com/technologies/details/ws-nodejs" target="_blank" rel="noopener noreferrer">W3Techs Node.js</a>, <a href="https://survey.stackoverflow.co/2025/technology" target="_blank" rel="noopener noreferrer">Stack Overflow 2025 Developer Survey</a>, <a href="https://blog.jetbrains.com/research/2025/10/state-of-developer-ecosystem-2025/" target="_blank" rel="noopener noreferrer">JetBrains State of Developer Ecosystem 2025</a>, <a href="https://github.blog/news-insights/octoverse/octoverse-a-new-developer-joins-github-every-second-as-ai-leads-typescript-to-1/" target="_blank" rel="noopener noreferrer">GitHub Octoverse 2025</a>, <a href="https://www.tiobe.com/tiobe-index/" target="_blank" rel="noopener noreferrer">TIOBE Index</a>, <a href="https://pypl.github.io/" target="_blank" rel="noopener noreferrer">PYPL Index</a>. Figures are as of mid-2026 and update monthly — verify before publishing.</em></p>
+---
