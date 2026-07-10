@@ -1,7 +1,11 @@
+import type { ComponentType } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Page } from "@/lib/types";
 import { PlaceholderImage } from "./postBlocks/PlaceholderImage";
+import { PhpJsShareLongView } from "./charts/PhpJsShareLongView";
+import { PhpJsShareRecent } from "./charts/PhpJsShareRecent";
+import { PhpJsPercentChange } from "./charts/PhpJsPercentChange";
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -11,6 +15,55 @@ function formatDate(iso: string): string {
     month: "long",
     day: "numeric",
   });
+}
+
+// Interactive charts an author can drop into a blog post's `contentHtml` by
+// placing `<div data-ff-chart="<key>"></div>` at the insertion point. Each key
+// maps to a self-contained client component. Add new charts here as they're
+// authored.
+const CHART_REGISTRY: Record<string, ComponentType> = {
+  "php-js-share-long-view": PhpJsShareLongView,
+  "php-js-share-recent": PhpJsShareRecent,
+  "php-js-percent-change": PhpJsPercentChange,
+};
+
+// Splits on the chart token, keeping the captured key. `String.split` with a
+// capture group yields [html, key, html, key, …], so odd indices are keys.
+const CHART_TOKEN = /<div data-ff-chart="([^"]+)"><\/div>/;
+
+/**
+ * Renders a blog post body. Posts without a chart token take the fast path and
+ * render byte-identically to a plain `dangerouslySetInnerHTML` block. Posts
+ * that embed a `data-ff-chart` token get their HTML split around each token,
+ * with the matching chart component mounted inline. HTML segments render inside
+ * a `display: contents` wrapper so the article's `.ff-article` spine/inset
+ * styling (all descendant selectors) still applies to the elements within.
+ */
+function ArticleBody({ html }: { html: string }) {
+  if (!html.includes("data-ff-chart")) {
+    return (
+      <div className="ff-article" dangerouslySetInnerHTML={{ __html: html }} />
+    );
+  }
+
+  const parts = html.split(CHART_TOKEN);
+  return (
+    <div className="ff-article">
+      {parts.map((part, i) => {
+        if (i % 2 === 1) {
+          const Chart = CHART_REGISTRY[part];
+          return Chart ? <Chart key={`chart-${i}`} /> : null;
+        }
+        return part ? (
+          <div
+            key={`html-${i}`}
+            style={{ display: "contents" }}
+            dangerouslySetInnerHTML={{ __html: part }}
+          />
+        ) : null;
+      })}
+    </div>
+  );
 }
 
 export function BlogPost({ page }: { page: Page }) {
@@ -108,10 +161,7 @@ export function BlogPost({ page }: { page: Page }) {
           </div>
 
           {contentHtml ? (
-            <div
-              className="ff-article"
-              dangerouslySetInnerHTML={{ __html: contentHtml }}
-            />
+            <ArticleBody html={contentHtml} />
           ) : (
             <p>Sorry, no post content was found.</p>
           )}
