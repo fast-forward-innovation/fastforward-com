@@ -1,17 +1,28 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -r \"hamburger\" /Users/jasonyarrington/dev/fastforward-web-next --path \"*/node_modules\" -prune -o --include=\"*.tsx\" --include=\"*.ts\" --include=\"*.css\" -print)",
       "Bash(npm run *)",
+      "Bash(npm ci)",
       "Bash(npx eslint *)",
+      "Bash(npx playwright install*)",
+      "Bash(bash scripts/doctor.sh*)",
+      "Bash(bash scripts/sync-env.sh*)",
       "Bash(chromium-cli help *)",
       "Bash(git fetch *)",
       "Bash(git stash *)",
       "Bash(git checkout *)",
       "Bash(git push *)",
-      "Bash(gh pr create --title 'fix\\(nav\\): close mobile menu after navigation' --body ' *)",
       "Bash(git ls-remote *)",
-      "Bash(git tag *)"
+      "Bash(git tag *)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr status:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(terminus auth:whoami)",
+      "Bash(terminus site:info*)",
+      "Bash(terminus env:list*)",
+      "mcp__pantheon-content-publisher__*"
     ]
   }
 }

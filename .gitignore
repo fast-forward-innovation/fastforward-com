@@ -44,6 +44,14 @@ yarn-error.log*
 !.env.example
 !.env.local.example
 
+# terminus secret:site:local-generate writes this; it holds real secret values
+# and is NOT covered by the .env* rule above.
+secrets.json
+
+# Claude Code: .claude/settings.json and .claude/commands/ ARE committed (shared
+# permissions + slash commands). settings.local.json is per-developer.
+.claude/settings.local.json
+
 # vercel
 .vercel
 
