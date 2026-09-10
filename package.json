@@ -10,6 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "doctor": "bash scripts/doctor.sh",
+    "sync-env": "bash scripts/sync-env.sh",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --project unit && playwright test",
     "test:unit": "vitest run --project unit",
