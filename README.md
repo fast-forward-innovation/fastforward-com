@@ -16,6 +16,7 @@ Quick links: [Pantheon Next.js docs](https://docs.pantheon.io/nextjs) · [Next.j
 ## Table of contents
 
 - [Architecture](#architecture)
+- [Onboarding (new machine)](ONBOARDING.md)
 - [Local development](#local-development)
 - [Editing content](#editing-content)
 - [Deployment (Dev / Test / Live)](#deployment-dev--test--live)
@@ -81,19 +82,18 @@ Everything uses `next/image` with explicit `width` + `height` from the migrated 
 
 ### One-time setup
 
-1. Use the right Node version (20+):
-   ```bash
-   nvm use       # reads .nvmrc… actually we don't have one, but package.json engines says >=20
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Create your local env file:
-   ```bash
-   cp .env.local.example .env.local
-   ```
-   Open `.env.local` and paste your `MONDAY_API_TOKEN` after the `=`. (Get a personal token from https://monday.com → Admin → Developers → Tokens. Board id `3979078971` needs write access.)
+New machine? Follow **[ONBOARDING.md](ONBOARDING.md)** — it covers Node, `gh`,
+terminus, the Pantheon MCP server, and environment variables, and ends with a
+check that tells you whether it all worked:
+
+```bash
+nvm use && npm ci     # Node 20, from .nvmrc
+npm run doctor        # verifies the whole toolchain and names any fix
+```
+
+The short version: the site runs with **no `.env.local` at all** — everything
+that needs a token degrades quietly rather than breaking, so you can pick up
+credentials when you first need them.
 
 ### Daily workflow
 
