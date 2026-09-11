@@ -6,9 +6,9 @@ _Compiled 2026-06-08. Migration executed 2026-04-17._
 
 A phase-by-phase record of the port of `fastforward-web` (Gatsby 4 + headless WordPress on Pantheon WP hosting) to `fastforward-com` (Next.js 16 App Router + static markdown/YAML on Pantheon Next.js hosting).
 
-**Why the prompts are reconstructed, not verbatim.** The Claude Code sessions that drove Phases 0–7 ran on 2026-04-17. The transcripts (`~/.claude/projects/-Users-jasonyarrington-dev-fastforward-web-next/*.jsonl`) for that date are no longer on disk — they expired, never persisted, or lived on a different machine. The earliest surviving JSONL in this project's directory starts 2026-04-18. So every "seed prompt" below is a one-sentence reconstruction inferred from three sources:
+**Why the prompts are reconstructed, not verbatim.** The Claude Code sessions that drove Phases 0–7 ran on 2026-04-17. The transcripts (`~/.claude/projects/<this-repo>/*.jsonl`) for that date are no longer on disk — they expired, never persisted, or lived on a different machine. The earliest surviving JSONL in this project's directory starts 2026-04-18. So every "seed prompt" below is a one-sentence reconstruction inferred from three sources:
 
-1. The phase's name + bullet objectives in the plan at `/Users/jasonyarrington/.claude/plans/setup-claude-for-use-groovy-kitten.md`.
+1. The phase's name + bullet objectives in the original session plan (kept in the author's local Claude Code plans directory; never committed, so not available in this repo).
 2. The chronological "Session log" entries in that plan file (the "Phase N complete" lines).
 3. The commit messages in `git log` for the matching commits.
 
@@ -22,7 +22,7 @@ The phase-to-commit map is at the bottom (Appendix).
 
 **Status:** done · **Commit:** `5a94f8b` (bundled with Phase 1)
 **Seed prompt (reconstructed):**
-> Start Phase 0 — scaffold the new Next.js repo at `/Users/jasonyarrington/dev/fastforward-web-next/` per the plan, swap fonts to `next/font`, port the Tailwind theme, and copy public assets.
+> Start Phase 0 — scaffold the new Next.js repo per the plan, swap fonts to `next/font`, port the Tailwind theme, and copy public assets.
 
 **Delivered:**
 - `create-next-app` produced **Next 16.2.4 + React 19 + Tailwind 4** (not the planned Next 14 / Tailwind 3 — adjusted in flight).
