@@ -3,6 +3,7 @@
 @theme {
   --color-ff_black: #191819;
   --color-ff_gray: #7f7d81;
+  --color-ff_darkGray: #696969;
   --color-ff_slateGray: #aaaaaa;
   --color-ff_lightGray: #edf1f2;
   --color-ff_red: #dd2e2a;
@@ -760,7 +761,7 @@
   }
   @media (min-width: 768px) {
     .zigzag {
-      gap: 7rem;
+      gap: 4rem;
     }
   }
 
@@ -770,8 +771,8 @@
     gap: 2rem;
     align-items: center;
     /* Matches ProjectCard: dimmed at rest, full on hover. */
-    opacity: 0.85;
-    transition: opacity 0.3s ease;
+    /* opacity: 0.90;
+    transition: opacity 0.3s ease; */
   }
   .zigzag__item:hover {
     opacity: 1;
@@ -779,7 +780,7 @@
   @media (min-width: 768px) {
     .zigzag__item {
       grid-template-columns: 1fr 1fr;
-      gap: 4.5rem;
+      gap: 3rem;
     }
     /* Default: content left (col 1), media right (col 2). */
     .zigzag__item .zigzag__body {

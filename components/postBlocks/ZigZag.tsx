@@ -47,7 +47,7 @@ export function ZigZag({ block }: { block: ZigZagData }) {
   if (items.length === 0) return null;
 
   return (
-    <div className="section zigzag-section">
+    <div className="section zigzag-section pt-0">
       <div className="mx-auto">
         <div className="zigzag">
           {items.map((item, i) => {
