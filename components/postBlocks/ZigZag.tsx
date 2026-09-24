@@ -4,11 +4,14 @@ import type { ZigZag as ZigZagData, ZigZagItem } from "@/lib/types";
 import { PlaceholderImage } from "./PlaceholderImage";
 
 /**
- * A stack of linked rows that alternate sides automatically (copy left / media
- * right, then swapped, via `:nth-child` in CSS). Authors just list `items` in
- * order. Visual language mirrors the site's cards: mono uppercase tags,
- * opacity-on-hover, clean square-cornered `object-cover` imagery. The
- * `diagram` flag contains the art on a soft brand panel for SVG diagrams.
+ * A stack of linked rows that alternate sides automatically (via `:nth-child`
+ * in CSS — authors just list `items` in order). Each row is a soft grey copy
+ * card overlapping the edge of a wide photograph: card left / media right,
+ * then swapped. Below `md` the overlap is dropped and the two stack, media
+ * first, because a 201px pull would crush the copy on a phone.
+ *
+ * The `diagram` flag contains the art on a soft brand panel instead of
+ * cover-cropping it, for SVG architecture diagrams.
  */
 function Row({ item }: { item: ZigZagItem }) {
   const img = item.image;
@@ -35,7 +38,19 @@ function Row({ item }: { item: ZigZagItem }) {
         {item.description ? (
           <p className="zigzag__desc">{item.description}</p>
         ) : null}
-        {item.tag ? <span className="zigzag__tag">{item.tag}</span> : null}
+        {item.bullets?.length ? (
+          <ul className="zigzag__list">
+            {item.bullets.map((bullet, i) => (
+              <li key={i}>{bullet}</li>
+            ))}
+          </ul>
+        ) : null}
+        <span className="zigzag__link">
+          {item.linkLabel || `Explore ${item.title}`}
+          {/* Decorative: the label already names the destination. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icons/chevron-right.svg" alt="" width={20} height={20} aria-hidden="true" />
+        </span>
       </div>
       {media}
     </>

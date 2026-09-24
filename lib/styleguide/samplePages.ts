@@ -12,6 +12,7 @@ import {
   sampleCodeBlock,
   sampleVideoLoom,
   sampleTeamIndividual,
+  sampleZigZag,
 } from "./sampleSections";
 
 const SAMPLE_IMAGE = "/Touchscreen-1-denoise-gigapixel.jpg";
@@ -41,13 +42,19 @@ export const sampleDraftProject: Project = {
 };
 
 export const sampleLandingPage: Page = {
-  title: "Transform Your Business",
+  title: "Experiences",
   slug: "landing-example",
   date: "2024-01-01T00:00:00",
   layout: "landing",
-  featuredImage: { src: SAMPLE_IMAGE, alt: "", width: 1600, height: 900 },
-  contentHtml:
-    "<p>We partner with ambitious teams to ship software that moves the needle.</p>",
+  // `title` is the mono eyebrow; `header.title` is the display headline. Both
+  // are needed or the story renders an empty header.
+  header: {
+    artwork: "/content/images/landing/header-artwork.svg",
+    title: "Where Story\nMeets Technology",
+    intro:
+      "We bring ambitious ideas to life with creative insight and technical expertise. As true partners, we adapt to your team's needs.",
+  },
+  pageSections: [sampleZigZag],
 };
 
 export const sampleBlogPage: Page = {

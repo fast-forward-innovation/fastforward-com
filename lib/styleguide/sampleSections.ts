@@ -321,7 +321,11 @@ export const sampleZigZag: ZigZag = {
       title: "Web Design and Development",
       description:
         "Looking for a rebrand, a refresh, or an extension of your current site?",
-      tag: "Web Design & Development",
+      bullets: [
+        "Design systems & component libraries",
+        "Accessible, standards-first front ends",
+        "Headless CMS integration",
+      ],
       image: {
         src: SAMPLE_IMAGE,
         alt: "Abstract data-stream visualization.",
@@ -334,7 +338,11 @@ export const sampleZigZag: ZigZag = {
       title: "Pantheon Partnership",
       description:
         "A decade-long Pantheon partnership that streamlines hosting and WebOps.",
-      tag: "Hosting & WebOps",
+      bullets: [
+        "Managed hosting & environments",
+        "Automated deploys and previews",
+        "Edge caching & performance",
+      ],
       diagram: true,
       image: {
         src: "",

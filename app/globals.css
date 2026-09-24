@@ -754,58 +754,168 @@
      category tags and opacity-on-hover (ProjectCard), and clean square-cornered
      object-cover imagery (ImageBlock). Rendered by the `ZigZag` page block,
      which brings its own `.section` wrapper. */
+
+  /* ----- Landing page header -----
+     Left-aligned header for `landing`-layout pages (Digital, Experiences),
+     per the Figma comp (Frame 109). A soft top-down tint with decorative
+     outlined letterforms bleeding off the right edge, sitting behind the copy.
+     Distinct from PageHero (dark full-bleed photo) and the pillar-page tinted
+     gradient panel. Rendered by `LandingPage`. */
+  .landing-header {
+    position: relative;
+    /* The artwork intentionally overhangs the right edge; clip it so it never
+       creates a horizontal scrollbar. */
+    overflow: hidden;
+    background: linear-gradient(
+      to bottom,
+      #f0f8fa 23.309%,
+      rgba(240, 248, 250, 0) 86.996%
+    );
+    /* Owns its padding rather than using `.section`, whose `py` would fight
+       the comp's asymmetric 72/144 and whose `> *` max-width would clamp the
+       absolutely-positioned artwork. Horizontal padding matches `.section`. */
+    padding: 3rem 1.5rem 4rem;
+  }
+  @media (min-width: 768px) {
+    .landing-header {
+      padding: 4.5rem 3rem 9rem; /* 72 top, space/6xl = 144 bottom */
+    }
+  }
+  .landing-header__inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1096px;
+    margin-inline: auto;
+    /* Matches the widest text run in the comp (905). */
+    --landing-measure: 905px;
+  }
+  .landing-header__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-md);
+    line-height: 1.25rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-ff_red);
+    padding-bottom: 0;
+    margin-bottom: 2rem; /* 32 */
+  }
+  .landing-header__title {
+    font-size: 2.5rem;
+    line-height: 1.15;
+    font-weight: 400;
+    color: var(--color-ff_black);
+    max-width: var(--landing-measure);
+    padding: 0;
+    /* Headlines are hard-wrapped in frontmatter with a YAML block scalar. */
+    white-space: pre-line;
+  }
+  @media (min-width: 768px) {
+    .landing-header__title {
+      font-size: 3.75rem; /* Display/Large — 60/68 */
+      line-height: 4.25rem;
+      letter-spacing: -1.125px;
+    }
+  }
+  .landing-header__intro {
+    margin-top: 2.5rem; /* 40 */
+    max-width: var(--landing-measure);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--color-ff_darkGray);
+  }
+  @media (min-width: 768px) {
+    .landing-header__intro {
+      font-size: var(--text-base); /* Heading/XSmall — 21 */
+    }
+  }
+  /* Decorative only; inset values are the comp's, as a share of the header. */
+  .landing-header__artwork {
+    position: absolute;
+    inset: -18.47% -7.6% 9.06% 30.79%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .landing-header__artwork img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  @media (max-width: 767px) {
+    /* At phone widths the letterforms crowd the headline rather than framing
+       it, and the comp has no mobile treatment for them. */
+    .landing-header__artwork {
+      display: none;
+    }
+  }
+  /* Measurements come from the Figma comp (Frame 109) at 1440: a 1096 content
+     column holding a 536 copy card and a 760x541 image that the card overlaps
+     by 201. Those are expressed as percentages of the row so the layout stays
+     fluid between breakpoints: 48.9 + 69.34 - 18.34 = 99.9% of the row. */
   .zigzag {
     display: flex;
     flex-direction: column;
     gap: 4rem;
+    max-width: 1096px;
+    margin-inline: auto;
   }
   @media (min-width: 768px) {
     .zigzag {
-      gap: 4rem;
+      gap: 6rem; /* space/5xl = 96 */
     }
   }
 
   .zigzag__item {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    align-items: center;
-    /* Matches ProjectCard: dimmed at rest, full on hover. */
-    /* opacity: 0.90;
-    transition: opacity 0.3s ease; */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
   }
-  .zigzag__item:hover {
-    opacity: 1;
+  /* Stacked: image first, card beneath it. The DOM stays copy-then-media for
+     reading and tab order, so the visual swap is done with `order`. */
+  .zigzag__item .zigzag__media {
+    order: -1;
+  }
+  @media (min-width: 768px) {
+    .zigzag__item .zigzag__media {
+      order: 0;
+    }
   }
   @media (min-width: 768px) {
     .zigzag__item {
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      flex-direction: row;
+      align-items: center;
     }
-    /* Default: content left (col 1), media right (col 2). */
+    /* Default: copy card left, overlapping the image's left edge. */
     .zigzag__item .zigzag__body {
-      grid-column: 1;
-      grid-row: 1;
+      width: 48.9%;
+      flex: none;
+      margin-right: -18.34%;
+      z-index: 2;
     }
     .zigzag__item .zigzag__media {
-      grid-column: 2;
-      grid-row: 1;
+      width: 69.34%;
+      flex: none;
+      z-index: 1;
     }
-    /* Alternate: even rows swap sides. */
+    /* Alternate: even rows swap sides. Reversing the flex direction keeps the
+       DOM in copy-then-media order for reading and tab order. */
+    .zigzag__item:nth-child(even) {
+      flex-direction: row-reverse;
+    }
     .zigzag__item:nth-child(even) .zigzag__body {
-      grid-column: 2;
-    }
-    .zigzag__item:nth-child(even) .zigzag__media {
-      grid-column: 1;
+      margin-right: 0;
+      margin-left: -18.34%;
     }
   }
 
-  /* Clean, square-cornered, full-bleed imagery — matches ImageBlock /
-     ProjectCard. No card chrome. */
+  /* Clean, square-cornered imagery — matches ImageBlock / ProjectCard. The
+     760x541 comp ratio, not the 3:2 this block used previously. */
   .zigzag__media {
     position: relative;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 760 / 541;
     overflow: hidden;
+    /* Sits below the copy card where they overlap. */
+    isolation: isolate;
   }
   .zigzag__media img {
     width: 100%;
@@ -835,35 +945,66 @@
     transform: scale(1.02);
   }
 
+  /* Soft grey copy card (surface/muted). On mobile it sits below the image at
+     full width; from md it overlaps the image edge. */
   .zigzag__body {
-    max-width: 38rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem; /* space/lg = 24 */
+    background: var(--color-ff_lightGray);
+    padding: 2rem 1.5rem;
+    overflow: clip;
+  }
+  @media (min-width: 768px) {
+    .zigzag__body {
+      padding: 3rem 1.875rem; /* space/2xl = 48, 30 */
+    }
   }
   .zigzag__title {
-    @apply text-2xl sm:text-3xl;
+    font-size: 1.875rem; /* Heading/Large — 30/40 */
+    line-height: 2.5rem;
+    letter-spacing: -0.16px;
+    font-weight: 500;
     color: var(--color-ff_black);
-    padding-bottom: 1rem;
+    padding-bottom: 0;
   }
   .zigzag__item:hover .zigzag__title {
     text-decoration: underline;
     text-underline-offset: 0.15em;
   }
-  .zigzag__desc {
-    color: var(--color-ff_black);
-    line-height: 1.6;
+  /* Body/Small — 14/22, shared by the description and the capability list. */
+  .zigzag__desc,
+  .zigzag__list {
+    font-size: var(--text-sm);
+    line-height: 1.375rem;
+    font-weight: 500;
+    color: var(--color-ff_darkGray);
     margin: 0;
   }
-  /* Mono uppercase category tag — same treatment as ProjectCard service
-     tags / lab eyebrow. */
-  .zigzag__tag {
-    @apply inline-flex items-center font-mono text-sm uppercase tracking-wider mt-5;
+  .zigzag__list {
+    list-style: disc;
+    padding-left: 1.3125rem; /* 21px, per the comp */
+  }
+  .zigzag__list li::marker {
+    color: var(--color-ff_darkGray);
+  }
+  /* Teal call to action with the comp's chevron. Not an <a> — the whole row is
+     already a single link, so nesting one would be invalid. */
+  .zigzag__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem; /* space 4 */
+    font-size: var(--text-md);
+    line-height: 1.5rem;
+    font-weight: 500;
     color: var(--color-ff_teal);
   }
-  .zigzag__tag::after {
-    content: "\2192";
-    margin-left: 0.6rem;
+  .zigzag__link img {
+    display: block;
     transition: transform 0.3s ease;
   }
-  .zigzag__item:hover .zigzag__tag::after {
+  .zigzag__item:hover .zigzag__link img {
     transform: translateX(0.35rem);
   }
 
