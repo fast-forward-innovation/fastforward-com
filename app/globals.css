@@ -797,7 +797,8 @@
     text-transform: uppercase;
     color: var(--color-ff_red);
     padding-bottom: 0;
-    margin-bottom: 2rem; /* 32 */
+    /* Comp has 32; tightened to sit closer to the headline. */
+    margin-bottom: 1.25rem;
   }
   .landing-header__title {
     font-size: 2.5rem;
@@ -817,7 +818,8 @@
     }
   }
   .landing-header__intro {
-    margin-top: 2.5rem; /* 40 */
+    /* Comp has 40; tightened to match the eyebrow spacing above. */
+    margin-top: 1.5rem;
     max-width: var(--landing-measure);
     font-size: var(--text-lg);
     font-weight: 500;
