@@ -926,12 +926,13 @@
     }
   }
 
-  /* Clean, square-cornered imagery — matches ImageBlock / ProjectCard. The
-     760x541 comp ratio, not the 3:2 this block used previously. */
+  /* The 760x541 comp ratio, not the 3:2 this block used previously. Softened
+     with a slight radius — `overflow: hidden` clips the image to it. */
   .zigzag__media {
     position: relative;
     aspect-ratio: 760 / 541;
     overflow: hidden;
+    border-radius: 6px;
     /* Sits below the copy card where they overlap. */
     isolation: isolate;
   }
