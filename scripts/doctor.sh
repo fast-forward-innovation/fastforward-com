@@ -129,7 +129,10 @@ if ! command -v gh >/dev/null 2>&1; then
 elif ! gh auth status >/dev/null 2>&1; then
   fail deploy "gh is installed but not authenticated" "gh auth login"
 else
-  ok "gh authenticated as $(gh api user -q .login 2>/dev/null || echo 'unknown')"
+  # Ask once and reuse. A second call can fail on its own (network blip,
+  # rate limit) and would otherwise render "authenticated as" with nothing.
+  GH_USER="$(gh api user -q .login 2>/dev/null | tr -d '\r')"
+  ok "gh authenticated${GH_USER:+ as $GH_USER}"
 fi
 
 # ----------------------------------------------------------------- Pantheon
@@ -138,11 +141,17 @@ section "Pantheon"
 TERMINUS_OK=0
 if ! command -v terminus >/dev/null 2>&1; then
   fail deploy "terminus is not installed" "brew install pantheon-systems/pantheon/terminus"
-elif ! terminus auth:whoami >/dev/null 2>&1; then
-  fail deploy "terminus is installed but not logged in" "terminus auth:login --machine-token=<token>  (dashboard.pantheon.io → Account → Machine Tokens)"
 else
-  ok "terminus authenticated as $(terminus auth:whoami 2>/dev/null | tr -d '\r')"
-  TERMINUS_OK=1
+  # One call, reused for both the verdict and the label. Calling twice meant a
+  # transient failure on the second could print "authenticated as" with a blank
+  # name while still reporting OK.
+  TERMINUS_USER="$(terminus auth:whoami 2>/dev/null | tr -d '\r' | tr -d '[:space:]')"
+  if [ -z "$TERMINUS_USER" ]; then
+    fail deploy "terminus is installed but not logged in" "terminus auth:login --machine-token=<token>  (dashboard.pantheon.io → Account → Machine Tokens)"
+  else
+    ok "terminus authenticated as $TERMINUS_USER"
+    TERMINUS_OK=1
+  fi
 fi
 
 if [ "$TERMINUS_OK" -eq 1 ]; then
