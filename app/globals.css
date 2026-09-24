@@ -932,7 +932,7 @@
     position: relative;
     aspect-ratio: 760 / 541;
     overflow: hidden;
-    border-radius: 6px;
+    border-radius: 9px;
     /* Sits below the copy card where they overlap. */
     isolation: isolate;
   }
