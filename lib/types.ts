@@ -222,6 +222,7 @@ export interface Page {
    */
   header?: {
     background: string;
+    title?: string;
     intro?: string;
   };
   contentHtml?: string;
