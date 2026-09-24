@@ -18,8 +18,10 @@ Quick links: [Pantheon Next.js docs](https://docs.pantheon.io/nextjs) · [Next.j
 - [Architecture](#architecture)
 - [Onboarding (new machine)](ONBOARDING.md)
 - [Local development](#local-development)
+- [Continuous integration](#continuous-integration)
 - [Editing content](#editing-content)
 - [Deployment (Dev / Test / Live)](#deployment-dev--test--live)
+  - [Multidev environments (`multi-*`)](#multidev-environments-multi-)
 - [Environment variables](#environment-variables)
 - [Troubleshooting](#troubleshooting)
 - [Project layout](#project-layout)
@@ -105,14 +107,45 @@ Environment variables are read at server start — if you change `.env.local`, r
 
 ### Scripts
 
-| Script            | What it does                                         |
-| ----------------- | ---------------------------------------------------- |
-| `npm run dev`     | Dev server with Turbopack + HMR                      |
-| `npm run build`   | Production build (the exact build Pantheon runs)     |
-| `npm run start`   | Serve the built app locally (for testing the prod bundle) |
-| `npm run lint`    | ESLint (Next.js flat config)                         |
+| Script | What it does | CI gate |
+| ------ | ------------ | ------- |
+| `npm run dev` | Dev server with Turbopack + HMR | |
+| `npm run build` | Production build (the exact build Pantheon runs) | |
+| `npm run start` | Serve the built app locally (for testing the prod bundle) | |
+| `npm run lint` | ESLint (Next.js flat config) | ✅ |
+| `npm run typecheck` | `tsc --noEmit` | ✅ |
+| `npm run test` | Unit tests, then Playwright e2e | |
+| `npm run test:unit` | Vitest unit tests | ✅ |
+| `npm run test:unit:watch` | Vitest in watch mode | |
+| `npm run test:storybook` | Vitest against the Storybook stories | |
+| `npm run test:e2e` | Playwright e2e (chromium) | ✅ |
+| `npm run test:e2e:ui` | Playwright in UI mode | |
+| `npm run storybook` | Storybook dev server on :6006 | |
+| `npm run build-storybook` | Static Storybook build | |
+| `npm run doctor` | Verify this machine's toolchain and auth | |
+| `npm run sync-env` | Reconcile `.env.local` against Pantheon's key list | |
 
-**Before pushing**, it's worth running `npm run build` locally — it's what Pantheon will run, and it catches type errors + route-generation issues that `npm run dev` will let through.
+**Before pushing**, run `npm run build` locally — it's what Pantheon will run, and it catches type errors + route-generation issues that `npm run dev` will let through.
+
+### Continuous integration
+
+`.github/workflows/test.yml` runs three required jobs on every PR to `main`, on
+Node 20. All three must pass before a merge:
+
+| Job | Command |
+| --- | ------- |
+| lint + typecheck | `npm run lint && npm run typecheck` |
+| unit tests | `npm run test:unit` |
+| e2e | `npm run test:e2e` (Playwright, chromium, 15-min timeout) |
+
+Reproduce the whole gate locally in one line:
+
+```bash
+npm run lint && npm run typecheck && npm run test:unit && npm run test:e2e
+```
+
+If e2e fails immediately, you're probably missing the browser binary:
+`npx playwright install --with-deps chromium`.
 
 ---
 
@@ -162,15 +195,39 @@ Pantheon's Dev environment rebuilds automatically from `main`. See next section 
 
 Pantheon's Next.js hosting uses the same **Dev → Test → Live** three-environment model as their WordPress product, driven by GitHub.
 
-Github repo
+GitHub repo:
 
 ```
 https://github.com/fast-forward-innovation/fastforward-com
 ```
 
-### Content
+**The repo and the Pantheon site have different names.** The Pantheon site is
+`fastforward`; the GitHub repo is `fastforward-com`. Any `terminus` command that
+takes a site name wants `fastforward`.
 
-Every push to the `multi-content` branch on GitHub auto-deploys to **content** environment:
+A clone has two remotes pointing at that same repo — `origin` over SSH and
+`pantheon` over HTTPS. Push to `origin`; `pantheon` exists for Pantheon's
+GitHub integration.
+
+### Multidev environments (`multi-*`)
+
+Branches prefixed `multi-` map to long-lived Pantheon **multidev** environments.
+They are not feature branches:
+
+| Branch | Environment |
+| ------ | ----------- |
+| `multi-content` | https://content-fastforward.pantheonsite.io/ |
+| `multi-marketing` | (marketing multidev) |
+
+Pushing to one of these rebuilds its environment directly — **no PR required**,
+and the build takes several minutes. These branches are long-lived: don't delete
+them after a merge, and don't open PRs from them. Use them to park work that
+needs a stable URL for review (content drafts, marketing experiments) without
+tying up a PR preview.
+
+Ordinary feature branches get an ephemeral `pr-*` environment instead, created
+automatically for each open PR.
+
 ### Dev
 
 Every push to the `main` branch on GitHub auto-deploys to the **Dev** environment:
@@ -205,10 +262,37 @@ Live is at `live-fastforward.pantheonsite.io` before DNS cutover, and at `fastfo
 
 ### Typical release flow
 
-1. Work on a feature branch → open PR → merge to `main`
+1. Work on a feature branch → open PR → merge to `main`. Direct pushes to
+   `main` are not used — every change goes through a PR, and
+   `scripts/deploy-feature-branch.sh <branch>` does branch → push → open PR
+   in one step.
 2. Pantheon auto-deploys `main` to Dev. QA there.
 3. When Dev is green, tag `pantheon_test_<date>` at that commit and push. QA on Test.
 4. When Test is green, tag `pantheon_live_<date>` and push. Live updates.
+
+### Pantheon CLI (terminus)
+
+Install and authentication are in [ONBOARDING.md](ONBOARDING.md). The site name
+is `fastforward`, and environments are `dev`, `content`, `test`, `live`, plus
+ephemeral `pr-*`.
+
+Read-only, safe to run any time:
+
+```bash
+terminus auth:whoami                  # who you're logged in as
+terminus site:info fastforward        # confirms team access
+terminus env:list fastforward         # every environment, incl. open PR envs
+terminus env:view fastforward.dev     # open an environment in the browser
+terminus secret:site:list fastforward # secret NAMES (values are never returned)
+```
+
+Changes state — know what you're doing, and don't point these at `live` casually:
+
+```bash
+terminus env:clear-cache fastforward.<env>
+terminus env:clone-content fastforward.live fastforward.dev
+terminus multidev:create fastforward.dev <name>
+```
 
 ### Secrets Manager
 
@@ -228,7 +312,7 @@ Optional:
 
 ### Caching on Pantheon
 
-Pantheon's traditional cache automation (`pantheon.yml` Quicksilver hooks, `terminus env:clear-cache` via PHP scripts) **is not supported on the Next.js platform** — the `pantheon.yml` file is silently ignored. Instead, this site uses Pantheon's official [`@pantheon-systems/nextjs-cache-handler`](https://github.com/pantheon-systems/nextjs-cache-handler), wired up as Next's `cacheHandler` in [next.config.ts](next.config.ts) and exported from [cacheHandler.mjs](cacheHandler.mjs).
+Pantheon's traditional cache *automation* — `pantheon.yml` Quicksilver hooks that fire PHP scripts on deploy — **is not supported on the Next.js platform**; the `pantheon.yml` file is silently ignored. (The `terminus` CLI itself works fine and we use it regularly; it's the `pantheon.yml` hook mechanism that doesn't exist here.) Instead, this site uses Pantheon's official [`@pantheon-systems/nextjs-cache-handler`](https://github.com/pantheon-systems/nextjs-cache-handler), wired up as Next's `cacheHandler` in [next.config.ts](next.config.ts) and exported from [cacheHandler.mjs](cacheHandler.mjs).
 
 What it does for us:
 - **Build-aware route cache.** On every new deploy the handler detects the new build ID and invalidates the Full Route Cache. This is what stops the "post-deploy multidev serves stale HTML referencing old `/_next/static/<hash>.css` paths until I click Clear Caches" failure mode.
@@ -245,21 +329,41 @@ For deeper reference: [Pantheon Next.js Considerations](https://docs.pantheon.io
 
 See [.env.local.example](.env.local.example) for the canonical list and docs.
 
-| Variable                          | Where                                 | Purpose                                                                  |
-| --------------------------------- | ------------------------------------- | ------------------------------------------------------------------------ |
-| `MONDAY_API_TOKEN`                | local `.env.local` + Pantheon Secrets | Contact-form route authenticates to Monday.com with this                 |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY`  | local `.env.local` + Pantheon Secrets | Cloudflare Turnstile public key — gates the contact form's submit button |
-| `TURNSTILE_SECRET_KEY`            | local `.env.local` + Pantheon Secrets | Cloudflare Turnstile secret — server-side token verification             |
-| `ANTHROPIC_API_KEY`               | Pantheon Secrets (optional)           | Enables Claude-based inquiry classification on `/api/contact`            |
-| `MONDAY_INQUIRY_TYPE_COLUMN_ID`   | Pantheon Secrets (optional)           | Monday Dropdown-column ID for the inquiry-type tag                       |
-| `NEXT_PUBLIC_SITE_URL`            | Pantheon Secrets (optional)           | Overrides the canonical URL in sitemap.xml, robots.txt, and OpenGraph    |
+`.env.local.example` documents what each variable *does*; this table is about
+**where each one is required**, which the example file can't tell you.
+
+| Variable | Local | Dev / Test / Live | Missing means |
+| -------- | :---: | :---------------: | ------------- |
+| `MONDAY_API_TOKEN` | when working on the form | **required** | Contact form 500s on submit |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | test key | **required** | Frontend omits the Turnstile widget |
+| `TURNSTILE_SECRET_KEY` | test key | **required** | Server skips bot verification |
+| `PCC_SITE_ID` | when working on Lab pages | **required** | Content Publisher pages render empty |
+| `PCC_TOKEN` | when working on Lab pages | **required** | Same as above |
+| `PCC_WEBHOOK_SECRET` | — | **required** | Publish webhooks can't be verified |
+| `MONDAY_INQUIRY_TYPE_COLUMN_ID` | optional | optional | Inquiries land untagged |
+| `ANTHROPIC_API_KEY` | optional | optional | No Claude inquiry classification |
+| `NEXT_PUBLIC_SITE_URL` | optional | optional | Falls back to `https://fastforward.sh` |
+| `NEXT_PUBLIC_GITHUB_REPO` | optional | optional | Editorial toast can't link to the repo |
+
+Locally, use Cloudflare's public "always passes" Turnstile test pair —
+`npm run sync-env` fills it in for you.
+
+**Nothing here is required to run the site locally.** With an empty
+`.env.local`, `npm run dev` works; the features above degrade rather than break.
+Pick up a token when you first need one.
+
+**Pantheon's Secrets Manager is write-only.** `terminus secret:site:list` returns
+secret *names* with null values, and `secret:site:local-generate` writes a
+template for you to fill in — there is no supported way to read a value back
+out. So `npm run sync-env` reconciles the set of keys in `.env.local` against
+what production expects; it cannot fetch the values.
 
 ---
 
 ## Troubleshooting
 
 ### `ChunkLoadError` / 404 on `_next/static/chunks/*.js` after deploy
-Should be rare now that the Pantheon cache handler (see [Caching on Pantheon](#caching-on-pantheon)) invalidates the Full Route Cache on every new build ID. If it does happen — usually a fluke where a request lands during the deploy window — hit **Clear Caches** on the environment in the Pantheon dashboard (or `terminus env:clear-cache fastforward-com.<env>`) and refresh.
+Should be rare now that the Pantheon cache handler (see [Caching on Pantheon](#caching-on-pantheon)) invalidates the Full Route Cache on every new build ID. If it does happen — usually a fluke where a request lands during the deploy window — hit **Clear Caches** on the environment in the Pantheon dashboard (or `terminus env:clear-cache fastforward.<env>` — the Pantheon site is `fastforward`, not `fastforward-com`) and refresh.
 
 ### Contact form returns 500 "Server misconfigured"
 `MONDAY_API_TOKEN` isn't set (or wasn't read). For local: check `.env.local` has the token and restart `npm run dev`. For Pantheon: check the env's Secrets Manager.
@@ -299,33 +403,56 @@ components/                   All .tsx, mix of server + 'use client'
 lib/
   content.ts                  Typed content loader (gray-matter + js-yaml)
   types.ts                    Project, Page, PageSection union, Service, Settings
+  pcc.ts                      Pantheon Content Publisher client (degrades to [] when unset)
+  env.ts                      isLiveEnvironment() — reads PANTHEON_ENVIRONMENT
   trapFocus.ts                Focus-trap helper used by SiteHeader
 content/
   projects/*.mdx              One file per case study
-  pages/*.mdx                 privacy-policy.mdx, accessibility.mdx
+  pages/*.mdx                 Static pages, incl. blog/ and digital/ subtrees
   services.yml                Service taxonomy
   settings.yml                Site title, description, GA id, postsPerPage
+  _migration-*.md             Notes from the Gatsby → Next.js port
 public/
   content/images/YYYY/MM/     Migrated WP media (~140 MB)
   hero-images/                Homepage rotating heroes
   *.svg, icon.png, etc.       Static assets
 scripts/
+  doctor.sh                   Verify toolchain + auth (npm run doctor)
+  sync-env.sh                 Reconcile .env.local with Pantheon's key list
+  deploy-feature-branch.sh    Branch → push → open PR
   export-wp-to-markdown.mjs   One-shot WP → markdown exporter (kept for re-runs
                               against the old WP backend while it's still alive)
-next.config.ts                Image qualities, /page/:num → / redirect
+tests/                        Vitest unit tests + Playwright e2e
+.storybook/                   Storybook config (npm run storybook, :6006)
+brand/                        Brand kit — GUIDELINES.md, fonts, logos (see BRAND.md)
+docs/                         Longer-form notes (PCC integration, talk outline)
+demo-prompts/                 Slash commands that replay the migration as a demo
+.claude/
+  commands/                   Project slash commands (/workflow, /new-page, …)
+  settings.json               Shared permissions — committed
+.github/workflows/test.yml    CI: lint+typecheck, unit, e2e
+.mcp.json                     Pantheon Content Publisher MCP server
+cacheHandler.mjs              Pantheon cache handler wiring
+next.config.ts                Image qualities, HSTS, /page/:num → / redirect
+.nvmrc                        Node 20
 package.json tsconfig.json eslint.config.mjs postcss.config.mjs
+playwright.config.ts vitest.config.ts
 ```
+
+Agent-facing docs live at the root: [CLAUDE.md](CLAUDE.md) (rules),
+[CONTENT.md](CONTENT.md) (authoring), [DESIGN.md](DESIGN.md) (visual work),
+[BRAND.md](BRAND.md) (pointer to `brand/`).
 
 ---
 
 ## Migration history
 
-This codebase was ported from the Gatsby 4 + headless WordPress site at [fast-forward-innovation/fastforward-web](https://github.com/fast-forward-innovation/fastforward-web). The full migration plan, session-by-session notes, and every decision made during the port live at:
+This codebase was ported from the Gatsby 4 + headless WordPress site at [fast-forward-innovation/fastforward-web](https://github.com/fast-forward-innovation/fastforward-web). What's committed here:
 
-```
-/Users/jasonyarrington/.claude/plans/setup-claude-for-use-groovy-kitten.md
-```
+- [content/_migration-report.md](content/_migration-report.md) — what was ported and what changed
+- [content/_migration-prompts.md](content/_migration-prompts.md) — the prompts used, phase by phase
+- [docs/migration-talk-outline.md](docs/migration-talk-outline.md) — the talk written about it
 
-(…in the sibling Gatsby repo's Claude Code plans directory, not committed to this repo.)
+The original session-by-session plan lives in the author's local Claude Code plans directory and was never committed, so it isn't available to anyone else.
 
 The WP content export ran once at the start of the port; the script lives at [scripts/export-wp-to-markdown.mjs](scripts/export-wp-to-markdown.mjs) and is idempotent in case it needs to run again while the WordPress backend is still available.

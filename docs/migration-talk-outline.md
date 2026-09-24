@@ -361,9 +361,10 @@ If you're slide-budgeted: ~16 slides total.
 
 ## Appendix C — Things to verify before the talk
 
-- [ ] Pull current `terminus` commands you actually use into §7 (the
-      repo only shows `env:clear-cache`; the others lived in
-      sessions).
+- [x] Pull current `terminus` commands you actually use into §7 — done:
+      they're now documented in the README's "Pantheon CLI (terminus)"
+      section, split into read-only and state-changing. Reference that
+      rather than restating them here.
 - [ ] Confirm the team's actual multidev creation convention for §8
       (branch-based push vs. multidev-specific tag pattern) and put
       one concrete example on the slide.
