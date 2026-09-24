@@ -908,6 +908,22 @@
       margin-right: 0;
       margin-left: -18.34%;
     }
+    /* Artwork rows (logo lockups, architecture diagrams) sit side by side with
+       a gap instead. The overlap is designed to land on a photograph's dead
+       space; over a logo it just covers the mark. */
+    .zigzag__item--diagram {
+      gap: 3rem;
+    }
+    .zigzag__item--diagram .zigzag__body,
+    .zigzag__item--diagram:nth-child(even) .zigzag__body {
+      width: auto;
+      flex: 1;
+      margin-inline: 0;
+    }
+    .zigzag__item--diagram .zigzag__media {
+      width: auto;
+      flex: 1;
+    }
   }
 
   /* Clean, square-cornered imagery — matches ImageBlock / ProjectCard. The
@@ -929,10 +945,11 @@
   .zigzag__item:hover .zigzag__media img {
     transform: scale(1.04);
   }
-  /* Diagram variant — architecture SVGs are contained on a soft brand panel
-     so they stay legible (placeholder imagery; swap for real art). */
+  /* Artwork variant — logo lockups and architecture diagrams are contained so
+     nothing is cropped. White panel, because these assets are authored on
+     white and a tinted panel would show as a hard rectangle behind them. */
   .zigzag__media--diagram {
-    background: linear-gradient(158.44deg, #eef3f5 0%, #ebf2f6 100%);
+    background: #fff;
   }
   .zigzag__media--diagram img {
     object-fit: contain;

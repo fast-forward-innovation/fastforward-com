@@ -10,8 +10,10 @@ import { PlaceholderImage } from "./PlaceholderImage";
  * then swapped. Below `md` the overlap is dropped and the two stack, media
  * first, because a 201px pull would crush the copy on a phone.
  *
- * The `diagram` flag contains the art on a soft brand panel instead of
- * cover-cropping it, for SVG architecture diagrams.
+ * The `diagram` flag marks rows whose media is artwork rather than a
+ * photograph — a logo lockup or an architecture diagram. Those drop the
+ * overlap, because the card would land on the art itself instead of a
+ * photo's dead space, and the art is contained rather than cover-cropped.
  */
 function Row({ item }: { item: ZigZagItem }) {
   const img = item.image;
@@ -68,12 +70,15 @@ export function ZigZag({ block }: { block: ZigZagData }) {
           {items.map((item, i) => {
             const inner: ReactNode = <Row item={item} />;
             const isInternal = item.href?.startsWith("/");
+            // Logo/diagram rows opt out of the card-over-image overlap — the
+            // card would cover the artwork rather than a photo's dead space.
+            const cls = `zigzag__item ${item.diagram ? "zigzag__item--diagram" : ""}`;
             return isInternal ? (
-              <Link key={i} href={item.href} className="zigzag__item">
+              <Link key={i} href={item.href} className={cls}>
                 {inner}
               </Link>
             ) : (
-              <a key={i} href={item.href} className="zigzag__item">
+              <a key={i} href={item.href} className={cls}>
                 {inner}
               </a>
             );
