@@ -154,10 +154,10 @@ Then merge. Merging to `main` deploys to Dev automatically.
 These are the ones that bite people. [CLAUDE.md](CLAUDE.md) has the full set.
 
 - **Never push to `main`.** Always a branch and a PR.
-- **`multi-*` branches are not feature branches.** `multi-content` and
-  `multi-marketing` are standing Pantheon multidev environments. Pushing to one
+- **`multi-*` branches are not feature branches.** `multi-content` is a
+  standing Pantheon multidev environment — currently the only one. Pushing to it
   rebuilds that environment directly, with **no PR**, and takes several minutes.
-  Don't delete them; don't open PRs from them.
+  Don't delete it; don't open PRs from it.
 - **Deploys are tag-driven.** `main` → Dev. `pantheon_test_<date>` → Test.
   `pantheon_live_<date>` → Live. The `/deploy-test` and `/deploy-live` slash
   commands wrap this.
