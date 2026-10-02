@@ -121,8 +121,10 @@ export interface ZigZagItem {
   title: string;
   /** Supporting copy (plain text). */
   description?: string;
-  /** Mono uppercase category tag shown below the copy, with a trailing arrow. */
-  tag?: string;
+  /** Short capability list rendered as a bulleted list under the description. */
+  bullets?: string[];
+  /** Call-to-action label. Defaults to `Explore {title}`. */
+  linkLabel?: string;
   /** Row media. Supports `placeholder` + `notes` like any image. */
   image: FrontmatterImage;
   /** Contain the art on a soft brand panel instead of cover-cropping — for diagrams / SVGs. */
@@ -215,15 +217,25 @@ export interface Page {
   editorial?: Editorial;
   featuredImage?: FrontmatterImage;
   /**
-   * Optional dark hero header for `default`-layout pages. When present, the
-   * `Page` renderer shows a full-bleed background image with the page title
-   * (and optional intro) on a dark overlay — matching the `/our-work`
-   * header — instead of the plain inline `<h1>`.
+   * Page header copy, read by two different renderers:
+   *
+   * - `default` layout: when `background` is set, `Page` shows a full-bleed
+   *   dark hero via `PageHero` — matching the `/our-work` header — instead of
+   *   the plain inline `<h1>`.
+   * - `landing` layout: `LandingPage` renders a left-aligned header on a soft
+   *   gradient, using `title` (display headline, distinct from `page.title`,
+   *   which becomes the eyebrow), `intro`, and the decorative `artwork` SVG.
+   *
+   * `background` is optional because landing pages supply only `title` /
+   * `intro`; it was previously typed as required even though no landing page
+   * has ever set it.
    */
   header?: {
-    background: string;
+    background?: string;
     title?: string;
     intro?: string;
+    /** Decorative SVG behind the landing header. Ignored by other layouts. */
+    artwork?: string;
   };
   contentHtml?: string;
   additionalPostFields?: AdditionalPostFields;

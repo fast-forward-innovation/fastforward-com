@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "The `landing`-layout page renderer: gradient hero, features grid, optional `contentHtml`, and a `FeaturedProjects` footer. Projects in the footer come from the mocked `@/lib/content`.",
+          "The `landing`-layout page renderer (Digital, Experiences): a left-aligned header on a soft tint with decorative letterforms behind it, followed by the page's blocks. The frontmatter `title` is the mono eyebrow; `header.title` is the display headline.",
       },
     },
   },
