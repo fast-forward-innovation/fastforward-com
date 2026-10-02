@@ -107,6 +107,23 @@ for key in $KEYS; do
   fi
 done
 
+# Not every documented variable is a Pantheon secret. `.env.local.example` also
+# carries non-secret settings with real default values — NEXT_PUBLIC_GITHUB_REPO
+# is one. Those would otherwise be reported as drift by `npm run doctor` with a
+# fix hint pointing back here, which could never resolve them, because the loop
+# above only knows the keys Pantheon returns. Carry them over with the example's
+# own value.
+if [ -f .env.local.example ]; then
+  while IFS= read -r line; do
+    key="${line%%=*}"
+    value="${line#*=}"
+    [ -z "$value" ] && continue                                   # secrets are blank in the example
+    grep -qE "^[[:space:]]*${key}=" .env.local && continue        # already present
+    printf '%s=%s\n' "$key" "$value" >> .env.local
+    ADDED="${ADDED}${ADDED:+, }${key}"
+  done < <(grep -E '^[A-Z_]+=' .env.local.example)
+fi
+
 # Cloudflare publishes an "always passes" Turnstile test pair. These are public
 # test credentials, safe to commit, and they make the contact form work locally
 # without a Cloudflare account. Only ever fill them in when the key is empty.
