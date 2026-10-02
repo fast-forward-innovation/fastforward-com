@@ -66,6 +66,15 @@ function stubRoutedFetch(opts: {
 
 beforeEach(() => {
   vi.stubEnv("MONDAY_API_TOKEN", "test-token");
+  // These three must be ABSENT by default — several tests assert the behavior
+  // the route takes when they are unset (Turnstile verification skipped, no
+  // classifier call, inquiry type prepended to the comment rather than written
+  // to its own column). Vitest loads `.env.local`, so without these stubs the
+  // suite passes in CI and fails on any machine where `npm run sync-env` has
+  // been run. Individual blocks override them where the test needs a value.
+  vi.stubEnv("TURNSTILE_SECRET_KEY", "");
+  vi.stubEnv("ANTHROPIC_API_KEY", "");
+  vi.stubEnv("MONDAY_INQUIRY_TYPE_COLUMN_ID", "");
   // Default: classifier returns null (no tagging). Individual tests override.
   mockClassify.mockReset();
   mockClassify.mockResolvedValue(null);
