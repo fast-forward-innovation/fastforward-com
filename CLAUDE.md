@@ -26,9 +26,11 @@ New machine? Start at [ONBOARDING.md](ONBOARDING.md), then run `npm run doctor`.
    Pantheon builds a `pr-*` preview environment for every open PR.
 
 2. **`multi-*` branches are standing multidev environments, not feature branches.**
-   `multi-content` and `multi-marketing` map to long-lived Pantheon environments.
-   Pushing to one rebuilds that environment directly, with **no PR** — builds take
-   several minutes. Do not delete these branches and do not open PRs from them.
+   `multi-content` maps to a long-lived Pantheon environment and is currently the
+   only one. Pushing to it rebuilds that environment directly, with **no PR** —
+   builds take several minutes. Do not delete it and do not open PRs from it.
+   Check `terminus env:list fastforward` before assuming any other `multi-*`
+   environment exists.
 
 3. **Deploys are tag-driven.** Merging to `main` auto-deploys to **Dev**. Promote
    with tags: `pantheon_test_<date>` → **Test**, `pantheon_live_<date>` → **Live**

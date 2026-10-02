@@ -217,7 +217,10 @@ They are not feature branches:
 | Branch | Environment |
 | ------ | ----------- |
 | `multi-content` | https://content-fastforward.pantheonsite.io/ |
-| `multi-marketing` | (marketing multidev) |
+
+`multi-content` is currently the only standing multidev. Confirm what exists
+with `terminus env:list fastforward` rather than assuming from branch names —
+a `multi-*` branch can outlive its environment.
 
 Pushing to one of these rebuilds its environment directly — **no PR required**,
 and the build takes several minutes. These branches are long-lived: don't delete
