@@ -20,32 +20,31 @@ export function BlogPost({ page }: { page: Page }) {
 
   return (
     <article className="wp-page blog-post">
-      {featuredImage && (
-        <div id="featured-image" className="relative mb-10 lg:px-6">
-          {featuredImage.placeholder ? (
-            <PlaceholderImage
-              alt={featuredImage.alt || title}
-              width={featuredImage.width ?? 1600}
-              height={featuredImage.height ?? 900}
-              notes={featuredImage.notes}
-              className="max-lg:h-[50vh] w-full"
-            />
-          ) : (
-            <Image
-              src={featuredImage.src}
-              alt={featuredImage.alt || title}
-              width={featuredImage.width ?? 1600}
-              height={featuredImage.height ?? 900}
-              priority
-              sizes="100vw"
-              className="max-lg:h-[50vh] object-cover w-full"
-            />
-          )}
-        </div>
-      )}
-
       <div className="section main-section">
-        <div className="mx-auto lg:w-4/5">
+        <div className="blog-measure mx-auto">
+          {featuredImage && (
+            <div id="featured-image" className="relative mb-10">
+              {featuredImage.placeholder ? (
+                <PlaceholderImage
+                  alt={featuredImage.alt || title}
+                  width={featuredImage.width ?? 1500}
+                  height={featuredImage.height ?? 1000}
+                  notes={featuredImage.notes}
+                  className="aspect-[3/2] w-full"
+                />
+              ) : (
+                <Image
+                  src={featuredImage.src}
+                  alt={featuredImage.alt || title}
+                  width={featuredImage.width ?? 1500}
+                  height={featuredImage.height ?? 1000}
+                  priority
+                  sizes="(min-width: 768px) 680px, 100vw"
+                  className="aspect-[3/2] object-cover w-full"
+                />
+              )}
+            </div>
+          )}
           <div className="pb-8">
             <Link
               href="/blog"

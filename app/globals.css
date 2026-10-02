@@ -349,6 +349,16 @@
     font-size: max(1rem, 18px);
   }
 
+  /* ----- Blog measure -----
+     One column width for the whole post — hero image, title, meta, and prose
+     all share it, so the 3:2 featured image is exactly as wide as the text.
+     Outspecifies the `.section > *` max-width (screen-xl) via `.blog-post`.
+     `--blog-measure` is the single knob: at the 18px `.ff-article` body size
+     this lands the prose at roughly 70-75 characters per line. */
+  .blog-post .blog-measure {
+    max-width: var(--blog-measure, 680px);
+  }
+
   /* ----- Blog / article content insets -----
      `.ff-article` is the contentHtml body of the blog layout (BlogPost). Block
      elements step in from the paragraph measure with an equal gutter on both
