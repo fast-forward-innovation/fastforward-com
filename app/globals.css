@@ -325,24 +325,45 @@
      are capped as maxima — mobile keeps its smaller scale, the desktop step
      is what gets pulled down. `.blog-post …` outspecifies the base `h1`/`h2`
      element rules, so these win even inside the base responsive @media blocks.
-       H1: was 2.5 / 3.75 / 5.6rem  → 2.5rem, capped at 3.6rem from md up.
-       H2: was 2 / 3.75rem          → 2rem, capped at 3.0rem from sm up.
+     Sized as a ladder against the 18px body, so the steps stay legible in the
+     680px measure rather than shouting across it:
+
+       desktop  H1 44px / H2 32px / H3 24px / body 18px
+       mobile   H1 36px / H2 28px / H3 22px / body 18px
+
+     H3 is capped for the same reason the others are: the base `h3` step is
+     1.875rem (30px) from sm up, which would sit on top of H2 the first time a
+     post uses one. No blog post does yet — this keeps the ladder correct when
+     one does.
+
+     H2 also takes an explicit line-height. The base `h2` picks up Tailwind's
+     `text-6xl` pairing, which carries `line-height: 1` — fine at 48px, too
+     tight once the step comes down, and it inherits the 1.5 body leading on
+     mobile instead. 1.2 reads consistently at both ends.
+
      Body copy is floored at 16px with max(1rem, 16px): scales up with the
      root size for accessibility, but never renders below 16px. */
   .blog-post h1 {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
   }
   .blog-post h2 {
-    font-size: 2rem;
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+  .blog-post h3 {
+    font-size: 1.375rem;
   }
   @media (min-width: 640px) {
     .blog-post h2 {
-      font-size: 3rem;
+      font-size: 2rem;
+    }
+    .blog-post h3 {
+      font-size: 1.5rem;
     }
   }
   @media (min-width: 768px) {
     .blog-post h1 {
-      font-size: 3.6rem;
+      font-size: 2.75rem;
     }
   }
   .blog-post .ff-article {
