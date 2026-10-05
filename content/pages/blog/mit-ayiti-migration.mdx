@@ -1,0 +1,139 @@
+---
+title: "Our Site's Problems, or Our Plugins' Problems? Rebuilding MIT-Ayiti on Next.js and Pantheon P1"
+slug: blog/mit-ayiti-migration
+date: '2026-10-04T12:00:00'
+layout: blog
+draft: true
+pinned: true
+editorial:
+  status: draft
+  branch: content/mit-ayiti-blog
+  updated: 2026-10-04
+  notes: >-
+    First full draft from the author's brief, with the three design callouts.
+    Featured image is a 560×333 video thumbnail from MIT-Ayiti; a larger
+    original would be sharper. Confirm the sidebar's description of
+    MIT-Ayiti and the video caption. The article's bandwidth/latency figures
+    disagree with the latency callout's SpeedOf.Me data; reconcile before
+    review.
+author:
+  name: Jason Yarrington
+  role: Web Solutions
+featuredImage:
+  src: /content/images/blog/mit-ayiti-chache-konnen-nan-fe-mouvman-epi-jwe.webp
+  alt: >-
+    A teacher plays with toddlers in a classroom, one shaking green maracas
+    beside a toy barn. Caption: "Chache konnen nan fè mouvman epi nan jwe"
+    (learning through movement and play).
+  width: 560
+  height: 333
+additionalPostFields:
+  seoDescription: >-
+    MIT-Ayiti shares Haitian Creole learning materials between Haitian
+    educators in every subject, K–12. The WordPress site we inherited did the
+    job by stacking plugin on plugin. Here's how we rebuilt it on Next.js and
+    Pantheon P1, and why solving the problems from the ground up worked
+    better than fighting the plugins.
+  tags:
+    - Migration
+    - WordPress
+    - Next.js
+    - Pantheon P1
+contentHtml: |
+  <p>I've run into this moment over and over in my career. I inherit a WordPress site that works, for the most part. It has all the plugins you'd expect in a fully functional WordPress site: a plugin for search, a plugin for membership, a plugin for security, a plugin to embed documents. Each one solves a problem while quietly creating another. Sites like this don't have a chosen architecture. They have an accumulation of plugins.</p>
+
+  <p>That's what we inherited with MIT-Ayiti, a platform for sharing Haitian Creole learning materials written by Haitian Creole teachers. Nearly 300 resources have been published over the years, contributed by dozens of educators. But with every feature added to the site, more problems piled up.</p>
+
+  <p>We're very good at working our way through that kind of plugin tangle. But I kept asking myself: what if we solved these problems once and for all, in code we control, instead of wading through plugin soup?</p>
+
+  <p>If you manage a mature WordPress site and wonder whether Next.js is worth the move, you've probably asked yourself some version of the same question: <strong>are we solving our site's problems, or patching our plugins' problems?</strong></p>
+
+  <p>When we took on MIT-Ayiti, the answer was clear. The content was strong and the mission was clear, but nearly every feature depended on a plugin that kind of did the job, but not quite. This is my account of rebuilding it on Next.js, Pantheon P1, and Firebase.</p>
+
+  <aside class="ff-aside" aria-label="About MIT-Ayiti">
+    <p class="ff-aside__label">About MIT-Ayiti</p>
+    <p><a href="https://mit-ayiti.net">MIT-Ayiti</a> is a library of teaching materials written in Haitian Creole, by Haitian educators, for Haitian classrooms. It covers every subject from kindergarten through grade 12. Teachers contribute lessons and resources, and other teachers find them, save them, and use them in their own classes.</p>
+    <figure class="video-card">
+      <div class="video-card__frame" style="aspect-ratio: 16 / 9;">
+        <iframe
+          class="video-card__media"
+          src="https://www.youtube-nocookie.com/embed/wV1fGh8EKtA?start=4"
+          title="An introduction to MIT-Ayiti"
+          loading="lazy"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <figcaption class="video-card__caption">An introduction to MIT-Ayiti and the educators behind it.</figcaption>
+    </figure>
+  </aside>
+
+  <h2>Why rebuild</h2>
+
+  <p><strong>The plugins weren't doing what they were supposed to do.</strong> Ultimate Member held 1,321 accounts, of which only a few dozen belonged to contributors. Everyone else was a reader, and readers didn't need an account to read.</p>
+
+  <p><strong>The fields didn't fit the content.</strong> Our contributions have authors, author credentials, and license strings. None of our plugins gave us those, so the content needed restructuring regardless.</p>
+
+  <p><strong>Some plugins had no job to do.</strong> Polylang was installed, but this is a site written in Haitian Creole and managed by Haitian Creole writers. We wouldn't bother with Polylang on an English-only site, and this site doesn't need it either.</p>
+
+  <p><strong>Security was layered on security.</strong> Solid Security was installed, on top of custom security configuration on DreamHost that none of our developers were familiar with. We call these YASPs: Yet Another Security Plugin.</p>
+
+  <h2>Five questions to ask yourself</h2>
+
+  <ol>
+    <li>Do you know what all of your plugins do?</li>
+    <li>How many licenses are you paying for and managing for your "simple WordPress site"?</li>
+    <li>Are you using a plugin that "kind of" does what you want?</li>
+    <li>Does your content model reflect your content, or is it dictated by your plugin choices?</li>
+    <li>Are you managing your site's problems, or your plugins' problems?</li>
+  </ol>
+
+  <p>If you answered "not sure" to two or more, it's worth a conversation. That's where we started with MIT-Ayiti.</p>
+
+  <h2>Five fears about leaving WordPress</h2>
+
+  <div data-callout="five-fears"></div>
+
+  <h3>"We'll lose our SEO."</h3>
+  <p>This is always a legitimate concern, and we addressed it in the plan from the start. We kept the old URLs in exactly the same shape, with no redirects, across the primary pages. As for the faceted search our search plugin provided, the way it was set up meant search engines couldn't crawl it anyway. Rewriting it was going to be a win.</p>
+
+  <h3>"Editors will lose the ability to edit."</h3>
+  <p>On other Next.js sites we've built, editing happens in a platform like Strapi, or directly in Markdown files. That's fine when our own team makes all the updates, but the modern standard is a visual editor. Pantheon P1 gives editors visual page composition: a modern editor built on Puck, overlaid on their documents.</p>
+
+  <h3>"Aren't we just rebuilding all the plugin code?"</h3>
+  <p>Most plugins get replaced by decisions, not by more code. Facets, for instance, are just an index of the content filtered in the browser. We often end up writing that code from scratch anyway, just to make a faceting interface look the way we want. Membership was easy to replace with Firebase Auth and a single document per user. When the base architecture lines up with your goals, building features gets much easier.</p>
+
+  <h3>"Isn't P1 unproven?"</h3>
+  <p>As of this writing, P1 is still in alpha. In the interest of full disclosure, we took this on as an alpha project in close partnership with Pantheon. Every issue we ran into, we logged and sent straight to their engineering team as it happened. The newness of the platform didn't worry us much. It's built on the WebOps patterns Pantheon has more than a decade of experience with, and its editor is based on Puck, a popular open source project.</p>
+
+  <h3>"We'll be locked into the agency."</h3>
+  <p>The Firebase project holds authentication and the Firestore database. P1 holds the documents and the media. Handing the project over is a change of ownership, not a migration. From day one, one of Pantheon's strengths has been how easily a site's ownership moves to the client instead of staying with the agency. That still fits how we like to support our clients.</p>
+
+  <div data-callout="five-advantages"></div>
+
+  <h2>Built for low bandwidth</h2>
+
+  <p>A page that loads instantly in Boston can crawl in Haiti. Haitian users get about one sixth of the bandwidth: 51 Mbps versus 301 Mbps. On mobile it's worse, averaging 8.87 Mbps. Every request travels to the US and back with roughly eight times the latency. Every kilobyte counts.</p>
+
+  <div data-callout="haiti-latency"></div>
+
+  <p>This was our main reason for switching, and we felt Next.js was a very good fit for it. We focused the build on static-first pages with minimal JavaScript. Every page is pre-built HTML that a CDN can serve from an edge node, with no server work or database call per request. Granted, you can get a lot of that from WordPress with good caching. But keeping JavaScript small on a plugin-heavy site is really hard, because every plugin that adds JavaScript to the front end is beyond your control.</p>
+
+  <p>Anything a user saves, such as their saved lists, is cached and works offline. In those lists, we chose up and down arrows over drag-to-reorder, so teachers using keyboards or screen readers can reorder and manage their lists too.</p>
+
+  <h2>What might have been easier in WordPress</h2>
+
+  <p>We definitely missed a few plugins, and they made us ask whether rebuilding everything was worth it. Two good examples are Mailchimp and podcast hosting.</p>
+
+  <p><strong>Mailchimp.</strong> The Mailchimp sync plugin is a lot better than most plugins. It's well supported and easy to configure. Rebuilding its features felt a little unnecessary, and maybe a little fragile, compared to just installing the plugin in WordPress.</p>
+
+  <p><strong>Podcast hosting.</strong> This turned out to be trickier than we expected. When you move where your podcast is hosted, existing download links break. In our case the podcast hadn't been active in a while, and most new media had moved to YouTube, so we decided we could live with that.</p>
+
+  <h2>Should you make the move?</h2>
+
+  <p>This move worked really well for this site. It's the right fit for the people who maintain its content and the right fit for our technical team. Would this approach work in every case? Definitely not.</p>
+
+  <p>We believe it's a very sound approach for a site that is content-heavy, has several custom content types, and still wants a drag-and-drop visual editor. A full ecommerce site that fits WooCommerce well, or a learning management system (LMS) that benefits from a full-featured commercial plugin, will probably be better off staying on WordPress.</p>
+
+  <p>Not sure which is right for you? As always, talk to a professional. At Fast Forward we build both, and we only recommend one after a careful conversation about your site. <strong>Solve your site's problems, not your plugins'.</strong></p>
+---

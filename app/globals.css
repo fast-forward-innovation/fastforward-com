@@ -418,6 +418,348 @@
     }
   }
 
+  /* ----- Article sidebar -----
+     `<aside class="ff-aside">` in a blog post's contentHtml: a boxed
+     "about this" panel that sits in the flow at the article inset, with a
+     teal rail and a mono label (`.ff-aside__label`). Anything nested inside
+     (a video-card figure, a list) drops the article inset, since the box
+     already carries it. */
+  .ff-article .ff-aside {
+    margin: 2.5rem 1rem;
+    padding: 1.5rem;
+    border-left: 4px solid var(--color-ff_teal);
+    background: rgba(0, 140, 168, 0.06);
+    font-size: 0.9em;
+  }
+  .ff-article .ff-aside figure,
+  .ff-article .ff-aside ul,
+  .ff-article .ff-aside ol {
+    margin-inline: 0;
+  }
+  .ff-article .ff-aside > :last-child {
+    margin-bottom: 0;
+  }
+  .ff-article .ff-aside__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-ff_teal);
+    margin-bottom: 0.5rem;
+  }
+  @media (min-width: 768px) {
+    .ff-article .ff-aside {
+      margin-inline: 2.5rem;
+    }
+  }
+
+  /* ----- Blog numbered lists -----
+     `<ol>` in a blog post's contentHtml: teal number discs in a hanging
+     indent — the callouts' numbered-disc mark (components/callouts/) at body
+     scale, partnering the teal square bullets on `<ul>`. Each disc centers on
+     its item's first line. Tailwind's preflight strips native list numbers,
+     so these come from a CSS counter; `start` isn't honored. */
+  .blog-post .ff-article ol {
+    counter-reset: ff-ol;
+    list-style: none;
+    padding-left: 2.5rem;
+  }
+  .blog-post .ff-article ol > li {
+    position: relative;
+    counter-increment: ff-ol;
+    line-height: 1.5;
+  }
+  .blog-post .ff-article ol > li + li {
+    margin-top: 1rem;
+  }
+  .blog-post .ff-article ol > li::before {
+    content: counter(ff-ol);
+    position: absolute;
+    left: -2.5rem;
+    /* Item line box is 1.5 × the article body size (`.blog-post .ff-article`
+       font-size). Spelled out in rem/px rather than `1lh`/`em`, which would
+       resolve against this pseudo-element's own smaller font. */
+    top: calc((1.5 * max(1rem, 18px) - 1.75rem) / 2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--color-ff_teal);
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  /* ----- Blog callouts -----
+     Designed graphics placed in a blog post with a `<div data-callout="…">`
+     marker (lib/callouts.ts, components/callouts/). Specs and brand values:
+     docs/design/callouts/.
+
+     Drawn on a 1200×820 canvas. `--u` is one canvas pixel at the current
+     width (`.ff-callout` is the size container), so at 1200px wide every
+     measurement matches the spec and below that the whole card scales down
+     together. Text sizes are `max(floor, N × --u)` so they stop shrinking at
+     a readable size on phones; the card then grows taller than 820:1200
+     (`min-height`, not `aspect-ratio`) instead of clipping. */
+  .ff-callout {
+    container-type: inline-size;
+    margin: 2.5rem 1rem;
+  }
+  /* Same side inset as the article's other blocks (figures, code cards,
+     lists) so callouts step in from the text measure with them. */
+  @media (min-width: 768px) {
+    .ff-callout {
+      margin-inline: 2.5rem;
+    }
+  }
+  .ff-callout__card {
+    --u: calc(100cqw / 1200);
+    display: flex;
+    flex-direction: column;
+    min-height: calc(820 * var(--u));
+    font-family: var(--font-sans);
+  }
+  /* Undo the article's list and paragraph styling (`.main-section ul` teal
+     bullets, hanging indent, 2rem paragraph gaps) inside callouts. */
+  .main-section .ff-callout :is(p, ol, ul) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .main-section .ff-callout li {
+    margin: 0;
+  }
+  .main-section .ff-callout li::before {
+    content: none;
+  }
+
+  .ff-callout--light {
+    background: #ffffff;
+    color: #1b1a1c;
+    border: 1px solid #c2cacf;
+  }
+  .ff-callout--dark {
+    background: #1b1a1c;
+    color: #ffffff;
+  }
+  .ff-callout__bar {
+    height: max(4px, calc(8 * var(--u)));
+    background: linear-gradient(
+      90deg,
+      #dd2e2a 0%,
+      #b81d19 19%,
+      #18397f 59%,
+      #1e2142 100%
+    );
+  }
+  .ff-callout__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: max(20px, calc(36 * var(--u)));
+    padding: max(24px, calc(56 * var(--u))) max(20px, calc(72 * var(--u)))
+      max(20px, calc(48 * var(--u)));
+  }
+  .ff-callout--dark .ff-callout__body {
+    gap: max(24px, calc(40 * var(--u)));
+    padding-top: max(28px, calc(64 * var(--u)));
+  }
+  .ff-callout__head {
+    display: flex;
+    flex-direction: column;
+    gap: max(6px, calc(14 * var(--u)));
+  }
+  .ff-callout .ff-callout__eyebrow {
+    font-size: max(11px, calc(14 * var(--u)));
+    font-weight: 700;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: #6a7078;
+  }
+  .ff-callout--dark .ff-callout__eyebrow {
+    color: #ffffff;
+  }
+  .ff-callout .ff-callout__title {
+    font-size: max(22px, calc(46 * var(--u)));
+    line-height: 1.13;
+    font-weight: 800;
+    letter-spacing: -0.011em;
+    color: inherit;
+  }
+  .ff-callout--dark .ff-callout__title {
+    max-width: 20em;
+  }
+
+  /* Numbered list (five-fears, five-advantages) */
+  .ff-callout .ff-callout__item {
+    display: grid;
+    grid-template-columns: max(32px, calc(52 * var(--u))) 1fr;
+    gap: max(14px, calc(28 * var(--u)));
+    align-items: center;
+    padding: max(12px, calc(26 * var(--u))) 0;
+    border-top: 1px solid #c2cacf;
+  }
+  .ff-callout .ff-callout__item:last-child {
+    border-bottom: 1px solid #c2cacf;
+  }
+  .ff-callout .ff-callout__disc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: max(32px, calc(48 * var(--u)));
+    height: max(32px, calc(48 * var(--u)));
+    border-radius: 50%;
+    font-size: max(14px, calc(20 * var(--u)));
+    font-weight: 800;
+    color: #ffffff;
+  }
+  .ff-callout--red .ff-callout__disc {
+    background: #dd2e2a;
+  }
+  .ff-callout--teal .ff-callout__disc {
+    background: #008ca8;
+  }
+  .ff-callout .ff-callout__text {
+    font-size: max(17px, calc(32 * var(--u)));
+    line-height: 1.25;
+    font-weight: 700;
+    color: inherit;
+  }
+
+  /* Latency stat + download-speed bars (haiti-latency) */
+  .ff-callout__stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: calc(64 * var(--u));
+    align-items: end;
+    padding-bottom: max(20px, calc(36 * var(--u)));
+    border-bottom: 1px solid #4a4854;
+  }
+  @container (max-width: 560px) {
+    .ff-callout__stats {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+  .ff-callout__latency {
+    display: flex;
+    flex-direction: column;
+    gap: max(4px, calc(8 * var(--u)));
+  }
+  .ff-callout .ff-callout__big {
+    display: flex;
+    align-items: baseline;
+    gap: max(6px, calc(12 * var(--u)));
+  }
+  .ff-callout .ff-callout__big-num {
+    font-size: max(72px, calc(168 * var(--u)));
+    line-height: 0.9;
+    font-weight: 800;
+    letter-spacing: -0.036em;
+    color: #ffffff;
+  }
+  .ff-callout .ff-callout__big-unit {
+    font-size: max(22px, calc(44 * var(--u)));
+    font-weight: 700;
+    color: #d6dbe4;
+  }
+  .ff-callout .ff-callout__big-label {
+    font-size: max(15px, calc(20 * var(--u)));
+    line-height: 1.4;
+    color: #d6dbe4;
+  }
+  .ff-callout__chart,
+  .ff-callout .ff-callout__bars {
+    display: flex;
+    flex-direction: column;
+    gap: max(14px, calc(24 * var(--u)));
+  }
+  .ff-callout .ff-callout__chart-label {
+    font-size: max(11px, calc(14 * var(--u)));
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #a6afc0;
+  }
+  .ff-callout .ff-callout__bar-row {
+    display: flex;
+    flex-direction: column;
+    gap: max(6px, calc(10 * var(--u)));
+  }
+  .ff-callout .ff-callout__bar-text {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: max(14px, calc(18 * var(--u)));
+    font-weight: 700;
+  }
+  .ff-callout .ff-callout__bar-text span {
+    color: #ffffff;
+  }
+  .ff-callout .ff-callout__bar-row--global .ff-callout__bar-text span {
+    color: #d6dbe4;
+  }
+  .ff-callout__track {
+    display: block;
+    height: max(10px, calc(18 * var(--u)));
+    background: #242229;
+    border-radius: 3px;
+  }
+  .ff-callout__fill {
+    display: block;
+    height: 100%;
+    background: #dd2e2a;
+    border-radius: 3px;
+  }
+  .ff-callout__bar-row--global .ff-callout__track {
+    background: transparent;
+  }
+  .ff-callout__bar-row--global .ff-callout__fill {
+    background: #a6afc0;
+  }
+  .ff-callout .ff-callout__lede {
+    max-width: 44em;
+    font-size: max(16px, calc(22 * var(--u)));
+    line-height: 1.45;
+    color: #e3e7ee;
+  }
+
+  /* Footer line, shared */
+  .ff-callout__footer {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem 2rem;
+    font-size: max(11px, calc(14 * var(--u)));
+    font-weight: 600;
+  }
+  .ff-callout .ff-callout__footer span {
+    color: #6a7078;
+  }
+  .ff-callout--dark .ff-callout__footer {
+    align-items: flex-end;
+    font-size: max(11px, calc(13 * var(--u)));
+    font-weight: 400;
+    line-height: 1.38;
+  }
+  .ff-callout--dark .ff-callout__footer span {
+    color: #a6afc0;
+  }
+  .ff-callout .ff-callout__footer .ff-callout__brand {
+    font-size: max(11px, calc(14 * var(--u)));
+    font-weight: 800;
+    white-space: nowrap;
+    color: #1b1a1c;
+  }
+  .ff-callout--dark .ff-callout__footer .ff-callout__brand {
+    color: #ffffff;
+  }
+
   /* Definition lists — mono-rail labels with row dividers.
      Stacks on mobile; switches to a fixed-label / fluid-body grid at md. */
   .main-section dl {

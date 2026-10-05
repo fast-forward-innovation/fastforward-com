@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Page } from "@/lib/types";
+import { splitCallouts } from "@/lib/callouts";
+import { CALLOUTS } from "./callouts";
 import { PlaceholderImage } from "./postBlocks/PlaceholderImage";
 
 function formatDate(iso: string): string {
@@ -20,32 +22,9 @@ export function BlogPost({ page }: { page: Page }) {
 
   return (
     <article className="wp-page blog-post">
-      <div className="section main-section">
+      <div className="section main-section pt-12 md:pt-[4.5rem]">
         <div className="blog-measure mx-auto">
-          {featuredImage && (
-            <div id="featured-image" className="relative mb-10">
-              {featuredImage.placeholder ? (
-                <PlaceholderImage
-                  alt={featuredImage.alt || title}
-                  width={featuredImage.width ?? 1500}
-                  height={featuredImage.height ?? 1000}
-                  notes={featuredImage.notes}
-                  className="aspect-[3/2] w-full"
-                />
-              ) : (
-                <Image
-                  src={featuredImage.src}
-                  alt={featuredImage.alt || title}
-                  width={featuredImage.width ?? 1500}
-                  height={featuredImage.height ?? 1000}
-                  priority
-                  sizes="(min-width: 768px) 680px, 100vw"
-                  className="aspect-[3/2] object-cover w-full"
-                />
-              )}
-            </div>
-          )}
-          <div className="pb-8">
+          <div className="pb-4">
             <Link
               href="/blog"
               className="font-mono text-sm uppercase tracking-wider text-ff_black hover-linear-gradient-underline"
@@ -55,7 +34,7 @@ export function BlogPost({ page }: { page: Page }) {
           </div>
 
           {tags.length > 0 && (
-            <ul className="pb-4 leading-4">
+            <ul className="pb-4 mb-0! leading-4">
               {tags.map((tag) => (
                 <li
                   key={tag}
@@ -67,7 +46,7 @@ export function BlogPost({ page }: { page: Page }) {
             </ul>
           )}
 
-          <h1 className="pb-6">{title}</h1>
+          <h1 className="pt-0 pb-4">{title}</h1>
 
           <div className="flex items-center gap-3 pb-10">
             {author?.avatar &&
@@ -106,11 +85,46 @@ export function BlogPost({ page }: { page: Page }) {
             </div>
           </div>
 
+          {featuredImage && (
+            <div id="featured-image" className="relative mb-10">
+              {featuredImage.placeholder ? (
+                <PlaceholderImage
+                  alt={featuredImage.alt || title}
+                  width={featuredImage.width ?? 1500}
+                  height={featuredImage.height ?? 1000}
+                  notes={featuredImage.notes}
+                  className="aspect-[3/2] w-full"
+                />
+              ) : (
+                <Image
+                  src={featuredImage.src}
+                  alt={featuredImage.alt || title}
+                  width={featuredImage.width ?? 1500}
+                  height={featuredImage.height ?? 1000}
+                  priority
+                  sizes="(min-width: 768px) 680px, 100vw"
+                  className="aspect-[3/2] object-cover w-full"
+                />
+              )}
+            </div>
+          )}
+
           {contentHtml ? (
-            <div
-              className="ff-article"
-              dangerouslySetInnerHTML={{ __html: contentHtml }}
-            />
+            // Each HTML run between callout markers is its own `.ff-article`,
+            // so the article's direct-child (`.ff-article > …`) rules still hold.
+            splitCallouts(contentHtml).map((segment, i) => {
+              if (segment.kind === "html") {
+                return (
+                  <div
+                    key={i}
+                    className="ff-article"
+                    dangerouslySetInnerHTML={{ __html: segment.html }}
+                  />
+                );
+              }
+              const Callout = CALLOUTS[segment.name];
+              return <Callout key={i} />;
+            })
           ) : (
             <p>Sorry, no post content was found.</p>
           )}
