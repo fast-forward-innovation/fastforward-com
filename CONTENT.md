@@ -371,6 +371,16 @@ The wiring lives in [lib/pcc.ts](lib/pcc.ts) (fetch + ArchieML/Slate dispatcher)
 
 When the M365 add-in lands in this tenant, authors will be able to write the same lab project in Word. Zero Next.js code changes — both ArchieML body and Smart Components flow through the same PCC API.
 
+## Blog callouts
+
+Blog posts (`layout: blog`) can place a designed callout graphic in `contentHtml` with an empty marker on its own line, between top-level blocks:
+
+```html
+<div data-callout="five-fears"></div>
+```
+
+`BlogPost` swaps each marker for its React component. Available names: `five-fears`, `five-advantages`, `haiti-latency` (registry in [components/callouts/index.tsx](components/callouts/index.tsx), design specs in [docs/design/callouts/](docs/design/callouts/)). An unknown name fails `npm run build`. Never put a marker inside a `<p>`, list, or figure. Each callout is a labelled `<aside>`, so the post's own `<h2>`/`<h3>` headings stay the outline. Copy and figures live in the component, not the MDX. Change them only against the spec or its source.
+
 ## Image conventions
 
 **Storage.** Organize by **theme or page**, not by date.

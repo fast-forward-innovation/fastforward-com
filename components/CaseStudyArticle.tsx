@@ -25,6 +25,7 @@ export function CaseStudyArticle({
   services = [],
   pageSections,
   numbered = true,
+  heroWidth = "full",
 }: {
   title: string;
   featuredImage?: FrontmatterImage;
@@ -33,6 +34,12 @@ export function CaseStudyArticle({
   pageSections: PageSection[];
   /** Auto-number MainSections `(01)/(02)…`. False for the pillar-page layout. */
   numbered?: boolean;
+  /**
+   * `full` (our-work projects): the featured image bleeds edge to edge.
+   * `content` (blog case studies): capped at the sections' content width,
+   * with the same side gutters, so it never runs wider than the text.
+   */
+  heroWidth?: "full" | "content";
 }) {
   const backgroundColor = additionalPostFields?.brandColor
     ? hexToRgba(additionalPostFields.brandColor)
@@ -114,26 +121,51 @@ export function CaseStudyArticle({
           </div>
         </div>
         {featuredImage && (
-          <div id="featured-image" className="relative mb-[4.5rem] lg:px-6">
-            {featuredImage.placeholder ? (
-              <PlaceholderImage
-                alt={featuredImage.alt || title}
-                width={featuredImage.width ?? 1600}
-                height={featuredImage.height ?? 900}
-                notes={featuredImage.notes}
-                className="max-lg:h-[60vh] w-full"
-              />
-            ) : (
-              <Image
-                src={featuredImage.src}
-                alt={featuredImage.alt || title}
-                width={featuredImage.width ?? 1600}
-                height={featuredImage.height ?? 900}
-                priority
-                sizes="100vw"
-                className="max-lg:h-[60vh] object-cover w-full"
-              />
-            )}
+          <div
+            id="featured-image"
+            className={
+              heroWidth === "content"
+                ? "relative mb-[4.5rem] px-6 md:px-12"
+                : "relative mb-[4.5rem] lg:px-6"
+            }
+          >
+            <div
+              className={
+                heroWidth === "content" ? "max-w-screen-xl mx-auto" : undefined
+              }
+            >
+              {featuredImage.placeholder ? (
+                <PlaceholderImage
+                  alt={featuredImage.alt || title}
+                  width={featuredImage.width ?? 1600}
+                  height={featuredImage.height ?? 900}
+                  notes={featuredImage.notes}
+                  className={
+                    heroWidth === "content"
+                      ? "w-full"
+                      : "max-lg:h-[60vh] w-full"
+                  }
+                />
+              ) : (
+                <Image
+                  src={featuredImage.src}
+                  alt={featuredImage.alt || title}
+                  width={featuredImage.width ?? 1600}
+                  height={featuredImage.height ?? 900}
+                  priority
+                  sizes={
+                    heroWidth === "content"
+                      ? "(min-width: 1280px) 1280px, 100vw"
+                      : "100vw"
+                  }
+                  className={
+                    heroWidth === "content"
+                      ? "h-auto object-cover w-full"
+                      : "max-lg:h-[60vh] object-cover w-full"
+                  }
+                />
+              )}
+            </div>
           </div>
         )}
       </div>

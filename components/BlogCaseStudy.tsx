@@ -15,6 +15,7 @@ export function BlogCaseStudy({ page }: { page: Page }) {
         additionalPostFields={page.additionalPostFields}
         services={page.services}
         pageSections={page.pageSections ?? []}
+        heroWidth="content"
       />
       <FeaturedProjects />
     </>
