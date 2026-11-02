@@ -381,6 +381,68 @@ Blog posts (`layout: blog`) can place a designed callout graphic in `contentHtml
 
 `BlogPost` swaps each marker for its React component. Available names: `five-fears`, `five-advantages`, `haiti-latency` (registry in [components/callouts/index.tsx](components/callouts/index.tsx), design specs in [docs/design/callouts/](docs/design/callouts/)). An unknown name fails `npm run build`. Never put a marker inside a `<p>`, list, or figure. Each callout is a labelled `<aside>`, so the post's own `<h2>`/`<h3>` headings stay the outline. Copy and figures live in the component, not the MDX. Change them only against the spec or its source.
 
+## Prospect reviews
+
+A co-branded review of a prospective client's website, sent as outreach. Each review is `content/reviews/<slug>.mdx` and renders at `/review/<slug>` with:
+- a Fast Forward × prospect logo lockup, on a hero tinted with the prospect's brand colour
+- the usual `pageSections` blocks
+- a contact block for the principal who sent it
+
+Draft one with `/new-review`. There are two references:
+- [content/reviews/example-review.mdx](content/reviews/example-review.mdx): a fictional review built from the standard blocks.
+- [content/reviews/usac-climbing-review.mdx](content/reviews/usac-climbing-review.mdx): a real review built from a brief with exact copy and supplied HTML diagrams.
+
+**Frontmatter:**
+- `principal`: an `id` from [content/principals.yml](content/principals.yml). That file holds name, role, email, LinkedIn URL, and Slack member ID (for alert @-mentions).
+- `prospect`: `name`, `url`, `logo` (a `FrontmatterImage`; supports `placeholder`), `brandColor` (`#rrggbb`, tints the hero), and optional `logoBackground`, a plate colour for a logo drawn for dark backgrounds. Never recolour the logo itself.
+- `header`: `intro` (lead paragraph), optional `eyebrow` (small label above the title; omitted when unset) and `byline` (small muted line under the title).
+- `metaTitle`: optional exact browser-tab title, used verbatim instead of the site's "— Fast Forward" template.
+- `recipients`: `id`, `name`, `title`
+- `pageSections`: any standard block, plus two review-only blocks:
+  - `Prose`: `heading` (an `<h2>`) and `html`, in a single reading column with no `(01)` numbering or side label. Use it when a brief gives exact headings and copy. `<ol>` gets the teal number discs.
+  - `HtmlEmbed`: `src`, a file under `content/reviews/<slug>/` holding one scoped `<style>` and one `<section>`. Use it for supplied diagrams; see "Embedding supplied diagrams" below.
+- `contact`: optional `heading` and `lede` for the contact block, so a brief's closing section can be the contact block.
+- `footnote`: optional small, muted line at the end of the page.
+
+Types are `Review` and `Principal` in [lib/types.ts](lib/types.ts).
+
+**Personal links.** Each recipient gets `https://fastforward.sh/review/<slug>?v=<id>`.
+- When the page is opened through that link, the browser pings `/api/review-view`, which posts to Slack: "👀 Jane Doe (VP Marketing) opened …", @-mentioning the principal. Clicking a contact option does the same ("clicked Email on …").
+- Bare links (no `?v=`) never alert, so preview without it.
+- Each visitor alerts once per tab session, and at most once per event per 30 minutes.
+- Alerts post only where `SLACK_REVIEW_WEBHOOK_URL` is set (Live). Elsewhere they're logged.
+
+**Contact block.**
+- Email (pre-addressed, with the subject filled in)
+- Message on LinkedIn
+- Live chat, which appears only while someone is online. It's a placeholder: `isChatOnline()` in [lib/chat.ts](lib/chat.ts) returns false until chat is built (planned on Firebase; see [docs/roadmap.md](docs/roadmap.md)).
+
+Options with no value in `principals.yml` are hidden.
+
+**Unlisted and private.**
+- Reviews are always noindex, disallowed in `robots.txt`, and absent from the sitemap, `llms.txt` and every listing.
+- Recipient names live only in the MDX (this repo is private). They are never rendered or sent to the browser. An e2e test checks the HTML.
+- Never put a recipient's name in the page copy.
+
+- Review pages load **no third-party scripts**. Google Analytics is skipped on `/review/*` (`components/SiteAnalytics.tsx`). The only tracking is our own view alert.
+- Print preview shows just the review: the site header, footer, draft notice and contact buttons are hidden.
+
+**Embedding supplied diagrams.** For a standalone HTML diagram (a full document with its own CSS):
+1. Keep only its `<style>` and its single `<section>`. Drop `<html>`, `<head>`, `<body>` and any font `<link>`s.
+2. Swap its font families for the site's Manrope (`var(--font-manrope),` followed by the original fallbacks) unless the brief says otherwise. Don't touch its colours.
+3. Save it as `content/reviews/<slug>/<name>.html` and reference it with `type: HtmlEmbed`.
+
+The page drops the diagram's side padding and left-aligns it to the column. It also restores the browser defaults Tailwind's reset removes (list markers, heading colours), so a diagram renders as it does standalone. Check new diagrams against the original anyway.
+
+**Placeholders.** Mark copy still waiting on real content with `class="fill"`, as supplied diagrams often do. A review **can't be published** (`draft: false`) while any remain: the build fails and lists each one. Drafts are allowed.
+
+**The build fails** on a review with:
+- an unknown `principal`
+- a slug that isn't one kebab-case segment
+- recipient IDs that are malformed (must be 6–32 lowercase letters/digits) or duplicated
+- an `HtmlEmbed` whose file is missing or outside `content/reviews/`
+- unfilled placeholders, when `draft: false`
+
 ## Image conventions
 
 **Storage.** Organize by **theme or page**, not by date.

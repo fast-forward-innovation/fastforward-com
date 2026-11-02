@@ -134,13 +134,14 @@ export function DraftStatusToast({
         rel="noreferrer"
         className={`${baseClass} block hover:opacity-95`}
         style={style}
+        data-draft-toast
       >
         {body}
       </a>
     );
   }
   return (
-    <div className={baseClass} style={style}>
+    <div className={baseClass} style={style} data-draft-toast>
       {body}
     </div>
   );

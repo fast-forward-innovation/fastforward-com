@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { SiteAnalytics } from "@/components/SiteAnalytics";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FooterBlock } from "@/components/footer/FooterBlock";
 import { JsonLd } from "@/components/JsonLd";
@@ -81,7 +81,7 @@ export default function RootLayout({
         <SiteHeader />
         <main className="flex-auto">{children}</main>
         <FooterBlock />
-        {settings.gaTrackingId && <GoogleAnalytics gaId={settings.gaTrackingId} />}
+        {settings.gaTrackingId && <SiteAnalytics gaId={settings.gaTrackingId} />}
       </body>
     </html>
   );

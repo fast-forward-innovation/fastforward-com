@@ -10,17 +10,10 @@ Before doing anything else:
 2. **Read [lib/types.ts](lib/types.ts)** — confirm the current `Page` interface shape.
 3. **Skim [content/pages/accessibility.mdx](content/pages/accessibility.mdx)** — the canonical exemplar for default-layout pages.
 
-## Important: landing pages are not yet supported
+## Not this command
 
-If the user is asking for a **campaign / marketing landing page**, stop and tell them this:
-
-> The `layout: landing` template ([components/LandingPage.tsx](components/LandingPage.tsx)) currently has its hero copy, three feature cards, and CTA hard-coded in JSX — they are not driven by frontmatter. Until that component is refactored to read from frontmatter, a `layout: landing` page will not render the campaign-specific content.
->
-> Options:
-> - **Use `layout: default`** — if your campaign page is mostly long-form copy, the default layout works today.
-> - **Refactor LandingPage first** — if you need the hero / features structure, that's a coding task before the content task.
-
-Confirm which path the user wants before continuing.
+- **Campaign / marketing landing pages** use `layout: landing` ([components/LandingPage.tsx](components/LandingPage.tsx)). The header (eyebrow, `header.title`, `header.intro`, optional `header.artwork`) and the `pageSections` body come from frontmatter. See `content/pages/digital/` and `content/pages/experiences/` for examples.
+- **Prospect site reviews** use `/new-review`.
 
 ## Workflow
 
