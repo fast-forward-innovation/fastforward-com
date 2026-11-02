@@ -1,0 +1,106 @@
+<!-- usac-our-experience: prepared from the USA Climbing handoff (docs/reviews/usac-review-handoff.zip).
+     Barlow fonts swapped for Manrope; colors unchanged. Scoped styles + one section only. -->
+<style>
+/* Scoped to .usac-x so it can sit beside .usac-j and .usac-f in the same proposal */
+.usac-x{
+  --ink:#16202E; --muted:#5B6675; --rule:#D9DEE5; --paper:#FFFFFF;
+  --wp:#1B3A6B; --g:#E3A80F; --s80:#C8302F; --vl:#178C80; --mdl:#6A4BA6;
+  font-family:var(--font-manrope),system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color:var(--ink); background:var(--paper);
+  max-width:980px; margin:0 auto; padding:36px 28px 28px; line-height:1.45;
+}
+.usac-x *{box-sizing:border-box}
+.usac-x h2{font-family:var(--font-manrope),"Arial Narrow",Arial,sans-serif; font-weight:700; font-size:2rem; line-height:1.1; margin:0 0 10px}
+.usac-x .lead{color:var(--muted); font-size:1.04rem; max-width:62ch; margin:0 0 26px}
+
+.usac-x .pair{display:grid; grid-template-columns:1fr 44px 1.15fr; align-items:center; padding:18px 0; border-top:1px solid var(--rule)}
+.usac-x .pair:last-of-type{border-bottom:1px solid var(--rule)}
+
+/* left: the USAC pattern, shown as the holds it touches */
+.usac-x .pattern h3{font-family:var(--font-manrope),Arial,sans-serif; font-weight:700; font-size:1.15rem; margin:0 0 6px; line-height:1.2}
+.usac-x .pattern p{margin:0 0 10px; font-size:.9rem; color:var(--muted)}
+.usac-x .holds{display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin:0; padding:0; list-style:none}
+.usac-x .holds li{display:flex; align-items:center; gap:6px; font-size:.78rem; color:var(--muted); margin-right:6px}
+.usac-x .hold{display:inline-block; width:16px; height:15px; border-radius:52% 48% 57% 43% / 46% 58% 42% 54%; background:var(--c); box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
+.usac-x [data-sys="wp"]{--c:var(--wp)} .usac-x [data-sys="g"]{--c:var(--g)}
+.usac-x [data-sys="s80"]{--c:var(--s80)} .usac-x [data-sys="vl"]{--c:var(--vl)} .usac-x [data-sys="mdl"]{--c:var(--mdl)}
+
+/* connector */
+.usac-x .link{height:2px; margin:0 8px; background:repeating-linear-gradient(90deg,#9AA3AE 0 6px,transparent 6px 10px); position:relative}
+.usac-x .link::after{content:""; position:absolute; right:-2px; top:-4px; border:5px solid transparent; border-left:7px solid #9AA3AE; border-right:0}
+
+/* right: the proof */
+.usac-x .proof{border-left:4px solid var(--wp); padding:4px 0 4px 16px}
+.usac-x .proof .client{font-family:var(--font-manrope),Arial,sans-serif; font-weight:700; font-size:1.2rem; margin:0; line-height:1.15}
+.usac-x .proof .what{margin:2px 0 8px; font-size:.92rem; font-weight:500}
+.usac-x .proof dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:3px 10px; font-size:.86rem}
+.usac-x .proof dt{color:var(--muted)}
+.usac-x .proof dd{margin:0}
+.usac-x .proof .applies{margin:10px 0 0; font-size:.84rem; color:var(--muted)}
+.usac-x .proof .applies b{color:var(--ink); font-weight:600}
+
+/* placeholders: visible until edited */
+.usac-x .fill{background:#FFF6D6; border-bottom:1px dashed #B88A00; padding:0 3px}
+
+.usac-x .source{font-size:.78rem; color:var(--muted); margin:14px 0 0}
+
+@media (max-width:760px){
+  .usac-x{padding:26px 18px}
+  .usac-x .pair{grid-template-columns:1fr; gap:12px}
+  .usac-x .link{width:2px; height:20px; margin:0 0 0 8px; background:repeating-linear-gradient(180deg,#9AA3AE 0 6px,transparent 6px 10px)}
+  .usac-x .link::after{right:auto; left:-4px; top:auto; bottom:-3px; border:5px solid transparent; border-top:7px solid #9AA3AE; border-bottom:0}
+}
+@media print{.usac-x .pair{break-inside:avoid}}
+</style>
+<section class="usac-x" aria-labelledby="usac-x-title">
+  <h2 id="usac-x-title">We have untangled journeys like these before</h2>
+  <p class="lead">The friction USA Climbing members face follows two patterns we know well: registration that sends people across several systems, and urgent information that has to reach many audiences quickly and correctly.</p>
+
+  <article class="pair">
+    <div class="pattern">
+      <h3>Registration spread across systems</h3>
+      <p>Competitors and parents join in one system, re-enter their details in another, and finish with forms in a third.</p>
+      <ul class="holds" aria-label="Systems involved">
+        <li data-sys="s80"><span class="hold" aria-hidden="true"></span>Sport80</li>
+        <li data-sys="vl"><span class="hold" aria-hidden="true"></span>Vertical-Life</li>
+        <li data-sys="g"><span class="hold" aria-hidden="true"></span>Google Forms</li>
+      </ul>
+    </div>
+    <div class="link" aria-hidden="true"></div>
+    <div class="proof">
+      <p class="client">Northeastern University</p>
+      <p class="what">Graduate registration: we simplified the online course registration process.</p>
+      <dl>
+        <dt>Problem</dt><dd><span class="fill">[One line: what made registration hard for students]</span></dd>
+        <dt>What we built</dt><dd><span class="fill">[One line: the flow or integration we delivered]</span></dd>
+        <dt>Result</dt><dd><span class="fill">[One measurable outcome]</span></dd>
+      </dl>
+      <p class="applies">Applies to: <b>competitor and parent registration</b>, membership checks across systems</p>
+    </div>
+  </article>
+
+  <article class="pair">
+    <div class="pattern">
+      <h3>Urgent information for many audiences</h3>
+      <p>Season changes, eligibility lists and safety requirements reach members through scattered documents and pages.</p>
+      <ul class="holds" aria-label="Systems involved">
+        <li data-sys="wp"><span class="hold" aria-hidden="true"></span>usaclimbing.org</li>
+        <li data-sys="g"><span class="hold" aria-hidden="true"></span>Google Docs and Sheets</li>
+        <li data-sys="mdl"><span class="hold" aria-hidden="true"></span>Education Hub</li>
+      </ul>
+    </div>
+    <div class="link" aria-hidden="true"></div>
+    <div class="proof">
+      <p class="client">Boston Medical Center</p>
+      <p class="what">COVID-19 response</p>
+      <dl>
+        <dt>Problem</dt><dd><span class="fill">[One line: the challenge BMC faced]</span></dd>
+        <dt>What we built</dt><dd><span class="fill">[One line: what we delivered and for whom]</span></dd>
+        <dt>Result</dt><dd><span class="fill">[One measurable outcome, such as speed to launch or reach]</span></dd>
+      </dl>
+      <p class="applies">Applies to: <b>judge and routesetter certification</b>, season announcements, SafeSport requirements</p>
+    </div>
+  </article>
+
+  <p class="source">Highlighted text is a placeholder for project details to confirm before sending.</p>
+</section>
