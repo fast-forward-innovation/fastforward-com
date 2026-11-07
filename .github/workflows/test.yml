@@ -38,7 +38,10 @@ jobs:
 
   e2e:
     name: Playwright (e2e)
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest moved to 26.04, which Playwright 1.60 can't
+    # install Chromium on ("does not support chromium on ubuntu26.04-x64").
+    # Unpin after upgrading @playwright/test to a release that supports it.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
