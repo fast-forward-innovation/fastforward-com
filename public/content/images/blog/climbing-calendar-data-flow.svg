@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 800" width="760" height="800" role="img" aria-labelledby="t d">
+  <title id="t">Climbing Calendar data flow</title>
+  <desc id="d">Published Google Sheets and usaclimbing.org pages feed the weekly update job; Google Places feeds the discover job, which runs on the 1st and 15th. Both jobs run on Google Cloud and write to Firestore. The Next.js site on Cloud Run reads Firestore and serves pages to the visitor's browser, which keeps favorites, saved views, last-used filters and theme in local storage on the device.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7f7d81"/>
+    </marker>
+    <style>
+      text { font-family: Manrope, "Helvetica Neue", Helvetica, Arial, sans-serif; }
+      .label { font-size: 12px; font-weight: 700; letter-spacing: 1.6px; fill: #7f7d81; }
+      .title { font-size: 19px; font-weight: 700; fill: #191819; }
+      .sub { font-size: 14px; fill: #4a4a4d; }
+      .on-dark .title { fill: #ffffff; }
+      .on-dark .sub { fill: #e3e7ee; }
+      .note { font-size: 13px; fill: #7f7d81; }
+      .flow { stroke: #7f7d81; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="760" height="800" fill="#ffffff"/>
+
+  <!-- Public sources -->
+  <text class="label" x="20" y="26">PUBLIC SOURCES</text>
+  <g text-anchor="middle">
+    <rect x="20" y="40" width="226" height="78" rx="8" fill="#ffffff" stroke="#c9ced3" stroke-width="1.5"/>
+    <text class="title" x="133" y="73">Google Sheets</text>
+    <text class="sub" x="133" y="97">18 youth + 7 collegiate tabs</text>
+
+    <rect x="267" y="40" width="226" height="78" rx="8" fill="#ffffff" stroke="#c9ced3" stroke-width="1.5"/>
+    <text class="title" x="380" y="73">usaclimbing.org</text>
+    <text class="sub" x="380" y="97">Championship dates</text>
+
+    <rect x="514" y="40" width="226" height="78" rx="8" fill="#ffffff" stroke="#c9ced3" stroke-width="1.5"/>
+    <text class="title" x="627" y="73">Google Places</text>
+    <text class="sub" x="627" y="97">Gym addresses and details</text>
+  </g>
+
+  <!-- Google Cloud -->
+  <rect x="10" y="150" width="740" height="440" rx="12" fill="#f5f8fa" stroke="#aaaaaa" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text class="label" x="28" y="176">GOOGLE CLOUD</text>
+
+  <g class="on-dark" text-anchor="middle">
+    <rect x="110" y="196" width="290" height="96" rx="8" fill="#008ca8"/>
+    <text class="title" x="255" y="228">update job</text>
+    <text class="sub" x="255" y="252">Reads every schedule tab and page</text>
+    <text class="sub" x="255" y="274">Weekly, Mondays</text>
+
+    <rect x="500" y="196" width="240" height="96" rx="8" fill="#008ca8"/>
+    <text class="title" x="620" y="228">discover job</text>
+    <text class="sub" x="620" y="252">Looks up host gyms</text>
+    <text class="sub" x="620" y="274">1st and 15th of the month</text>
+
+    <rect x="230" y="342" width="300" height="76" rx="8" fill="#18397f"/>
+    <text class="title" x="380" y="374">Firestore</text>
+    <text class="sub" x="380" y="398">Events and gyms</text>
+
+    <rect x="200" y="468" width="360" height="76" rx="8" fill="#191819"/>
+    <text class="title" x="380" y="500">Next.js site</text>
+    <text class="sub" x="380" y="524">Served by Cloud Run, reads Firestore</text>
+  </g>
+
+  <!-- Visitor's browser -->
+  <rect x="150" y="636" width="460" height="148" rx="12" fill="#edf1f2"/>
+  <text class="title" x="380" y="666" text-anchor="middle">Visitor's browser</text>
+  <rect x="180" y="682" width="400" height="86" rx="8" fill="#ffffff" stroke="#008ca8" stroke-width="2"/>
+  <g text-anchor="middle">
+    <text class="title" x="380" y="710" style="font-size:17px">Local storage</text>
+    <text class="sub" x="380" y="734">Favorites · saved views · filters · theme</text>
+    <text class="note" x="380" y="755">Never leaves the device</text>
+  </g>
+
+  <!-- Flow -->
+  <path class="flow" d="M133 118 L205 192" marker-end="url(#arrow)"/>
+  <path class="flow" d="M380 118 L305 192" marker-end="url(#arrow)"/>
+  <path class="flow" d="M620 118 L620 192" marker-end="url(#arrow)"/>
+  <path class="flow" d="M255 292 L325 338" marker-end="url(#arrow)"/>
+  <path class="flow" d="M620 292 L445 338" marker-end="url(#arrow)"/>
+  <path class="flow" d="M380 418 L380 464" marker-end="url(#arrow)"/>
+  <path class="flow" d="M380 544 L380 632" marker-end="url(#arrow)"/>
+  <text class="note" x="392" y="618">Pages</text>
+</svg>

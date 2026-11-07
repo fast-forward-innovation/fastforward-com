@@ -371,6 +371,10 @@ The wiring lives in [lib/pcc.ts](lib/pcc.ts) (fetch + ArchieML/Slate dispatcher)
 
 When the M365 add-in lands in this tenant, authors will be able to write the same lab project in Word. Zero Next.js code changes — both ArchieML body and Smart Components flow through the same PCC API.
 
+## Blog diagrams
+
+Put a diagram (usually an SVG on a white ground) in a blog post's `contentHtml` as `<figure class="ff-diagram">` with an `<img>` and a `<figcaption class="code-card__caption">`. The figure frames it with a hairline outline, rounded corners and inner padding, so it reads as a figure rather than loose text on the white page. Give the `<img>` its `width`, `height` and full `alt` text; no inline styles are needed. Example: the two diagrams in [content/pages/blog/climbing-calendar.mdx](content/pages/blog/climbing-calendar.mdx).
+
 ## Blog callouts
 
 Blog posts (`layout: blog`) can place a designed callout graphic in `contentHtml` with an empty marker on its own line, between top-level blocks:

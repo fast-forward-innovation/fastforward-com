@@ -1,0 +1,131 @@
+---
+title: "Climbing Calendar: A New User Journey Without a New CMS"
+slug: blog/climbing-calendar
+date: '2026-11-06T12:00:00'
+layout: blog
+draft: true
+editorial:
+  status: draft
+  branch: content/climbing-calendar-blog
+  updated: 2026-11-06
+  notes: >-
+    First draft from Jason's notes, the live site and the climbing-calendar
+    repo. Confirm the four-day / Claude Code line and the author role.
+author:
+  name: Jason Yarrington
+  role: Web Solutions
+featuredImage:
+  src: /content/images/blog/climbing-calendar-schedule-header.jpg
+  alt: >-
+    The Climbing Calendar schedule page: a banner of climbing holds on a gym
+    wall, then filters for series, discipline, region and favorites above a
+    list of upcoming USA Climbing events.
+  width: 1500
+  height: 1000
+additionalPostFields:
+  seoDescription: >-
+    A Fast Forward Labs experiment: one searchable schedule of every USA
+    Climbing competition, built on top of the Google Sheets and pages that
+    already publish them, with no new CMS, no accounts and almost no hosting
+    cost.
+  tags:
+    - Labs
+    - User Journeys
+    - Google Cloud
+    - FireBase
+    - Next.js
+contentHtml: |
+  <p>If you are a parent with a kid that does sports, you will recognize this story. I have a kid that climbs competitively.  As such, I have spent a lot of time on usaclimbing.org.  It's where we go to manage our membership, find the season climbing schedule and register for events.</p>
+
+  <p>USA Climbing publishes all of it. They manage the schedules for eighteen regions and seven collegiate divisions.  Most of it is managed with a handful of Google Docs and PDFs. The information is really good and well organized. Getting to it takes a lot of clicks.</p>
+
+  <p>So I built <a href="https://climbing-calendar.fastforward.sh">Climbing Calendar</a>, as a thought experiment.  I wanted to focus on one user experience.  I wanted just the schedule of events in one page where you can search, filter, and save from.  Note:  this is unofficial and not affiliated with USA Climbing; registration still happens on their systems. What I wanted to test was a pattern we use with clients all the time: <strong>build a new user journey on top of the systems an organization already runs, instead of replacing them.</strong></p>
+
+  <h2>Start with one journey</h2>
+
+  <p>The site is built for one persona: a competitor, or the parent of a competitor. Our goal is simple: keep track of the events that matter this season. For most of that journey, we need five things in one place:</p>
+
+  <ol>
+    <li><strong>See every event</strong> across qualifier series, regionals and divisionals, as well as disciplines in one list.</li>
+    <li><strong>Know where it came from.</strong> Every event cites the source of the information and when it was updated.</li>
+    <li><strong>Go to the official page</strong> to register, straight out to USA Climbing.</li>
+    <li><strong>Keep favorites</strong>: each of us has a handful of events we are aiming to attend.</li>
+    <li><strong>Share with the family</strong>, a quick link that can share the events we care about.</li>
+  </ol>
+
+  <p>I am a big believer that if we focus on just what the user journey needs, we can build it without a major platform overhaul.</p>
+
+  <h2>The data already exists</h2>
+
+  <p>There is no database or CMS integration in this project. USA Climbing runs its season on published Google Sheets and web pages, and that turned out to be plenty to work with:</p>
+
+  <ul>
+    <li><strong>Google Sheets.</strong> One published workbook holds all 18 youth region schedules, one tab per region. A second holds the 7 collegiate divisions.</li>
+    <li><strong>usaclimbing.org pages.</strong> National championship dates appear only as text on series pages, so they're scraped from there.</li>
+    <li><strong>Google Places.</strong> Addresses, phone numbers and websites for the gyms that host events, available through the API's free tier.</li>
+  </ul>
+
+  <p>There's no AI in the parsing. We know where the data lives and how each tab is laid out, so a deterministic parser handles each layout. I have been doing this since I was writing Perl one-liners.  Columns are matched by their header names, never by position, because the collegiate tabs use two different layouts. A row whose date, region or venue can't be resolved is dropped and logged rather than guessed at. Everything is normalized into one event shape, with its source document and fetch time attached.</p>
+
+  <p>Some published documents are deliberately left alone. There is a lot more information on usaclimbing.org, including athlete rosters and para-climbing classification lists, but this is an index of events, not people.</p>
+
+  <h2>No new CMS, no new infrastructure</h2>
+
+  <p>This is the part I find most useful for our clients. If we were working with USA Climbing (maybe someday?), staff would not have to change anything. They keep editing the same Google Sheets, and the calendar picks up the changes on its next weekly run. Nobody needs a new login, and nobody needs training on a new system.</p>
+
+  <p>This approach also allows organizations to iterate the user experience without a major overhaul.  These small-scale experiences can have a huge impact.  And a lot can be learned quickly.  Got an idea?  Build it, test it, get feedback.</p>
+
+  <h2>Small and inexpensive on Google Cloud</h2>
+
+  <p>The whole thing runs on a handful of Google Cloud services that scale to zero when nobody is using them:</p>
+
+  <ul>
+    <li><strong>Cloud Scheduler</strong> kicks off two jobs that run small Node.js scripts: Mondays for the schedules, and the 1st and 15th for gym details.</li>
+    <li><strong>Firestore</strong> stores the events and gyms.</li>
+    <li><strong>Cloud Storage</strong> keeps a raw copy of every fetch, so any parse can be re-run.</li>
+    <li><strong>Cloud Run</strong> serves the site itself, a Next.js app reading from Firestore.</li>
+  </ul>
+
+  <figure class="ff-diagram">
+    <img
+      src="/content/images/blog/climbing-calendar-data-flow.svg"
+      alt="Data flow: published Google Sheets and usaclimbing.org pages feed the weekly update job, and Google Places feeds the discover job on the 1st and 15th. Both jobs run on Google Cloud and write to Firestore. The Next.js site on Cloud Run reads Firestore and serves pages to the visitor's browser, which keeps favorites, saved views, filters and theme in local storage."
+      width="760"
+      height="800"
+    />
+    <figcaption class="code-card__caption">Published sources in, one schedule out. Preferences never leave the visitor's browser.</figcaption>
+  </figure>
+
+  <p>The jobs are good citizens. They read only public pages and published documents, identify themselves, honor each site's robots rules, and keep to about one request a second.</p>
+
+  <h2>Preferences stay on your device</h2>
+
+  <p>There are no accounts. Favorites, saved filter views, your last-used filters and your light or dark theme are kept in your browser's local storage, and none of it leaves your device. There's no login and no analytics and no third-party advertising.</p>
+
+  <p>That choice removed a whole layer of work: no user database, no authentication, no password resets. The site's <a href="https://climbing-calendar.fastforward.sh/privacy">privacy page</a> lists every item it stores, and an automated test fails if a new one is added without being listed there.</p>
+
+  <h2>Useful without a rebuild</h2>
+
+  <p>There's plenty more a portal like this could do with full access to USA Climbing's membership and registration systems: live registration status, entry fees, alerts when a favorite event changes. We left all of that out on purpose. Live registration status only exists inside USA Climbing's results service, which has no public API, and getting to it would mean real integration work.</p>
+
+  <p>That's the point of an experiment like this. You can learn a lot about what members actually need with what's already published. No need to boil the ocean to try a new approach.</p>
+
+  <p>It came together quickly, too. I built it over four days with Next.js as the framework for the website and typescript based Google Cloud Run Jobs.  For more detail, you can read the <a href="https://climbing-calendar.fastforward.sh/how-we-built-it">How we built it</a> page which walks through the decisions. Every source the calendar reads, and when it was last checked, is listed on the <a href="https://climbing-calendar.fastforward.sh/sources">Sources</a> page.</p>
+
+  <h2>A widget for one journey, not a new platform</h2>
+
+  <p>Most organizations we work with don't need another platform. They need the platforms they already have to work together without friction.  Pick one journey, read what it needs from each source, and send people straight to the right place when it's time to act.</p>
+
+  <p>This doesn't have to be a big project.  The modern tools we have allow us to build and experiment with these solutions rapidly.  <strong>Build the journey first, and let the existing systems keep doing what they do well.</strong></p>
+
+  <figure class="ff-screenshot" style="margin-block:2rem;">
+    <img
+      src="/content/images/blog/climbing-calendar-testing-at-the-gym.jpg"
+      alt="Jason, seen from behind in a ball cap, with Climbing Calendar open on a laptop at a climbing gym, its tall orange and grey walls and a few climbers in the background."
+      width="1600"
+      height="1332"
+      style="width:100%;height:auto;display:block;border-radius:0.5rem;"
+    />
+    <figcaption class="code-card__caption">Jason testing Climbing Calendar at the Gym</figcaption>
+  </figure>
+---

@@ -418,6 +418,30 @@
     }
   }
 
+  /* ----- Article diagrams -----
+     `<figure class="ff-diagram">` in a blog post's contentHtml: frames a
+     diagram (usually an SVG on a white ground) with a hairline outline,
+     rounded corners and inner padding, so it reads as a figure rather than
+     loose text on the white page. The image keeps its own aspect ratio. */
+  .ff-article figure.ff-diagram {
+    margin-block: 2rem;
+  }
+  .ff-article figure.ff-diagram img {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid rgba(25, 24, 25, 0.15);
+    border-radius: 0.5rem;
+  }
+  @media (min-width: 768px) {
+    .ff-article figure.ff-diagram img {
+      padding: 1.5rem;
+    }
+  }
+
   /* ----- Article sidebar -----
      `<aside class="ff-aside">` in a blog post's contentHtml: a boxed
      "about this" panel that sits in the flow at the article inset, with a
