@@ -477,6 +477,113 @@
     }
   }
 
+  /* ----- Banner block -----
+     `type: Banner` in pageSections (components/postBlocks/BannerBlock.tsx):
+     an ad-style promo band. Solid panel (brand black unless the block sets
+     `background`), a white logo tile, then eyebrow / headline / copy / CTA.
+     Tighter vertical padding than a normal section, since it sits between
+     two of them. */
+  .banner-section {
+    padding-block: 3rem;
+  }
+  .ff-banner {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1.75rem;
+    border-radius: 0.75rem;
+    background: var(--color-ff_black);
+    color: #fff;
+  }
+  /* Faint lightning-bolt watermark, echoing the Pantheon mark. */
+  .ff-banner::after {
+    content: "";
+    position: absolute;
+    right: -1rem;
+    bottom: -2rem;
+    width: 9rem;
+    height: 14rem;
+    background: currentColor;
+    opacity: 0.07;
+    clip-path: polygon(65% 0, 10% 53%, 46% 53%, 30% 100%, 95% 41%, 58% 41%);
+    pointer-events: none;
+  }
+  .ff-banner__logo,
+  .ff-banner__body {
+    position: relative;
+    z-index: 1;
+  }
+  .ff-banner p,
+  .ff-banner span,
+  .ff-banner a {
+    color: inherit;
+  }
+  .ff-banner--dark-text {
+    color: var(--color-ff_black);
+  }
+  .ff-banner__logo {
+    background: #fff;
+    border-radius: 0.5rem;
+    border: 2px solid var(--color-ff_black);
+    padding: 1rem;
+    width: 9rem;
+  }
+  .ff-banner__logo img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .ff-banner__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+  .ff-banner__eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 2px;
+    background: currentColor;
+  }
+  .ff-banner__title {
+    font-size: 1.75rem;
+    line-height: 1.2;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+  .ff-banner__text > :last-child {
+    margin-bottom: 0;
+  }
+  .ff-banner__cta {
+    display: inline-block;
+    margin-top: 1.25rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  @media (min-width: 768px) {
+    .banner-section {
+      padding-block: 4rem;
+    }
+    .ff-banner {
+      grid-template-columns: auto 1fr;
+      gap: 2.5rem;
+      padding: 2.5rem 3rem;
+    }
+    .ff-banner__logo {
+      width: 13rem;
+    }
+    .ff-banner__title {
+      font-size: 2.25rem;
+    }
+  }
+
   /* ----- Blog numbered lists -----
      `<ol>` in a blog post's contentHtml: teal number discs in a hanging
      indent — the callouts' numbered-disc mark (components/callouts/) at body

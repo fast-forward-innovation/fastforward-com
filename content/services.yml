@@ -26,3 +26,7 @@
   name: Visual Design
 - id: web-development
   name: Web Development
+- id: nextjs
+  name: Next.js
+- id: pantheon
+  name: Pantheon

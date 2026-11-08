@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>mit-ayiti.net Migration Report</title>
+    <meta
+      name="description"
+      content="Measured results from moving the MIT-Haiti open educational resource platform off WordPress, tested under a simulated Haitian mobile connection."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      /* Fast Forward brand tokens (app/globals.css, brand/GUIDELINES.md):
+         Manrope + JetBrains Mono, brand black ink, teal accents, red labels. */
+      :root {
+        color-scheme: light;
+
+        --canvas: #ffffff;
+        --page: #ffffff;
+        --card: #f7f9fa;
+        --rule: #dfe4e6;
+        --rule-card: #e3e8ea;
+        --ink: #191819;
+        --ink-body: #3a393c;
+        --ink-muted: #545356;
+        --ink-faint: #696969;
+        --heading: #191819;
+        --label: #dd2e2a;
+        --action: #00758c;
+        --save: #004a59;
+        --share: #dd2e2a;
+        --band: #edf1f2;
+
+        --series-old: #aaaaaa;
+        --series-new: #008ca8;
+
+        --display: "Manrope", system-ui, sans-serif;
+        --body: "Manrope", system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      img {
+        max-width: 100%;
+      }
+
+      body {
+        background: var(--canvas);
+        color: var(--ink-body);
+        font-family: var(--body);
+        font-size: 1.125rem;
+        line-height: 1.6;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      .page {
+        background: var(--page);
+        max-width: 64rem;
+        margin: 0 auto;
+      }
+      .wrap {
+        max-width: 50rem;
+        margin: 0 auto;
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
+        padding-block: 3.25rem 3.5rem;
+      }
+
+      h1,
+      h2 {
+        font-family: var(--display);
+        text-wrap: balance;
+        margin: 0;
+        color: var(--ink);
+      }
+      h1 {
+        font-size: clamp(2rem, 1.3rem + 2.8vw, 3.625rem);
+        font-weight: 700;
+        line-height: 1.08;
+        letter-spacing: -0.025em;
+      }
+      h2 {
+        font-size: clamp(1.4rem, 1.15rem + 1vw, 2.375rem);
+        font-weight: 600;
+        line-height: 1.15;
+        color: var(--heading);
+      }
+      p {
+        margin: 0;
+        max-width: 62ch;
+      }
+      strong {
+        font-weight: 600;
+        color: var(--ink);
+      }
+      a {
+        color: var(--action);
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.8125rem;
+        line-height: 1.2;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: var(--label);
+      }
+
+      header.top {
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+        padding-bottom: 1.6rem;
+        border-bottom: 2px solid var(--rule);
+      }
+      .lede {
+        font-size: 1.1875rem;
+        line-height: 1.62;
+        color: var(--ink-muted);
+        max-width: 58ch;
+      }
+
+      section {
+        margin-top: 3rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.05rem;
+      }
+
+      .headline {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+        gap: 1px;
+        background: var(--rule-card);
+        border: 1px solid var(--rule-card);
+      }
+      .cell {
+        background: var(--card);
+        padding: 1.15rem 1.1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        min-width: 0;
+      }
+      .cell .n {
+        font-family: var(--display);
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        color: var(--action);
+        font-variant-numeric: tabular-nums;
+      }
+      .cell .k {
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        color: var(--ink-muted);
+      }
+
+      figure {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+      }
+      .plot {
+        background: var(--card);
+        border: 1px solid var(--rule-card);
+        border-radius: 5px;
+        padding: 1rem 0.7rem 0.7rem;
+        overflow-x: auto;
+      }
+      .plot svg {
+        display: block;
+        width: 100%;
+        min-width: 480px;
+        height: auto;
+      }
+      figcaption {
+        font-size: 0.9375rem;
+        color: var(--ink-faint);
+        max-width: 60ch;
+      }
+      .key {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem 1.1rem;
+        font-size: 0.9375rem;
+        color: var(--ink-muted);
+        padding-left: 0.2rem;
+      }
+      .key span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+      .sw {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        flex: none;
+      }
+
+      .tbl {
+        overflow-x: auto;
+        border: 1px solid var(--rule-card);
+        border-radius: 5px;
+        background: var(--card);
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.9375rem;
+        min-width: 460px;
+      }
+      th,
+      td {
+        padding: 0.6rem 0.9rem;
+        text-align: right;
+        border-top: 1px solid var(--rule-card);
+        font-variant-numeric: tabular-nums;
+      }
+      th:first-child,
+      td:first-child {
+        text-align: left;
+        font-variant-numeric: normal;
+      }
+      thead th {
+        font-family: var(--mono);
+        font-size: 0.78125rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        font-weight: 500;
+        border-top: none;
+      }
+      .win {
+        color: var(--save);
+        font-weight: 600;
+      }
+
+      sup.fn {
+        font-size: 0.68em;
+        font-weight: 700;
+        color: var(--action);
+      }
+      .notes {
+        margin-top: 3.4rem;
+        padding-top: 1.3rem;
+        border-top: 1px solid var(--rule);
+      }
+      .notes h2 {
+        font-size: 1.375rem;
+      }
+      .notes ol {
+        margin: 0.9rem 0 0;
+        padding-left: 1.3rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        font-size: 0.9375rem;
+        color: var(--ink-muted);
+        max-width: 64ch;
+      }
+      code {
+        font-family: var(--mono);
+        font-size: 0.85em;
+      }
+
+      /* Credits band: Fast Forward and Pantheon logos on the brand light gray. */
+      .credits {
+        background: var(--band);
+        color: var(--ink-body);
+        border-top: 4px solid var(--series-new);
+      }
+      .credits-inner {
+        max-width: 52rem;
+        margin: 0 auto;
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
+        padding-block: 2.5rem 2.75rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 2.5rem;
+      }
+      .credit {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        min-width: 0;
+      }
+      .credit .label {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: var(--label);
+      }
+      .credit .logo {
+        display: block;
+        height: 52px;
+        width: auto;
+        align-self: flex-start;
+        margin-block: 0.25rem;
+      }
+      .credit p {
+        font-size: 0.9375rem;
+        line-height: 1.55;
+        color: var(--ink-muted);
+        max-width: 40ch;
+      }
+      .credit a {
+        color: var(--action);
+        font-weight: 600;
+        text-underline-offset: 3px;
+      }
+      .colophon {
+        max-width: 52rem;
+        margin: 0 auto;
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
+        padding-block: 1.1rem 1.6rem;
+        border-top: 1px solid var(--rule);
+        font-size: 0.875rem;
+        color: var(--ink-faint);
+      }
+      .colophon a {
+        color: var(--action);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="wrap">
+        <header class="top">
+          <div class="eyebrow">MIT-Haiti Initiative · November 2026</div>
+          <h1>mit-ayiti.net Migration Report</h1>
+          <p class="lede">
+            Measured results from moving the MIT-Haiti open educational resource platform
+            off WordPress. Four page pairs were tested on both sites under a simulated
+            Haitian mobile connection.
+          </p>
+        </header>
+
+        <section>
+          <h2>Background</h2>
+          <p>
+            mit-ayiti.net publishes teaching materials in Haitian Creole for teachers
+            across Haiti. Most readers arrive on a phone over mobile data. Two independent
+            real world samples put a typical Haitian mobile connection near 7 Mbps.<sup
+              class="fn"
+              >1</sup
+            >
+            Internet penetration in the country was 39.3% as of October 2025.<sup
+              class="fn"
+              >2</sup
+            >
+          </p>
+          <p>
+            All testing used Google Lighthouse 12.8.2 against identical URLs on both
+            sites, since the migration preserved the existing URL structure. Figures below
+            are medians of three runs on the simulated Haitian mobile profile.<sup
+              class="fn"
+              >3</sup
+            >
+          </p>
+          <div class="headline">
+            <div class="cell">
+              <div class="n">0.73s</div>
+              <div class="k">First Contentful Paint on the home page, from 1.59s</div>
+            </div>
+            <div class="cell">
+              <div class="n">60%</div>
+              <div class="k">reduction in home page transfer size</div>
+            </div>
+            <div class="cell">
+              <div class="n">100</div>
+              <div class="k">
+                Lighthouse SEO score on every page tested<sup class="fn">4</sup>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="n">0.07s</div>
+              <div class="k">Time to First Byte on the home page, from 0.95s</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Page Response Speed (TTFB and FCP)</h2>
+          <p>
+            First Contentful Paint improved on all four pages, by between 48% and 55%.
+            Time to First Byte improved by between 80% and 93%. The old site generated
+            every page on each request and sent
+            <code>Cache-Control: no-store, no-cache</code>, so no response was reusable.
+            The new site serves pre-rendered pages from a CDN edge cache.
+          </p>
+          <figure>
+            <div class="plot">
+              <svg id="c1" viewBox="0 0 700 290" role="img" aria-labelledby="t1">
+                <title id="t1">
+                  First Contentful Paint by page, old site compared with new site, in
+                  seconds
+                </title>
+              </svg>
+            </div>
+            <div class="key">
+              <span><i class="sw" style="background: #aaaaaa"></i> Old site</span>
+              <span><i class="sw" style="background: #008ca8"></i> New site</span>
+            </div>
+            <figcaption>
+              First Contentful Paint, median of three runs per page.
+            </figcaption>
+          </figure>
+          <div class="tbl">
+            <table>
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>TTFB before</th>
+                  <th>TTFB after</th>
+                  <th>FCP before</th>
+                  <th>FCP after</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Home</td>
+                  <td>0.95s</td>
+                  <td class="win">0.07s</td>
+                  <td>1.59s</td>
+                  <td class="win">0.73s</td>
+                </tr>
+                <tr>
+                  <td>Resource library</td>
+                  <td>0.52s</td>
+                  <td class="win">0.10s</td>
+                  <td>1.57s</td>
+                  <td class="win">0.71s</td>
+                </tr>
+                <tr>
+                  <td>A resource page</td>
+                  <td>0.49s</td>
+                  <td class="win">0.07s</td>
+                  <td>1.73s</td>
+                  <td class="win">0.90s</td>
+                </tr>
+                <tr>
+                  <td>Blog index</td>
+                  <td>0.46s</td>
+                  <td class="win">0.06s</td>
+                  <td>1.38s</td>
+                  <td class="win">0.67s</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Variance narrowed as well. Home page TTFB samples on the old site ranged from
+            0.89s to 2.03s across the full test set, against 0.04s to 0.14s on the new
+            site.
+          </p>
+        </section>
+
+        <section>
+          <h2>Page Size</h2>
+          <p>
+            Transfer size fell on all four pages. The two largest reductions were the blog
+            index at 86% and the home page at 60%.
+          </p>
+          <figure>
+            <div class="plot">
+              <svg id="c2" viewBox="0 0 700 300" role="img" aria-labelledby="t2">
+                <title id="t2">
+                  Transfer size by page, old site compared with new site, in megabytes
+                </title>
+              </svg>
+            </div>
+            <div class="key">
+              <span><i class="sw" style="background: #aaaaaa"></i> Old site</span>
+              <span><i class="sw" style="background: #008ca8"></i> New site</span>
+            </div>
+            <figcaption>
+              Bytes transferred to load each page, including third party resources.
+            </figcaption>
+          </figure>
+          <div class="tbl">
+            <table>
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>Requests before</th>
+                  <th>Requests after</th>
+                  <th>Transfer before</th>
+                  <th>Transfer after</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Home</td>
+                  <td>138</td>
+                  <td>60</td>
+                  <td>2,520 KB</td>
+                  <td>1,007 KB</td>
+                  <td class="win">60% smaller</td>
+                </tr>
+                <tr>
+                  <td>Resource library</td>
+                  <td>92</td>
+                  <td>77</td>
+                  <td>1,419 KB</td>
+                  <td>1,193 KB</td>
+                  <td class="win">16% smaller</td>
+                </tr>
+                <tr>
+                  <td>A resource page</td>
+                  <td>133</td>
+                  <td>89</td>
+                  <td>4,579 KB</td>
+                  <td>3,978 KB</td>
+                  <td class="win">13% smaller</td>
+                </tr>
+                <tr>
+                  <td>Blog index</td>
+                  <td>77</td>
+                  <td>48</td>
+                  <td>6,062 KB</td>
+                  <td>854 KB</td>
+                  <td class="win">86% smaller</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            The resource page embeds the Google Drive document viewer, which accounts for
+            roughly 9 MB of third party code. That embed is present on both sites, so it
+            is held constant across the comparison rather than counted as an
+            improvement.<sup class="fn">5</sup>
+          </p>
+        </section>
+
+        <section>
+          <h2>SEO and Accessibility</h2>
+          <p>
+            Lighthouse SEO reached 100 on all four pages. The old site failed the same two
+            audits sitewide, for a missing meta description and for links that could not
+            be crawled. Both are resolved on the new site.
+          </p>
+          <div class="tbl">
+            <table>
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>SEO before</th>
+                  <th>SEO after</th>
+                  <th>Accessibility before</th>
+                  <th>Accessibility after</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Home</td>
+                  <td>85</td>
+                  <td class="win">100</td>
+                  <td>82</td>
+                  <td class="win">92</td>
+                </tr>
+                <tr>
+                  <td>Resource library</td>
+                  <td>83</td>
+                  <td class="win">100</td>
+                  <td>91</td>
+                  <td class="win">96</td>
+                </tr>
+                <tr>
+                  <td>A resource page</td>
+                  <td>85</td>
+                  <td class="win">100</td>
+                  <td>88</td>
+                  <td class="win">97</td>
+                </tr>
+                <tr>
+                  <td>Blog index</td>
+                  <td>83</td>
+                  <td class="win">100</td>
+                  <td>91</td>
+                  <td class="win">96</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Accessibility scores improved on all four pages. These are Lighthouse
+            automated checks, which cover a subset of WCAG criteria and do not replace
+            manual testing.
+          </p>
+        </section>
+
+        <div class="notes">
+          <h2>Notes on the measurements</h2>
+          <ol>
+            <li>
+              SpeedOf.Me in browser tests report a median of 6.9 Mbps and 101 ms latency
+              for Haiti. Speedgeo puts Digicel's mobile average at 7.1 Mbps. Ookla's
+              Speedtest median is higher at 16.08 Mbps. The lower figure was used.
+              Throttling was applied at 7 Mbps and 100 ms round trip time with a 4x CPU
+              slowdown, simulated from the United States rather than measured in Haiti.
+            </li>
+            <li>DataReportal, Digital 2026, Haiti.</li>
+            <li>
+              Google Lighthouse 12.8.2 using Lantern simulated throttling, the same method
+              used by PageSpeed Insights. 40 runs across four page pairs. The old site is
+              the WordPress installation currently serving the public. The new site is the
+              deployed replacement.
+            </li>
+            <li>
+              SEO and Best Practices were measured against a build configured identically
+              to production. Pre-launch environments carry a hosting platform header that
+              instructs search engines not to index them, which suppresses the SEO score
+              for reasons unrelated to the site. Speed and transfer size figures come from
+              the deployed site.
+            </li>
+            <li>
+              Figures include third party resources, since those are downloaded by
+              readers. The old site also loads Google Analytics.
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="credits">
+      <div class="credits-inner">
+        <div class="credit">
+          <div class="label">Designed and built by</div>
+          <img class="logo" src="../assets/ff-logo.svg" alt="Fast Forward" width="79" height="52" />
+          <p>
+            Design and engineering of great websites, including the rebuild measured
+            in this report.
+          </p>
+          <a href="https://fastforward.sh">fastforward.sh</a>
+        </div>
+        <div class="credit">
+          <div class="label">Hosted on</div>
+          <img class="logo" src="../assets/pantheon-logo.svg" alt="Pantheon" width="172" height="52" />
+          <p>
+            mit-ayiti.net runs on the Pantheon platform which provides the build
+            pipeline and the CDN behind the figures above as well as Pantheon P1, a
+            next generation content editing platform.
+          </p>
+          <a href="https://pantheon.io">pantheon.io</a>
+        </div>
+      </div>
+      <div class="colophon">
+        Measurements taken 7 November 2026 with Google Lighthouse 12.8.2. Full methodology
+        and raw figures are available in the
+        <a href="migration-technical-report-11-7-2026.html">technical report</a>.
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+        var SVG = "http://www.w3.org/2000/svg";
+        function el(n, a) {
+          var e = document.createElementNS(SVG, n);
+          for (var k in a) e.setAttribute(k, a[k]);
+          return e;
+        }
+
+        function grouped(id, data, opts) {
+          var svg = document.getElementById(id);
+          if (!svg) return;
+          var W = 700,
+            H = opts.height,
+            L = opts.left,
+            R = 14,
+            T = 16,
+            B = 62;
+          var pw = W - L - R,
+            ph = H - T - B,
+            max = opts.max;
+          var y = function (v) {
+            return T + ph * (1 - v / max);
+          };
+
+          opts.ticks.forEach(function (v) {
+            svg.appendChild(
+              el("line", {
+                x1: L,
+                x2: W - R,
+                y1: y(v),
+                y2: y(v),
+                stroke: "#dfe4e6",
+                "stroke-width": v === 0 ? 1.5 : 1,
+              }),
+            );
+            var t = el("text", {
+              x: L - 9,
+              y: y(v) + 4,
+              "text-anchor": "end",
+              fill: "#696969",
+              "font-size": 11,
+              "font-family": "JetBrains Mono, monospace",
+            });
+            t.textContent = opts.fmtTick(v);
+            svg.appendChild(t);
+          });
+
+          var gw = pw / data.length,
+            bw = 50,
+            gap = 9;
+          data.forEach(function (d, i) {
+            var cx = L + gw * i + gw / 2;
+            [
+              [d.old, "#aaaaaa"],
+              [d.neu, "#008ca8"],
+            ].forEach(function (s, j) {
+              var v = s[0];
+              var bx = cx - bw - gap / 2 + j * (bw + gap);
+              var bh = Math.max(2, (ph * v) / max);
+              svg.appendChild(
+                el("rect", { x: bx, y: y(v), width: bw, height: bh, fill: s[1], rx: 3 }),
+              );
+              var lab = el("text", {
+                x: bx + bw / 2,
+                y: y(v) - 7,
+                "text-anchor": "middle",
+                fill: "#191819",
+                "font-size": 11.5,
+                "font-family": "JetBrains Mono, monospace",
+                "font-weight": 500,
+              });
+              lab.textContent = opts.fmtVal(v);
+              svg.appendChild(lab);
+            });
+            var name = el("text", {
+              x: cx,
+              y: T + ph + 20,
+              "text-anchor": "middle",
+              fill: "#aaaaaa",
+              "font-size": 12,
+              "font-family": "Manrope, sans-serif",
+            });
+            name.textContent = d.page;
+            svg.appendChild(name);
+            var delta = el("text", {
+              x: cx,
+              y: T + ph + 38,
+              "text-anchor": "middle",
+              fill: "#004a59",
+              "font-size": 11.5,
+              "font-weight": 600,
+              "font-family": "Manrope, sans-serif",
+            });
+            delta.textContent = opts.fmtDelta(d);
+            svg.appendChild(delta);
+          });
+        }
+
+        grouped(
+          "c1",
+          [
+            { page: "Home", old: 1.59, neu: 0.73 },
+            { page: "Resource library", old: 1.57, neu: 0.71 },
+            { page: "A resource page", old: 1.73, neu: 0.9 },
+            { page: "Blog index", old: 1.38, neu: 0.67 },
+          ],
+          {
+            height: 290,
+            left: 54,
+            max: 2.0,
+            ticks: [0, 0.5, 1.0, 1.5, 2.0],
+            fmtTick: function (v) {
+              return v.toFixed(1) + "s";
+            },
+            fmtVal: function (v) {
+              return v.toFixed(2) + "s";
+            },
+            fmtDelta: function (d) {
+              return Math.round(((d.old - d.neu) / d.old) * 100) + "% faster";
+            },
+          },
+        );
+
+        grouped(
+          "c2",
+          [
+            { page: "Home", old: 2520, neu: 1007 },
+            { page: "Resource library", old: 1419, neu: 1193 },
+            { page: "A resource page", old: 4579, neu: 3978 },
+            { page: "Blog index", old: 6062, neu: 854 },
+          ],
+          {
+            height: 300,
+            left: 62,
+            max: 6500,
+            ticks: [0, 1500, 3000, 4500, 6000],
+            fmtTick: function (v) {
+              return (v / 1000).toFixed(1) + " MB";
+            },
+            fmtVal: function (v) {
+              return v >= 1000 ? (v / 1000).toFixed(2) + "MB" : v + "KB";
+            },
+            fmtDelta: function (d) {
+              return Math.round(((d.old - d.neu) / d.old) * 100) + "% smaller";
+            },
+          },
+        );
+      })();
+    </script>
+  </body>
+</html>

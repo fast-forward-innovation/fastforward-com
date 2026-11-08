@@ -5,6 +5,7 @@
  * type-checks against the real schema in `@/lib/types`.
  */
 import type {
+  Banner,
   CardGrid,
   ClientQuote,
   CodeBlock,
@@ -392,6 +393,33 @@ export const sampleZigZag: ZigZag = {
 // sourced from `lib/types.ts` + `CONTENT.md`.
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Banner
+// ---------------------------------------------------------------------------
+
+export const sampleBanner: Banner = {
+  type: "Banner",
+  eyebrow: "Partnership",
+  title: "Built in partnership with Pantheon",
+  text: "<p>We worked closely with Pantheon's engineering and product teams on the development and testing of this site.</p>",
+  logo: {
+    src: "/content/images/pantheon-partnership/pantheon-fast-forward-logo-lockup.png",
+    alt: "Pantheon and Fast Forward",
+    width: 780,
+    height: 568,
+  },
+  background: "#ffdc28",
+  darkText: true,
+};
+
+export const sampleBannerDark: Banner = {
+  type: "Banner",
+  eyebrow: "Labs",
+  title: "Want the technical write-up?",
+  text: "<p>Read how we built it, decision by decision.</p>",
+  cta: { label: "Read the report", href: "/blog" },
+};
+
 export interface FieldDoc {
   name: string;
   type: string;
@@ -562,5 +590,25 @@ export const blockGallery: BlockDoc[] = [
       { name: "items", type: "ZigZagItem[]", required: true, notes: "Each: href (required), title (required), description, tag (mono uppercase, gets a trailing arrow), image (placeholder-friendly), diagram (bool)." },
     ],
     variants: [{ label: "Nav rows (photo + diagram)", section: sampleZigZag }],
+  },
+  {
+    type: "Banner",
+    label: "Banner",
+    allowedIn: "default, case-study, blog-case-study, lab-project",
+    description:
+      "An ad-style promo band between sections: a solid colour panel with an optional white logo tile, then eyebrow, headline, copy and an optional link. Not numbered. Use it for partnerships or a single call to action, at most once per page.",
+    fields: [
+      { name: "title", type: "string", required: true, notes: "The headline." },
+      { name: "eyebrow", type: "string", notes: "Mono uppercase label above the headline." },
+      { name: "text", type: "HTML string", notes: "One or two short sentences." },
+      { name: "logo", type: "FrontmatterImage", notes: "Shown on a white tile, so dark or full-colour logos work." },
+      { name: "background", type: "hex string", notes: "Panel colour. Defaults to brand black." },
+      { name: "darkText", type: "boolean", notes: "Dark text for light panel colours." },
+      { name: "cta", type: "{ label, href }", notes: "Optional link. Omit for a banner that doesn't link anywhere." },
+    ],
+    variants: [
+      { label: "Partner colour, logo, no link", section: sampleBanner },
+      { label: "Default black with link", section: sampleBannerDark },
+    ],
   },
 ];
