@@ -142,8 +142,28 @@ export interface ZigZag {
   items: ZigZagItem[];
 }
 
+/**
+ * An ad-style promo band: a logo tile beside an eyebrow, headline and short
+ * copy, on a solid colour panel. Not numbered. `cta` is optional; omit it for
+ * a banner that doesn't link anywhere.
+ */
+export interface Banner {
+  type: "Banner";
+  eyebrow?: string;
+  title: string;
+  /** Inline HTML. */
+  text?: string;
+  logo?: FrontmatterImage;
+  /** Panel colour as a hex string. Defaults to the brand black. */
+  background?: string;
+  /** Use dark text instead of white, for light panel colours. */
+  darkText?: boolean;
+  cta?: { label: string; href: string };
+}
+
 export type PageSection =
   | MainSection
+  | Banner
   | ImageBlock
   | CardGrid
   | ClientQuote

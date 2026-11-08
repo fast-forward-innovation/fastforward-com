@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>mit-ayiti.net Migration Technical Report</title>
+    <meta
+      name="description"
+      content="Full measurement record for the mit-ayiti.net migration, covering method, per page figures, the CDN change and the limits of the testing."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      /* Fast Forward brand tokens (app/globals.css, brand/GUIDELINES.md):
+         Manrope + JetBrains Mono, brand black ink, teal accents, red labels. */
+      :root {
+        color-scheme: light;
+
+        --canvas: #ffffff;
+        --page: #ffffff;
+        --card: #f7f9fa;
+        --rule: #dfe4e6;
+        --rule-card: #e3e8ea;
+        --ink: #191819;
+        --ink-body: #3a393c;
+        --ink-muted: #545356;
+        --ink-faint: #696969;
+        --heading: #191819;
+        --label: #dd2e2a;
+        --action: #00758c;
+        --save: #004a59;
+        --share: #dd2e2a;
+        --band: #edf1f2;
+
+        --series-old: #aaaaaa;
+        --series-new: #008ca8;
+
+        --display: "Manrope", system-ui, sans-serif;
+        --body: "Manrope", system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      img {
+        max-width: 100%;
+      }
+
+      body {
+        background: var(--canvas);
+        color: var(--ink-body);
+        font-family: var(--body);
+        font-size: 1.0625rem;
+        line-height: 1.6;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      .page {
+        background: var(--page);
+        max-width: 68rem;
+        margin: 0 auto;
+      }
+      .wrap {
+        max-width: 52rem;
+        margin: 0 auto;
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
+        padding-block: 3.25rem 3.5rem;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: var(--display);
+        text-wrap: balance;
+        margin: 0;
+        color: var(--ink);
+      }
+      h1 {
+        font-size: clamp(1.9rem, 1.25rem + 2.6vw, 3.1rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+      }
+      h2 {
+        font-size: clamp(1.35rem, 1.1rem + 0.9vw, 2rem);
+        font-weight: 600;
+        line-height: 1.2;
+        color: var(--heading);
+      }
+      h3 {
+        font-size: 1.1875rem;
+        font-weight: 600;
+      }
+      p {
+        margin: 0;
+        max-width: 64ch;
+      }
+      strong {
+        font-weight: 600;
+        color: var(--ink);
+      }
+      a {
+        color: var(--action);
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.8125rem;
+        line-height: 1.2;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: var(--label);
+      }
+
+      header.top {
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+        padding-bottom: 1.6rem;
+        border-bottom: 2px solid var(--rule);
+      }
+      .lede {
+        font-size: 1.1875rem;
+        line-height: 1.62;
+        color: var(--ink-muted);
+        max-width: 60ch;
+      }
+      .runmeta {
+        font-family: var(--mono);
+        font-size: 0.8125rem;
+        color: var(--ink-faint);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem 1.25rem;
+      }
+
+      section {
+        margin-top: 2.9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .tbl {
+        overflow-x: auto;
+        border: 1px solid var(--rule-card);
+        border-radius: 5px;
+        background: var(--card);
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.9375rem;
+        min-width: 520px;
+      }
+      caption {
+        text-align: left;
+        font-family: var(--mono);
+        font-size: 0.78125rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        padding: 0.75rem 0.9rem 0.5rem;
+      }
+      th,
+      td {
+        padding: 0.55rem 0.9rem;
+        text-align: right;
+        border-top: 1px solid var(--rule-card);
+        font-variant-numeric: tabular-nums;
+      }
+      th:first-child,
+      td:first-child {
+        text-align: left;
+        font-variant-numeric: normal;
+      }
+      thead th {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        font-weight: 500;
+        border-top: none;
+      }
+      .win {
+        color: var(--save);
+        font-weight: 600;
+      }
+      .warn {
+        color: #a8521c;
+        font-weight: 600;
+      }
+
+      pre {
+        background: var(--card);
+        border: 1px solid var(--rule-card);
+        border-radius: 5px;
+        padding: 0.9rem 1rem;
+        overflow-x: auto;
+        font-family: var(--mono);
+        font-size: 0.84rem;
+        line-height: 1.6;
+        color: var(--ink-body);
+        margin: 0;
+      }
+      code {
+        font-family: var(--mono);
+        font-size: 0.86em;
+      }
+
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--rule-card);
+        border-left: 3px solid var(--share);
+        border-radius: 5px;
+        padding: 1rem 1.15rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+      }
+      .panel h3 {
+        font-size: 1.0625rem;
+      }
+      .panel p {
+        font-size: 0.9375rem;
+        color: var(--ink-muted);
+      }
+
+      ol.method {
+        margin: 0;
+        padding-left: 1.3rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        font-size: 0.9375rem;
+        color: var(--ink-muted);
+        max-width: 66ch;
+      }
+      ol.method strong {
+        color: var(--ink);
+      }
+      ul.plain {
+        margin: 0;
+        padding-left: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        font-size: 0.9375rem;
+        color: var(--ink-muted);
+        max-width: 66ch;
+      }
+
+      /* Credits band: Fast Forward and Pantheon logos on the brand light gray. */
+      .credits {
+        background: var(--band);
+        color: var(--ink-body);
+        border-top: 4px solid var(--series-new);
+      }
+      .credits-inner {
+        max-width: 52rem;
+        margin: 0 auto;
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
+        padding-block: 2.5rem 2.75rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 2.5rem;
+      }
+      .credit {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        min-width: 0;
+      }
+      .credit .label {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: var(--label);
+      }
+      .credit .logo {
+        display: block;
+        height: 52px;
+        width: auto;
+        align-self: flex-start;
+        margin-block: 0.25rem;
+      }
+      .credit p {
+        font-size: 0.9375rem;
+        line-height: 1.55;
+        color: var(--ink-muted);
+        max-width: 40ch;
+      }
+      .credit a {
+        color: var(--action);
+        font-weight: 600;
+        text-underline-offset: 3px;
+      }
+      .colophon {
+        max-width: 52rem;
+        margin: 0 auto;
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
+        padding-block: 1.1rem 1.6rem;
+        border-top: 1px solid var(--rule);
+        font-size: 0.875rem;
+        color: var(--ink-faint);
+      }
+      .colophon a {
+        color: var(--action);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="wrap">
+        <header class="top">
+          <div class="eyebrow">
+            MIT-Haiti Initiative · Technical Report · November 2026
+          </div>
+          <h1>mit-ayiti.net Migration Technical Report</h1>
+          <p class="lede">
+            The full measurement record behind the migration from WordPress to a Next.js
+            front end on Pantheon, including method, per page figures, the effect of a CDN
+            change made during testing, and the limits of what was measured.
+          </p>
+          <div class="runmeta">
+            <span>Lighthouse 12.8.2</span>
+            <span>40 runs, 4 page pairs</span>
+            <span>Lantern simulate, 7 Mbps, 100 ms, 4x CPU</span>
+            <span>7 November 2026</span>
+          </div>
+        </header>
+
+        <section>
+          <h2>Method</h2>
+          <ol class="method">
+            <li>
+              <strong>Identical URLs on both sites.</strong> The migration preserved the
+              existing URL structure, so each pair compares the same content rather than
+              an approximation of it. Four pairs were tested, covering the home page, the
+              resource library index, a single resource page and the blog index.
+            </li>
+            <li>
+              <strong>Three throttling profiles.</strong> A Haitian mobile profile at 7
+              Mbps and 100 ms round trip time with a 4x CPU slowdown, Lighthouse's own
+              Slow 4G default for an industry comparable figure, and an unthrottled
+              desktop profile. Medians of three runs on the Haitian profile, single runs
+              on the others.
+            </li>
+            <li>
+              <strong>Lantern simulated throttling.</strong> The page loads at full speed
+              and the slow connection is modeled afterwards. This is the method PageSpeed
+              Insights uses and is far more repeatable than applying real packet delay,
+              but it is a model rather than a measurement of a real connection.
+            </li>
+            <li>
+              <strong>Simulated from the United States.</strong> No measurement was taken
+              in Haiti. Real geographic latency is not modeled by this method.
+            </li>
+            <li>
+              <strong>Third party content is included</strong>, because readers download
+              it. The old site loads Google Analytics. Both sites embed the Google Drive
+              document viewer on resource pages.
+            </li>
+          </ol>
+          <div class="panel">
+            <h3>Why 7 Mbps was chosen</h3>
+            <p>
+              Two independent real world samples converge near that figure. SpeedOf.Me in
+              browser tests report a median of 6.9 Mbps and 101 ms latency for Haiti.
+              Speedgeo puts Digicel's mobile average at 7.1 Mbps. Ookla's Speedtest median
+              is considerably more optimistic at 16.08 Mbps for the same carrier, drawn
+              from self selected tests. The lower and more conservative figure was used
+              throughout. Internet penetration in Haiti was 39.3% as of October 2025
+              according to DataReportal.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <h2>Response timing</h2>
+          <p>
+            Medians of three runs on the Haitian mobile profile. Time to First Byte
+            improved by between 80% and 93%, and First Contentful Paint by between 48% and
+            55%.
+          </p>
+          <div class="tbl">
+            <table>
+              <caption>
+                Haitian mobile profile, 7 Mbps, 100 ms, 4x CPU
+              </caption>
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>TTFB before</th>
+                  <th>TTFB after</th>
+                  <th>FCP before</th>
+                  <th>FCP after</th>
+                  <th>Speed Index before</th>
+                  <th>Speed Index after</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Home</td>
+                  <td>0.95s</td>
+                  <td class="win">0.07s</td>
+                  <td>1.59s</td>
+                  <td class="win">0.73s</td>
+                  <td>3.13s</td>
+                  <td class="win">1.20s</td>
+                </tr>
+                <tr>
+                  <td>Resource library</td>
+                  <td>0.52s</td>
+                  <td class="win">0.10s</td>
+                  <td>1.57s</td>
+                  <td class="win">0.71s</td>
+                  <td>2.27s</td>
+                  <td class="win">1.55s</td>
+                </tr>
+                <tr>
+                  <td>A resource page</td>
+                  <td>0.49s</td>
+                  <td class="win">0.07s</td>
+                  <td>1.73s</td>
+                  <td class="win">0.90s</td>
+                  <td>2.35s</td>
+                  <td class="win">1.80s</td>
+                </tr>
+                <tr>
+                  <td>Blog index</td>
+                  <td>0.46s</td>
+                  <td class="win">0.06s</td>
+                  <td>1.38s</td>
+                  <td class="win">0.67s</td>
+                  <td>1.74s</td>
+                  <td class="win">1.38s</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            The old site sent
+            <code>Cache-Control: no-store, no-cache, must-revalidate</code> on every
+            response, so each visit regenerated the page in PHP. The new site serves a
+            pre-rendered page from a CDN edge cache. Variance reflects that difference.
+            Home page TTFB samples on the old site ranged from 0.89s to 2.03s across the
+            full test set, against 0.04s to 0.14s on the new site.
+          </p>
+          <h3>Largest Contentful Paint</h3>
+          <p>
+            LCP is the one timing measure that did not improve uniformly. It is reported
+            here in full because a reader running their own test against the live site
+            will see these numbers.
+          </p>
+          <div class="tbl">
+            <table>
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>LCP before</th>
+                  <th>LCP after</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Home</td>
+                  <td>1.66s</td>
+                  <td>1.96s</td>
+                  <td class="warn">18% slower</td>
+                </tr>
+                <tr>
+                  <td>Resource library</td>
+                  <td>2.47s</td>
+                  <td>2.96s</td>
+                  <td class="warn">20% slower</td>
+                </tr>
+                <tr>
+                  <td>A resource page</td>
+                  <td>1.73s</td>
+                  <td class="win">1.45s</td>
+                  <td class="win">16% faster</td>
+                </tr>
+                <tr>
+                  <td>Blog index</td>
+                  <td>1.76s</td>
+                  <td class="win">1.57s</td>
+                  <td class="win">11% faster</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            The cause is JavaScript volume rather than network time. The home page ships
+            roughly 1.4 MB of uncompressed JavaScript, which gzips to around 440 KB but
+            still has to be parsed and executed on a device running at a quarter speed
+            under the test profile. Reducing that payload is ongoing work and is not a
+            property of the hosting change.
+          </p>
+        </section>
+
+        <section>
+          <h2>Transfer size</h2>
+          <p>
+            Transfer is what crossed the wire. Content is what those bytes represent once
+            decompressed, which is a better measure of how much the pages were actually
+            reduced.
+          </p>
+          <div class="tbl">
+            <table>
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>Requests</th>
+                  <th>Transfer before</th>
+                  <th>Transfer after</th>
+                  <th>Content before</th>
+                  <th>Content after</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Home</td>
+                  <td>138 to 60</td>
+                  <td>2,520 KB</td>
+                  <td class="win">1,007 KB</td>
+                  <td>6,850 KB</td>
+                  <td class="win">2,107 KB</td>
+                </tr>
+                <tr>
+                  <td>Resource library</td>
+                  <td>92 to 77</td>
+                  <td>1,419 KB</td>
+                  <td class="win">1,193 KB</td>
+                  <td>2,826 KB</td>
+                  <td class="win">2,397 KB</td>
+                </tr>
+                <tr>
+                  <td>A resource page</td>
+                  <td>133 to 89</td>
+                  <td>4,579 KB</td>
+                  <td class="win">3,978 KB</td>
+                  <td>14,277 KB</td>
+                  <td>13,785 KB</td>
+                </tr>
+                <tr>
+                  <td>Blog index</td>
+                  <td>77 to 48</td>
+                  <td>6,062 KB</td>
+                  <td class="win">854 KB</td>
+                  <td>7,106 KB</td>
+                  <td class="win">1,915 KB</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            The resource page figure is dominated by the embedded Google Drive document
+            viewer, which contributes roughly 9 MB of Google's own JavaScript and CSS.
+            That embed is present on both sites, so the comparison holds it constant
+            rather than claiming it as an improvement.
+          </p>
+        </section>
+
+        <section>
+          <h2>A CDN change during testing</h2>
+          <p>
+            Testing began while the site was served by one CDN and finished after a
+            migration to Pantheon's Advanced Global CDN. The two configurations were
+            briefly serving the same build at the same time, which produced an unusually
+            direct comparison.
+          </p>
+          <div class="tbl">
+            <table>
+              <caption>
+                Home page, same build, two CDN paths, minutes apart
+              </caption>
+              <thead>
+                <tr>
+                  <th>Path</th>
+                  <th>Content-Encoding</th>
+                  <th>Bytes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Advanced Global CDN</td>
+                  <td class="win">gzip</td>
+                  <td class="win">13,383</td>
+                </tr>
+                <tr>
+                  <td>Previous CDN</td>
+                  <td class="warn">none</td>
+                  <td class="warn">65,223</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            On the previous configuration no response reached the browser compressed,
+            although the origin compressed correctly when asked. The same build served by
+            a plain Node process returned 12,465 bytes with
+            <code>Content-Encoding: gzip</code>. The effect was a home page transfer of
+            2,074 KB where roughly 1,010 KB was achievable. The CDN migration resolved
+            this, and every figure in this report comes from the current configuration.
+          </p>
+          <p>
+            Conditional requests also improved. A request carrying a matching
+            <code>If-None-Match</code> header now returns 304 with an empty body, where it
+            previously returned 200 with the full resource.
+          </p>
+          <pre>
+correct etag  ->  304, 0 bytes
+no etag       ->  200, 229,287 bytes
+bogus etag    ->  200, 229,287 bytes</pre>
+          <p>
+            Two items remain open. Static assets under <code>/_next/static/</code> are
+            served without a <code>Cache-Control</code> header, so they revalidate rather
+            than being treated as immutable. Brotli is not negotiated, and a request
+            advertising only <code>Accept-Encoding: br</code> receives an uncompressed
+            response rather than a gzip fallback. Brotli would reduce these assets by a
+            further 16% against gzip at maximum quality.
+          </p>
+        </section>
+
+        <section>
+          <h2>SEO and Accessibility</h2>
+          <p>
+            Lighthouse SEO reached 100 on all four pages. The old site failed the same two
+            audits sitewide, for a missing meta description and for links that could not
+            be crawled.
+          </p>
+          <div class="tbl">
+            <table>
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>SEO before</th>
+                  <th>SEO after</th>
+                  <th>Accessibility before</th>
+                  <th>Accessibility after</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Home</td>
+                  <td>85</td>
+                  <td class="win">100</td>
+                  <td>82</td>
+                  <td class="win">92</td>
+                </tr>
+                <tr>
+                  <td>Resource library</td>
+                  <td>83</td>
+                  <td class="win">100</td>
+                  <td>91</td>
+                  <td class="win">96</td>
+                </tr>
+                <tr>
+                  <td>A resource page</td>
+                  <td>85</td>
+                  <td class="win">100</td>
+                  <td>88</td>
+                  <td class="win">97</td>
+                </tr>
+                <tr>
+                  <td>Blog index</td>
+                  <td>83</td>
+                  <td class="win">100</td>
+                  <td>91</td>
+                  <td class="win">96</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel">
+            <h3>Why SEO was measured against a local production build</h3>
+            <p>
+              Pre-launch environments carry a hosting platform header instructing search
+              engines not to index them, and Lighthouse reads that header alongside
+              <code>robots.txt</code>. The score is therefore suppressed on any pre-launch
+              host for reasons unrelated to the site. SEO and Best Practices were measured
+              against a build configured identically to production, with the production
+              origin set, which reproduces the indexable configuration exactly. Timing and
+              transfer figures come from the deployed site.
+            </p>
+          </div>
+          <p>
+            Accessibility figures are Lighthouse automated checks. They cover a subset of
+            WCAG success criteria and are a floor rather than a verdict. Manual testing is
+            a separate exercise.
+          </p>
+        </section>
+
+        <section>
+          <h2>Limits of this measurement</h2>
+          <ul class="plain">
+            <li>
+              Conditions were simulated from the United States and not measured in Haiti.
+            </li>
+            <li>
+              Lantern models a slow connection rather than applying real packet delay.
+            </li>
+            <li>
+              Every figure for the new site is a warm cache hit. The site scales to zero
+              after a period without traffic, and the first request after that costs
+              considerably more than these figures show.
+            </li>
+            <li>
+              Medians of three runs on the Haitian profile, single runs elsewhere.
+              Lighthouse results vary between runs even under simulated throttling.
+            </li>
+            <li>
+              Best Practices scores on the deployed site are depressed by the CDN's bot
+              detection challenging the headless test browser. The figures reported here
+              come from the local production build, where no challenge is issued.
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="credits">
+      <div class="credits-inner">
+        <div class="credit">
+          <div class="label">Designed and built by</div>
+          <img class="logo" src="../assets/ff-logo.svg" alt="Fast Forward" width="79" height="52" />
+          <p>
+            Design and engineering of great websites, including the rebuild measured
+            in this report.
+          </p>
+          <a href="https://fastforward.sh">fastforward.sh</a>
+        </div>
+        <div class="credit">
+          <div class="label">Hosted on</div>
+          <img class="logo" src="../assets/pantheon-logo.svg" alt="Pantheon" width="172" height="52" />
+          <p>
+            mit-ayiti.net runs on the Pantheon platform which provides the build
+            pipeline and the CDN behind the figures above as well as Pantheon P1, a
+            next generation content editing platform.
+          </p>
+          <a href="https://pantheon.io">pantheon.io</a>
+        </div>
+      </div>
+      <div class="colophon">
+        Measurements taken 7 November 2026 with Google Lighthouse 12.8.2. A shorter
+        summary is available in the
+        <a href="migration-overview-report-11-7-2026.html">overview report</a>.
+      </div>
+    </div>
+  </body>
+</html>

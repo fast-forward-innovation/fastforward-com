@@ -59,6 +59,7 @@ New machine? Start at [ONBOARDING.md](ONBOARDING.md), then run `npm run doctor`.
 |---|---|
 | Setting up a machine | [ONBOARDING.md](ONBOARDING.md), then `npm run doctor` |
 | Authoring or editing content | [CONTENT.md](CONTENT.md) |
+| Language rules for any copy | `.claude/skills/writing-style/SKILL.md` |
 | Visual, brand, or image work | [DESIGN.md](DESIGN.md), `brand/GUIDELINES.md` |
 | Shipping content through review | `.claude/commands/workflow.md` |
 | Architecture, deploys, env vars | [README.md](README.md) |

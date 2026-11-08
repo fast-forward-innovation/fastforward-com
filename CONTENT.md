@@ -76,6 +76,9 @@ pageSections: [...]                  # ordered array of MainSection / ImageBlock
 
 ### Voice and structure rules
 
+All copy also follows the house language rules in [.claude/skills/writing-style/SKILL.md](.claude/skills/writing-style/SKILL.md): American spelling, no em or en dashes, no triplets, and an 8th grade reading level (UX and developer jargon is fine).
+
+
 - **Lead with the human/business reality** — not the tech. The Challenge section opens on what the editorial team / customer was actually doing, not on the framework.
 - **Tech specs go last** — push every framework name, library version, and config detail into "Behind the Curtain". The middle of the piece is for decisions and tradeoffs, not specs.
 - **Tagline = sentence-case descriptive headline; title = Title Case short label.** They are not interchangeable. The component renders `tagline` as the visual H3 and `title` as a small label under the auto-number.

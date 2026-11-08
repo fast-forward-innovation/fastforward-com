@@ -1,0 +1,157 @@
+---
+title: Rebuilding a Decade-Old Teaching Library to Be Really, Really Fast
+slug: mit-ayiti-rebuilding-on-nextjs-and-pantheon-p1
+date: '2026-11-07T12:00:00'
+excerpt: >-
+  MIT-Ayiti shares Haitian Creole classroom materials made by Haitian
+  teachers for Haitian students. After ten successful years on WordPress, we
+  rebuilt it on Next.js, Pantheon P1 and Firebase to make it faster and more
+  capable.
+isSticky: false
+draft: true
+editorial:
+  status: draft
+  branch: content/mit-ayiti-case-study
+  updated: 2026-11-07
+  notes: >-
+    First draft from Jason's interview. The Result section is a placeholder
+    until the detailed results reports are ready to link. The closing line is
+    carried over from the blog post and may change.
+featuredImage:
+  # iStock 455621531, © Vedran Vukoja. Licensed stock photo.
+  src: /content/images/blog/iStock-455621531-haiti-chalkboard.jpg
+  alt: >-
+    A chalk outline map of Haiti and the word "Haiti" drawn on a blackboard
+    in a wooden frame.
+  width: 1800
+  height: 1125
+cardImage:
+  src: /content/images/blog/iStock-455621531-haiti-chalkboard.jpg
+  alt: >-
+    A chalk outline map of Haiti and the word "Haiti" drawn on a blackboard
+    in a wooden frame.
+  width: 1800
+  height: 1125
+additionalPostFields:
+  label: MIT-Ayiti
+  brandColor: '#008ca8'
+  seoDescription: >-
+    How Fast Forward rebuilt MIT-Ayiti, a ten-year-old library of Haitian
+    Creole classroom materials, on Next.js, Pantheon P1 and Firebase: static
+    first pages, minimal client-side JavaScript, and a visual editor for the
+    people who run it.
+services:
+  - web-development
+  - technical-consulting
+  - nextjs
+  - pantheon
+pageSections:
+  - type: MainSection
+    title: The Challenge
+    tagline: Classroom materials in the language students actually speak
+    background: white
+    richText: >
+      <p>The MIT Ayiti Project provides classroom material in Haitian Creole
+      for all ages and all subjects, created by Haitian teachers for Haitian
+      students. In Haiti, the official language for schools is French. But
+      virtually 100% of the population speaks Haitian Creole as their native
+      language, and it is a part of the cultural identity.</p>
+
+      <p>MIT-Ayiti gives teachers a place to share resources and collaborate.
+      The site has been successful for ten years. The challenge was a major
+      upgrade to improve its functionality and its performance.</p>
+  - type: MainSection
+    title: The Approach
+    tagline: We wanted it to be really, really fast
+    background: gray
+    richText: >
+      <p>Three options were on the table.</p>
+
+      <dl class="verdict-list">
+        <div data-verdict="rejected">
+          <dt>Option 01</dt>
+          <dd>Keep WordPress on DreamHost and clean up the plugins.</dd>
+        </div>
+        <div data-verdict="rejected">
+          <dt>Option 02</dt>
+          <dd>Move the WordPress site to Pantheon.</dd>
+        </div>
+        <div data-verdict="chosen">
+          <dt>Option 03</dt>
+          <dd>Rebuild on Next.js, Pantheon P1 and Firebase: static-first pages
+          rendered on the server, Firebase for teacher accounts and saved
+          lists, and P1's visual editor for the people who edit content.</dd>
+        </div>
+      </dl>
+
+      <p>We chose option three. We wanted the site to be really, really fast:
+      to take advantage of local storage and caching as much as possible, and
+      to be super optimized. With a multi-plugin architecture, it's hard to
+      fine-tune what gets delivered to the browser. By building everything
+      from scratch, we could maximize the optimization.</p>
+  - type: MainSection
+    title: The Stack
+    tagline: Server-rendered, edge-cached, and easy to edit
+    background: white
+    richText: >
+      <ul>
+        <li><strong>Next.js.</strong> Static-first pages rendered on the
+        server and served from the CDN edge, with as little client-side
+        JavaScript as possible.</li>
+        <li><strong>Pantheon P1.</strong> Content and media, with a visual
+        editor built on the open-source Puck editor and Tiptap.</li>
+        <li><strong>Firebase.</strong> Firebase Auth and Firestore for teacher
+        accounts and saved lists, with one document per user.</li>
+      </ul>
+  - type: MainSection
+    title: How We Built It
+    tagline: Decisions first, then code
+    background: gray
+    richText: >
+      <p>A few decisions shaped the build:</p>
+
+      <ul>
+        <li>We kept every primary URL in exactly the same shape, so there was
+        nothing to redirect.</li>
+        <li>We rebuilt faceted search as a small index filtered in the
+        browser, which search engines can now crawl.</li>
+        <li>Saved lists are cached and work offline, and teachers reorder them
+        with up and down arrows, so keyboard and screen-reader users can
+        manage them too.</li>
+        <li>We dropped Polylang and the stack of security plugins.</li>
+      </ul>
+
+      <h4>How we used AI</h4>
+
+      <ul>
+        <li>Integrated with the WordPress APIs and codebase.</li>
+        <li>Audited the source site's code and content structure.</li>
+        <li>Built deterministic migration scripts to migrate the content.</li>
+        <li>Built repeatable Playwright test suites.</li>
+      </ul>
+  - type: Banner
+    eyebrow: Partnership
+    title: Built in partnership with Pantheon
+    text: >-
+      <p>We worked closely with Pantheon's engineering and product teams on
+      the development and testing of this site.</p>
+    logo:
+      src: /content/images/pantheon-partnership/pantheon-fast-forward-logo-lockup.png
+      alt: Pantheon and Fast Forward
+      width: 780
+      height: 568
+    background: '#ffdc28'
+    darkText: true
+  - type: MainSection
+    title: The Result
+    tagline: Results to come
+    background: white
+    richText: >
+      <!-- PLACEHOLDER: link the detailed results reports here once they're
+      ready (public/reports/mit-ayiti/migration-overview-report-11-7-2026.html and
+      public/reports/mit-ayiti/migration-technical-report-11-7-2026.html). -->
+
+      <p><em>[Placeholder: links to the detailed results reports go here.]</em></p>
+
+      <p><strong>Solve your site's problems, not your plugins'.</strong></p>
+---
