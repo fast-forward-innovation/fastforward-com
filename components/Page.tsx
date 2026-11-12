@@ -8,7 +8,10 @@ export function Page({ page }: { page: PageData }) {
   // pageSections (e.g. a ZigZag nav) rendered below the prose.
   const hasBody = !!page.contentHtml;
   const body = hasBody ? (
-    <div dangerouslySetInnerHTML={{ __html: page.contentHtml ?? "" }} />
+    <div
+      className="page-prose"
+      dangerouslySetInnerHTML={{ __html: page.contentHtml ?? "" }}
+    />
   ) : null;
   const sections = page.pageSections?.length
     ? renderPageSections(page.pageSections)

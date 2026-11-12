@@ -271,6 +271,29 @@
   .main-section dl:not(:last-child) {
     margin-bottom: 2rem;
   }
+  /* Default-layout page prose (components/Page.tsx wraps contentHtml in
+     .page-prose). Code blocks get a light box so snippets such as a
+     robots.txt rule read as copyable text, and links in running text are
+     underlined so they read as links (see /bots, /accessibility). */
+  .page-prose pre {
+    background: var(--color-ff_lightGray);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .page-prose pre:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+  .page-prose p a,
+  .page-prose li a {
+    color: var(--color-ff_tealDarker);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
   /* Bulleted lists in MDX content — small teal square markers in a
      hanging indent (so wrapped lines align with the text), with
      breathing room between items. */
