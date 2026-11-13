@@ -1,0 +1,53 @@
+---
+title: Our crawlers
+slug: bots
+date: '2026-11-12T12:00:00'
+layout: default
+additionalPostFields:
+  seoDescription: >-
+    Fast Forward runs one crawler, ClimbingCalendarBot. What it fetches, how
+    it behaves, and how to block it with robots.txt.
+# This URL is compiled into the bot's User-Agent:
+#   ClimbingCalendarBot/0.1 (+https://fastforward.sh/bots)
+# Keep the slug stable, never mark this page draft, and don't redirect it.
+contentHtml: |
+  <p>Fast Forward runs one crawler. If you have seen it in your logs, this page tells you what it is and how to stop it.</p>
+
+  <h2>ClimbingCalendarBot</h2>
+
+  <pre><code>User-Agent: ClimbingCalendarBot/0.1 (+https://fastforward.sh/bots)</code></pre>
+
+  <p>It builds <a href="https://climbing-calendar.com">climbing-calendar.com</a>, a free, unofficial index of USA Climbing competitions. It is not affiliated with USA Climbing.</p>
+
+  <h3>What it fetches</h3>
+  <ul>
+    <li>USA Climbing's own published schedule pages and documents.</li>
+    <li>Climbing gym websites, to find a gym's logo and confirm a match.</li>
+  </ul>
+
+  <h3>How it behaves</h3>
+  <ul>
+    <li>About one request per second. It is never in a hurry.</li>
+    <li>It honors robots.txt, including Allow rules and wildcards.</li>
+    <li>It skips any document whose content has not changed since the last visit.</li>
+    <li>It reads schedules once a week and checks gym sites twice a month.</li>
+  </ul>
+
+  <h3>What it does not do</h3>
+  <ul>
+    <li>No forms, no logins, no paywalls, no personal data.</li>
+    <li>It deliberately does not collect athlete names, rosters or paraclimbing classifications, even where those are published.</li>
+    <li>It reads markup. It does not run your JavaScript.</li>
+  </ul>
+
+  <h2>Blocking it</h2>
+
+  <p>A robots.txt rule is enough, and we will honor it:</p>
+
+  <pre><code>User-agent: ClimbingCalendarBot
+  Disallow: /</code></pre>
+
+  <h2>Contact</h2>
+
+  <p>If it is causing you a problem, tell us and we will stop: <a href="https://fastforward.sh/contact-us">fastforward.sh/contact-us</a>.</p>
+---

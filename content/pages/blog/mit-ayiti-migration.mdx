@@ -11,8 +11,8 @@ editorial:
   updated: 2026-10-04
   notes: >-
     First full draft from the author's brief, with the three design callouts.
-    Featured image is a 560×333 video thumbnail from MIT-Ayiti; a larger
-    original would be sharper. Confirm the sidebar's description of
+    Featured image is an iStock photo (455621531); confirm the licence
+    covers blog use. Confirm the sidebar's description of
     MIT-Ayiti and the video caption. The article's bandwidth/latency figures
     disagree with the latency callout's SpeedOf.Me data; reconcile before
     review.
@@ -20,13 +20,13 @@ author:
   name: Jason Yarrington
   role: Web Solutions
 featuredImage:
-  src: /content/images/blog/mit-ayiti-chache-konnen-nan-fe-mouvman-epi-jwe.webp
+  # iStock 455621531, © Vedran Vukoja. Licensed stock photo.
+  src: /content/images/blog/iStock-455621531-haiti-chalkboard.jpg
   alt: >-
-    A teacher plays with toddlers in a classroom, one shaking green maracas
-    beside a toy barn. Caption: "Chache konnen nan fè mouvman epi nan jwe"
-    (learning through movement and play).
-  width: 560
-  height: 333
+    A chalk outline map of Haiti and the word "Haiti" drawn on a blackboard
+    in a wooden frame.
+  width: 1800
+  height: 1125
 additionalPostFields:
   seoDescription: >-
     MIT-Ayiti shares Haitian Creole learning materials between Haitian
@@ -120,6 +120,17 @@ contentHtml: |
   <p>This was our main reason for switching, and we felt Next.js was a very good fit for it. We focused the build on static-first pages with minimal JavaScript. Every page is pre-built HTML that a CDN can serve from an edge node, with no server work or database call per request. Granted, you can get a lot of that from WordPress with good caching. But keeping JavaScript small on a plugin-heavy site is really hard, because every plugin that adds JavaScript to the front end is beyond your control.</p>
 
   <p>Anything a user saves, such as their saved lists, is cached and works offline. In those lists, we chose up and down arrows over drag-to-reorder, so teachers using keyboards or screen readers can reorder and manage their lists too.</p>
+
+  <figure class="ff-screenshot" style="margin-block:2rem;">
+    <img
+      src="/content/images/blog/mit-ayiti-learning-through-play.webp"
+      alt="A teacher plays with toddlers in a classroom; a girl in a polka-dot dress shakes green maracas beside a bright yellow and red toy barn."
+      width="503"
+      height="262"
+      style="width:100%;height:auto;display:block;border-radius:0.5rem;"
+    />
+    <figcaption class="code-card__caption"><em>Chache konnen nan fè mouvman epi nan jwe</em>: learning through movement and play, from MIT-Ayiti.</figcaption>
+  </figure>
 
   <h2>What might have been easier in WordPress</h2>
 
