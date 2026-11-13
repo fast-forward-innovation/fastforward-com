@@ -308,3 +308,104 @@ export interface Settings {
   postsPerPage: number;
   gaTrackingId: string;
 }
+
+// ---------------------------------------------------------------------------
+// Prospect site reviews (content/reviews/*.mdx → /review/<slug>)
+// ---------------------------------------------------------------------------
+
+/**
+ * A Fast Forward principal who does outreach. Loaded from
+ * `content/principals.yml`, keyed by `id`; a review names its principal by
+ * that id. Contact options without a value are hidden on the page.
+ */
+export interface Principal {
+  id: string;
+  name: string;
+  role?: string;
+  email: string;
+  /** LinkedIn profile URL — the "Message on LinkedIn" button opens it. */
+  linkedin?: string;
+  /** Slack member ID (e.g. U0123ABC) — @-mentioned in view alerts. */
+  slackUserId?: string;
+  avatar?: FrontmatterImage;
+}
+
+/** The prospective client a review is addressed to — the page's second brand. */
+export interface ReviewProspect {
+  name: string;
+  url?: string;
+  logo?: FrontmatterImage;
+  /** Hex color (`#rrggbb`) that tints the hero. */
+  brandColor?: string;
+  /**
+   * Color of a small plate behind the logo, for a logo drawn for dark
+   * backgrounds (e.g. a white wordmark). Never recolor the logo itself.
+   */
+  logoBackground?: string;
+}
+
+/**
+ * One person a review was sent to. Their `id` rides in the personal link
+ * (`/review/<slug>?v=<id>`) and identifies them in the Slack view alert.
+ * Server-only: never rendered or passed to a client component.
+ */
+export interface ReviewRecipient {
+  id: string;
+  name: string;
+  title?: string;
+}
+
+/**
+ * Review-only block: a plain section — optional `<h2>` and an HTML body in a
+ * single reading column, with no `(01)` numbering or side label. For briefs
+ * that specify the copy and headings exactly.
+ */
+export interface ReviewProse {
+  type: "Prose";
+  heading?: string;
+  /** HTML body: `<p>`, `<ol>`, `<ul>`, `<strong>`, `<a>`. */
+  html: string;
+}
+
+/**
+ * Review-only block: a self-contained HTML diagram — one scoped `<style>`
+ * plus one `<section>` — kept as a file beside the review:
+ * `content/reviews/<slug>/<name>.html`. The loader reads it into `html`.
+ */
+export interface ReviewEmbed {
+  type: "HtmlEmbed";
+  /** Path relative to `content/reviews/`, e.g. `usac/journeys.html`. */
+  src: string;
+  /** Filled in by the loader from `src`. */
+  html?: string;
+}
+
+export type ReviewSection = PageSection | ReviewProse | ReviewEmbed;
+
+export interface Review {
+  title: string;
+  /** URL segment: the review lives at `/review/<slug>`. */
+  slug: string;
+  date: string;
+  draft?: boolean;
+  editorial?: Editorial;
+  /** Exact browser-tab `<title>`, bypassing the site's "— Fast Forward" suffix. */
+  metaTitle?: string;
+  /** `id` of an entry in content/principals.yml. */
+  principal: string;
+  prospect: ReviewProspect;
+  header?: {
+    /** Small label above the title. Omitted when unset. */
+    eyebrow?: string;
+    /** Small, muted line under the title (e.g. "Prepared for … by Fast Forward"). */
+    byline?: string;
+    /** Lead paragraph. */
+    intro?: string;
+  };
+  recipients?: ReviewRecipient[];
+  pageSections?: ReviewSection[];
+  /** Override the contact block's heading and lead line. */
+  contact?: { heading?: string; lede?: string };
+  /** Small, muted note at the end of the page, above the site footer. */
+  footnote?: string;
+}

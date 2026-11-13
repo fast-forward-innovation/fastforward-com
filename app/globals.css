@@ -608,30 +608,31 @@
   }
 
   /* ----- Blog numbered lists -----
-     `<ol>` in a blog post's contentHtml: teal number discs in a hanging
+     `<ol>` in a blog post's contentHtml (and a prospect review's Prose
+     blocks, which share the 18px body size): teal number discs in a hanging
      indent — the callouts' numbered-disc mark (components/callouts/) at body
      scale, partnering the teal square bullets on `<ul>`. Each disc centers on
      its item's first line. Tailwind's preflight strips native list numbers,
      so these come from a CSS counter; `start` isn't honored. */
-  .blog-post .ff-article ol {
+  :is(.blog-post .ff-article, .review-prose) ol {
     counter-reset: ff-ol;
     list-style: none;
     padding-left: 2.5rem;
   }
-  .blog-post .ff-article ol > li {
+  :is(.blog-post .ff-article, .review-prose) ol > li {
     position: relative;
     counter-increment: ff-ol;
     line-height: 1.5;
   }
-  .blog-post .ff-article ol > li + li {
+  :is(.blog-post .ff-article, .review-prose) ol > li + li {
     margin-top: 1rem;
   }
-  .blog-post .ff-article ol > li::before {
+  :is(.blog-post .ff-article, .review-prose) ol > li::before {
     content: counter(ff-ol);
     position: absolute;
     left: -2.5rem;
     /* Item line box is 1.5 × the article body size (`.blog-post .ff-article`
-       font-size). Spelled out in rem/px rather than `1lh`/`em`, which would
+       and `.review-prose` font-size). Spelled out in rem/px rather than `1lh`/`em`, which would
        resolve against this pseudo-element's own smaller font. */
     top: calc((1.5 * max(1rem, 18px) - 1.75rem) / 2);
     display: flex;
@@ -1281,6 +1282,258 @@
      category tags and opacity-on-hover (ProjectCard), and clean square-cornered
      object-cover imagery (ImageBlock). Rendered by the `ZigZag` page block,
      which brings its own `.section` wrapper. */
+
+  /* ----- Prospect review (components/review/) -----
+     Co-branded hero (Fast Forward × prospect logo lockup on a gradient
+     tinted with the prospect's brandColor, set inline) and the principal's
+     contact card. Spacing follows the landing header: 48px top on phones,
+     72px from md. */
+  .review-hero {
+    padding: 3rem 1.5rem 4.5rem;
+  }
+  @media (min-width: 768px) {
+    .review-hero {
+      padding: 4.5rem 3rem 6rem;
+    }
+  }
+  .review-hero__inner {
+    max-width: 1096px;
+    margin-inline: auto;
+  }
+  .review-hero__lockup {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .review-hero__ff-logo {
+    height: 3rem;
+    width: auto;
+  }
+  .review-hero__times {
+    font-size: 1.75rem;
+    font-weight: 300;
+    color: var(--color-ff_gray);
+  }
+  .review-hero__lockup .review-hero__prospect-logo {
+    height: 3rem;
+    width: auto;
+    max-width: 12rem;
+    object-fit: contain;
+  }
+  /* Optional plate for a logo drawn for dark backgrounds
+     (prospect.logoBackground). */
+  .review-hero__logo-plate {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.875rem;
+    border-radius: 0.375rem;
+  }
+  .review-hero__logo-placeholder {
+    display: inline-flex;
+    align-items: center;
+    height: 3rem;
+    padding-inline: 1rem;
+    border: 1px dashed var(--color-ff_slateGray);
+    background: var(--color-ff_lightGray);
+    color: var(--color-ff_gray);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .review-hero__prospect-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .review-hero .review-hero__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ff_red);
+    padding-bottom: 1rem;
+  }
+  .review-hero .review-hero__title {
+    max-width: 905px;
+    font-size: 2.5rem;
+    line-height: 1.15;
+    padding: 0 0 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .review-hero .review-hero__title {
+      font-size: 3.75rem;
+    }
+  }
+  .review-hero__intro {
+    max-width: 905px;
+    font-size: var(--text-lg);
+  }
+  @media (min-width: 768px) {
+    .review-hero__intro {
+      font-size: var(--text-base);
+    }
+  }
+
+  .review-contact__card {
+    max-width: 44rem;
+  }
+  .review-contact__person {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.75rem 0 1.5rem;
+  }
+  .review-contact__avatar {
+    width: 4.5rem;
+    height: 4.5rem;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    overflow: hidden;
+    background: var(--color-ff_lightGray);
+  }
+  .review-contact__avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .review-contact p.review-contact__name {
+    font-size: var(--text-base);
+    font-weight: 600;
+    margin-bottom: 0;
+  }
+  .review-contact p.review-contact__role {
+    color: var(--color-ff_gray);
+    margin: 0;
+  }
+  .review-contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .review-contact__secondary {
+    border: 2px solid var(--color-ff_black);
+    color: var(--color-ff_black);
+    background: transparent;
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+  .review-contact__secondary:hover {
+    background: var(--color-ff_black);
+    color: #fff;
+  }
+  .review-contact__email {
+    color: var(--color-ff_gray);
+  }
+  .review-contact__email a {
+    text-decoration: underline;
+  }
+
+  /* Review body column: hero, prose, diagrams, contact and footnote share
+     one left edge (the hero's 1096px measure). Prose sets its own reading
+     width inside it; diagrams keep the max-width they declare. */
+  .review-block {
+    padding: 2.5rem 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .review-block {
+      padding: 3.5rem 3rem;
+    }
+  }
+  .review-block__inner {
+    max-width: 1096px;
+    margin-inline: auto;
+  }
+  .review-prose {
+    font-size: max(1rem, 18px);
+    line-height: 1.6;
+  }
+  .review-prose > * {
+    max-width: 44rem;
+  }
+  .review-prose h2 {
+    font-size: 2rem;
+    line-height: 1.15;
+    padding: 0 0 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .review-prose h2 {
+      font-size: 2.5rem;
+    }
+  }
+  .review-prose p + p,
+  .review-prose p + ol,
+  .review-prose ol + p {
+    margin-top: 1.25rem;
+  }
+  .review-prose ol {
+    margin-top: 1.5rem;
+  }
+  .review-prose strong {
+    font-weight: 700;
+  }
+  .review-hero .review-hero__byline {
+    font-size: var(--text-sm);
+    color: var(--color-ff_gray);
+    padding-bottom: 1.5rem;
+  }
+
+  /* Diagrams (HtmlEmbed) bring their own scoped, unlayered CSS, which wins
+     over the site's layered styles wherever it sets a property. These undo
+     the base-layer rules it doesn't set (heading padding, forced p/span/
+     heading colors) and drop the diagram's side padding and centering:
+     the column already pads and aligns it. */
+  .review-embed > section {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+  }
+  .review-embed :where(h1, h2, h3, h4, h5, h6) {
+    padding: 0;
+    color: inherit;
+  }
+  .review-embed :where(p, span) {
+    color: inherit;
+  }
+  /* Tailwind's preflight strips list markers; diagrams may rely on the
+     browser default. One that sets list-style itself still wins. */
+  .review-embed :where(ul) {
+    list-style: disc;
+  }
+  .review-embed :where(ol) {
+    list-style: decimal;
+  }
+
+  .review-footnote {
+    font-size: var(--text-sm);
+    color: var(--color-ff_gray);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-ff_lightGray);
+  }
+
+  /* Print: the review only — no site chrome, draft toast or dev badge. */
+  @media print {
+    body:has(.review) > header,
+    body:has(.review) > div:has(> footer),
+    body:has(.review) [data-draft-toast] {
+      display: none !important;
+    }
+    body:has(.review) {
+      padding-top: 0 !important;
+    }
+    .review-hero {
+      background: none !important;
+      padding-top: 0;
+    }
+    .review-block {
+      padding-block: 1.25rem;
+      break-inside: avoid-page;
+    }
+    .review-contact__actions {
+      display: none;
+    }
+  }
 
   /* ----- Landing page header -----
      Left-aligned header for `landing`-layout pages (Digital, Experiences),

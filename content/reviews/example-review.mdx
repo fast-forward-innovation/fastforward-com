@@ -1,0 +1,83 @@
+---
+title: "Five quick wins for northwind-outfitters.example"
+slug: example-review
+date: "2026-11-02T12:00:00"
+draft: true
+editorial:
+  status: draft
+  updated: 2026-11-02
+  notes: >-
+    Reference example for /new-review. Fictional prospect; the recipients
+    below are test IDs, not real people.
+principal: jason
+prospect:
+  name: Northwind Outfitters
+  url: https://northwind-outfitters.example
+  logo:
+    src: ""
+    alt: Northwind Outfitters logo
+    width: 240
+    height: 80
+    placeholder: true
+    notes: The prospect's logo, SVG preferred, ~240×80, on a transparent background.
+  brandColor: "#1f6f5c"
+header:
+  eyebrow: Site review · Northwind Outfitters
+  intro: >-
+    We spent an afternoon with your site the way your customers do. Here is
+    what's working, where visitors stall, and the changes we'd make first.
+recipients:
+  - id: test01ab
+    name: Test Recipient
+    title: QA
+pageSections:
+  - type: MainSection
+    title: Summary
+    tagline: A strong brand held back by a slow first impression
+    background: white
+    richText: >
+      <p>Northwind's product photography and voice are excellent. The
+      problem is getting to them: the home page takes over six seconds to
+      become usable on a mid-range phone, and the main navigation hides
+      the two categories that drive most of your traffic.</p>
+  - type: MainSection
+    title: What's working
+    tagline: Keep these exactly as they are
+    background: gray
+    richText: >
+      <ul>
+        <li><strong>Product storytelling.</strong> Every product page
+        explains where and how the gear was tested.</li>
+        <li><strong>Checkout.</strong> Three steps, guest checkout, and
+        clear shipping costs up front.</li>
+      </ul>
+  - type: MainSection
+    title: Opportunities
+    tagline: Where visitors stall
+    background: white
+    richText: >
+      <dl>
+        <dt>01 · Speed</dt>
+        <dd>The hero video loads before anything else. Swapping it for a
+        poster image until it's needed would cut the first view by half.</dd>
+        <dt>02 · Navigation</dt>
+        <dd>"Packs" and "Tents" sit under a "Gear" menu that most mobile
+        visitors never open.</dd>
+      </dl>
+  - type: ImageBlock
+    width: text
+    images:
+      - src: ""
+        alt: Annotated screenshot of the mobile home page, showing the hero video and the collapsed Gear menu.
+        width: 1200
+        height: 800
+        placeholder: true
+        notes: Evidence screenshot for the Opportunities section.
+  - type: MainSection
+    title: Next step
+    tagline: A two-week sprint, not a redesign
+    background: gray
+    richText: >
+      <p>Everything above fits in a two-week engagement. We'd start with
+      speed, because every other change benefits from it.</p>
+---

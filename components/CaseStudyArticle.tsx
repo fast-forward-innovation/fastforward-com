@@ -10,13 +10,7 @@ import {
   renderPageSections,
   CASE_STUDY_SECTION_TYPES,
 } from "./postBlocks/renderPageSection";
-
-function hexToRgba(hex: string, alpha = 0.17) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
+import { hexToRgba } from "@/lib/color";
 
 export function CaseStudyArticle({
   title,
@@ -42,7 +36,7 @@ export function CaseStudyArticle({
   heroWidth?: "full" | "content";
 }) {
   const backgroundColor = additionalPostFields?.brandColor
-    ? hexToRgba(additionalPostFields.brandColor)
+    ? hexToRgba(additionalPostFields.brandColor, 0.17)
     : "#ebf2f6";
 
   const serviceNames = services

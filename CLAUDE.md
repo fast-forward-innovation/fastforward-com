@@ -67,8 +67,8 @@ New machine? Start at [ONBOARDING.md](ONBOARDING.md), then run `npm run doctor`.
 
 ## Slash commands in this repo
 
-`/workflow` · `/new-page` · `/new-project` · `/edit-page` · `/design-session` ·
-`/deploy-test` · `/deploy-live` — defined in `.claude/commands/`.
+`/workflow` · `/new-page` · `/new-project` · `/new-review` · `/edit-page` ·
+`/design-session` · `/deploy-test` · `/deploy-live` — defined in `.claude/commands/`.
 
 Content moves through an editorial state machine tracked in each MDX file's
 `editorial:` frontmatter — `draft → review → revisions → approved → live`.

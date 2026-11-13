@@ -1,0 +1,170 @@
+<!-- usac-front-door-architecture: prepared from the USA Climbing handoff (docs/reviews/usac-review-handoff.zip).
+     Barlow fonts swapped for Manrope; colors unchanged. Scoped styles + one section only. -->
+<style>
+/* Scoped to .usac-a so it can sit beside the other proposal diagrams */
+.usac-a{
+  --ink:#16202E; --muted:#5B6675; --rule:#D9DEE5; --paper:#FFFFFF; --band:#F3F5F8;
+  --wp:#1B3A6B; --g:#E3A80F; --s80:#C8302F; --vl:#178C80; --mdl:#6A4BA6; --oth:#8A919B;
+  font-family:var(--font-manrope),system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color:var(--ink); background:var(--paper);
+  max-width:1100px; margin:0 auto; padding:36px 28px 28px; line-height:1.45;
+}
+.usac-a *{box-sizing:border-box}
+.usac-a h2{font-family:var(--font-manrope),"Arial Narrow",Arial,sans-serif; font-weight:700; font-size:2rem; line-height:1.1; margin:0 0 10px}
+.usac-a h3{font-family:var(--font-manrope),"Arial Narrow",Arial,sans-serif; font-weight:700; font-size:1.15rem; margin:0 0 10px}
+.usac-a .lead{color:var(--muted); font-size:1.04rem; max-width:64ch; margin:0 0 26px}
+
+.usac-a .wrap{display:grid; grid-template-columns:1fr 290px; gap:32px; align-items:start}
+
+/* layered stack */
+.usac-a .layer{display:grid; grid-template-columns:120px 1fr; gap:16px; align-items:center}
+.usac-a .tier{font-size:.8rem; color:var(--muted); line-height:1.25}
+.usac-a .tier b{display:block; color:var(--ink); font-size:.92rem}
+
+.usac-a .members{display:flex; flex-wrap:wrap; gap:6px 16px; font-weight:500; font-size:.95rem; padding:6px 0}
+
+.usac-a .door{background:var(--wp); color:#fff; border-radius:10px; padding:14px 18px}
+.usac-a .door strong{font-family:var(--font-manrope),Arial,sans-serif; font-size:1.2rem}
+.usac-a .door ul{display:flex; flex-wrap:wrap; gap:6px 18px; margin:6px 0 0; padding:0; list-style:none; font-size:.88rem; color:#DCE4F1}
+
+.usac-a .content{display:grid; grid-template-columns:1fr; background:var(--band); border:1px solid var(--rule); border-radius:8px; padding:12px 16px}
+.usac-a .content strong{font-size:.98rem}
+.usac-a .content span{font-size:.86rem; color:var(--muted)}
+
+.usac-a .mid{background:var(--band); border:1px solid var(--rule); border-radius:8px; padding:12px 14px}
+.usac-a .mid > strong{display:block; font-size:.98rem; margin-bottom:8px}
+.usac-a .svc{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+.usac-a .svc div{background:#fff; border:1px solid var(--rule); border-radius:6px; padding:9px 10px; font-size:.84rem; line-height:1.3}
+.usac-a .svc b{display:block; font-size:.9rem; margin-bottom:2px}
+
+.usac-a .platforms{display:grid; grid-template-columns:repeat(5,1fr); gap:10px}
+.usac-a .plat{display:flex; gap:8px; align-items:flex-start; font-size:.82rem; line-height:1.3; color:var(--muted)}
+.usac-a .plat b{display:block; color:var(--ink); font-size:.92rem}
+.usac-a .hold{display:inline-block; flex:none; width:22px; height:20px; margin-top:1px; border-radius:52% 48% 57% 43% / 46% 58% 42% 54%; background:var(--c); box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
+.usac-a [data-sys="g"]{--c:var(--g)} .usac-a [data-sys="s80"]{--c:var(--s80)} .usac-a [data-sys="vl"]{--c:var(--vl)}
+.usac-a [data-sys="mdl"]{--c:var(--mdl)} .usac-a [data-sys="oth"]{--c:var(--oth)}
+
+/* connectors with protocol labels */
+.usac-a .conn{display:grid; grid-template-columns:120px 1fr; gap:16px; height:38px; align-items:center}
+.usac-a .conn .line{position:relative; height:100%; display:flex; align-items:center; gap:8px; padding-left:24px}
+.usac-a .conn .line::before{
+  content:""; position:absolute; left:10px; top:0; bottom:0; width:2px;
+  background:repeating-linear-gradient(180deg,#9AA3AE 0 6px,transparent 6px 10px);
+}
+.usac-a .pill{display:inline-block; font-size:.76rem; font-weight:600; padding:2px 9px; border-radius:999px; background:#fff; border:1px solid #B8C1CC; color:var(--ink); white-space:nowrap}
+
+.usac-a .pairrow{display:grid; grid-template-columns:0.95fr 2.4fr; gap:12px; align-items:stretch}
+.usac-a .content{align-content:start; gap:6px}
+.usac-a .conn .line.split{display:grid; grid-template-columns:0.95fr 2.4fr; gap:12px; padding-left:0}
+.usac-a .conn .line.split::before{display:none}
+.usac-a .conn .line.split .seg{position:relative; height:100%; display:flex; align-items:center; padding-left:24px}
+.usac-a .conn .line.split .seg::before{content:""; position:absolute; left:10px; top:0; bottom:0; width:2px;
+  background:repeating-linear-gradient(180deg,#9AA3AE 0 6px,transparent 6px 10px)}
+.usac-a .conn .line.right{padding-left:calc(28.4% + 36px)}
+.usac-a .conn .line.right::before{left:calc(28.4% + 22px)}
+/* walkthrough */
+.usac-a .walk{border-left:4px solid var(--mdl); padding:2px 0 2px 16px}
+.usac-a .walk p.sub{margin:-4px 0 12px; font-size:.86rem; color:var(--muted)}
+.usac-a .walk ol{margin:0; padding:0; list-style:none; counter-reset:w}
+.usac-a .walk li{counter-increment:w; position:relative; padding:0 0 12px 34px; font-size:.9rem}
+.usac-a .walk li::before{
+  content:counter(w); position:absolute; left:0; top:-1px; width:24px; height:22px;
+  display:grid; place-items:center; font-size:.8rem; font-weight:600; color:#fff;
+  border-radius:52% 48% 57% 43% / 46% 58% 42% 54%; background:var(--wp);
+}
+.usac-a .walk li span{display:block; font-size:.78rem; color:var(--muted)}
+.usac-a .walk .done{margin:4px 0 0; font-size:.86rem; font-weight:600}
+
+.usac-a .source{font-size:.78rem; color:var(--muted); margin:18px 0 0; max-width:90ch}
+
+@media (max-width:900px){
+  .usac-a .wrap{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .usac-a .pairrow{grid-template-columns:1fr}
+  .usac-a .conn .line.right{padding-left:24px}
+  .usac-a .conn .line.right::before{left:10px}
+  .usac-a .conn .line.split{grid-template-columns:1fr 1fr}
+  .usac-a{padding:26px 16px}
+  .usac-a .layer, .usac-a .conn{grid-template-columns:1fr; gap:6px}
+  .usac-a .conn .tier{display:none}
+  .usac-a .conn{height:auto; padding:6px 0}
+  .usac-a .conn .line{flex-wrap:wrap; min-height:30px}
+  .usac-a .svc{grid-template-columns:1fr}
+  .usac-a .platforms{grid-template-columns:1fr 1fr}
+}
+@media print{.usac-a .wrap{break-inside:avoid}}
+</style>
+<section class="usac-a" aria-labelledby="usac-a-title">
+  <h2 id="usac-a-title">A new front door, wired into the platforms USA Climbing already runs</h2>
+  <p class="lead">We rebuild usaclimbing.org as a headless front end and add a thin integration layer. Sport80, Vertical-Life, the Education Hub and the Google Docs staff rely on all stay in place. Members sign in once and never have to work out which system they are in.</p>
+
+  <div class="wrap">
+    <div class="stack" role="img" aria-label="Layered architecture: members use the usaclimbing.org front end, which reads content from headless WordPress over its REST API and, separately, reaches Sport80, Vertical-Life, Moodle, Google Workspace and Zendesk through an integration layer providing single sign-on, web services, LTI 1.3 Advantage and Google Workspace sync.">
+
+      <div class="layer">
+        <div class="tier"><b>Members</b>Every role</div>
+        <div class="members"><span>Competitors</span><span>Parents</span><span>Coaches</span><span>Judges</span><span>Routesetters</span><span>Gyms</span></div>
+      </div>
+
+      <div class="conn"><div class="tier"></div><div class="line"><span class="pill">One sign-in</span></div></div>
+
+      <div class="layer">
+        <div class="tier"><b>Front door</b>What members see</div>
+        <div class="door">
+          <strong>usaclimbing.org</strong>
+          <ul><li>Journey pages</li><li>My USA Climbing dashboard</li><li>Event and gym finder</li><li>Site search</li><li>Routed forms</li></ul>
+        </div>
+      </div>
+
+      <div class="conn"><div class="tier"></div><div class="line split"><span class="seg"><span class="pill">WordPress REST API</span></span><span class="seg"><span class="pill">Integration API</span></span></div></div>
+
+      <div class="layer">
+        <div class="tier"><b>Behind the front door</b>Called directly by the front end</div>
+        <div class="pairrow">
+          <div class="content">
+            <strong>Headless WordPress</strong>
+            <span>Staff keep the editor they know. Guides, schedules and eligibility lists become structured content served over the REST API.</span>
+          </div>
+          <div class="mid">
+            <strong>Integration layer, built by Fast Forward</strong>
+            <div class="svc">
+              <div><b>Single sign-on</b>One identity per member, linked to Sport80 through OpenID Connect or SAML</div>
+              <div><b>Web services</b>REST calls and webhooks for status, events, entries, results and certifications, cached for speed</div>
+              <div><b>LTI 1.3 Advantage</b>Launches courses in place and receives completions and grades</div>
+              <div><b>Google Workspace sync</b>Turns the Docs and Sheets staff already maintain, like qualified-athlete lists, into site pages through the Drive and Sheets APIs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="conn"><div class="tier"></div><div class="line right"><span class="pill">SSO</span><span class="pill">REST + webhooks</span><span class="pill">LTI 1.3</span><span class="pill">Google APIs</span></div></div>
+
+      <div class="layer">
+        <div class="tier"><b>Existing platforms</b>Stay in place</div>
+        <div class="platforms">
+          <div class="plat" data-sys="s80"><span class="hold" aria-hidden="true"></span><div><b>Sport80</b>Membership, compliance, payments</div></div>
+          <div class="plat" data-sys="vl"><span class="hold" aria-hidden="true"></span><div><b>Vertical-Life</b>Entries, start lists, results</div></div>
+          <div class="plat" data-sys="mdl"><span class="hold" aria-hidden="true"></span><div><b>Moodle Workplace</b>Courses and exams</div></div>
+          <div class="plat" data-sys="g"><span class="hold" aria-hidden="true"></span><div><b>Google Workspace</b>Lists and guides staff edit today</div></div>
+          <div class="plat" data-sys="oth"><span class="hold" aria-hidden="true"></span><div><b>Zendesk</b>Help articles and tickets</div></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="walk" aria-labelledby="usac-a-walk">
+      <h3 id="usac-a-walk">What a judge sees</h3>
+      <p class="sub">The same certification, without the handoffs</p>
+      <ol>
+        <li>Sign in once at usaclimbing.org<span>Single sign-on, linked to Sport80</span></li>
+        <li>See SafeSport and background check status on the dashboard<span>Web services read from Sport80</span></li>
+        <li>Open the judge course in the same tab<span>LTI 1.3 launch into Moodle, with no pop-up</span></li>
+        <li>Pass the exam<span>LTI Assignment and Grade Services returns the score</span></li>
+        <li>Certification updates automatically<span>Web services write it back to Sport80</span></li>
+      </ol>
+      <p class="done">Five steps, one site, one sign-in.</p>
+    </aside>
+  </div>
+
+  <p class="source">Target architecture proposed by Fast Forward. Single sign-on and web service coverage depend on what Sport80 and Vertical-Life expose, and will be confirmed in discovery. Where an API is missing, the front door falls back to a deep link or an embed. Google sync uses a service account with read access to the specific files USA Climbing chooses to publish.</p>
+</section>

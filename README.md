@@ -36,6 +36,9 @@ All site pages are **statically generated at build time**. Next.js walks each ro
 
 - `app/api/contact/route.ts` — POST handler; server-rendered on demand
 - `app/contact-submitted/page.tsx` — reads `searchParams.success`, server-rendered on demand
+- `app/api/review-view/route.ts` — POST handler for prospect-review alerts to Slack; server-rendered on demand
+
+Prospect reviews (`/review/[slug]`) are prerendered like everything else. The personal `?v=` visitor ID is read in the browser, which pings the route above.
 
 Everything else (`/`, `/our-work`, `/our-work/[slug]`, `/[slug]`, `/contact-us`, plus `sitemap.xml`, `robots.txt`, `manifest.webmanifest`, `icon.png`) is prerendered.
 
@@ -345,6 +348,7 @@ See [.env.local.example](.env.local.example) for the canonical list and docs.
 | `PCC_WEBHOOK_SECRET` | — | **required** | Publish webhooks can't be verified |
 | `MONDAY_INQUIRY_TYPE_COLUMN_ID` | optional | optional | Inquiries land untagged |
 | `ANTHROPIC_API_KEY` | optional | optional | No Claude inquiry classification |
+| `SLACK_REVIEW_WEBHOOK_URL` | — | **Live only** | Prospect-review alerts are logged, not posted to Slack |
 | `NEXT_PUBLIC_SITE_URL` | optional | optional | Falls back to `https://fastforward.sh` |
 | `NEXT_PUBLIC_GITHUB_REPO` | optional | optional | Editorial toast can't link to the repo |
 
