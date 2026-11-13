@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 820" width="900" height="820" role="img" aria-label="The Google Cloud services behind Climbing Calendar: one Cloud Run service, two Cloud Run jobs and a domain mapping for compute; Firestore and two Cloud Storage buckets for data; two Cloud Scheduler jobs; one Artifact Registry repository; and no load balancer, VPC, Kubernetes, Pub/Sub, Memorystore, Cloud SQL or CDN.">
+<rect width="900" height="820" fill="#ffffff"/>
+<text x="28" y="42" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="21" font-weight="700" fill="#14181f">Google Cloud services behind Climbing Calendar</text>
+<text x="28" y="66" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#5c6673">What one small, scheduled, scale-to-zero web app runs on. Everything in us-central1.</text>
+<text x="28" y="116" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#1b4d4a" letter-spacing="1.4">COMPUTE</text>
+<line x1="28" y1="125" x2="872" y2="125" stroke="#1b4d4a" stroke-width="1.4" opacity="0.35"/>
+<text x="28" y="151" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#14181f">Cloud Run service<tspan dx="11" font-size="11.5" fill="#1b4d4a">× 1</tspan></text>
+<text x="28" y="169" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#5c6673">Serves the site. Scales to zero between visitors.</text>
+<text x="28" y="186" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#8a93a0">1 vCPU · 512 MiB · min 0 / max 2 · public · startup probe /api/health</text>
+<text x="28" y="223" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#14181f">Cloud Run job<tspan dx="11" font-size="11.5" fill="#1b4d4a">× 2</tspan></text>
+<text x="28" y="241" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#5c6673">update re-reads every schedule; discover refreshes gym addresses.</text>
+<text x="28" y="258" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#8a93a0">1 vCPU · 1 GiB · 60 min cap · 1 retry · same image as the service</text>
+<text x="28" y="295" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#14181f">Cloud Run domain mapping<tspan dx="11" font-size="11.5" fill="#1b4d4a">× 1</tspan></text>
+<text x="28" y="313" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#5c6673">Custom domain with a Google-managed certificate.</text>
+<text x="28" y="330" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#8a93a0">free · Preview feature · no load balancer required</text>
+<text x="28" y="361" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#1b4d4a" letter-spacing="1.4">DATA</text>
+<line x1="28" y1="370" x2="872" y2="370" stroke="#1b4d4a" stroke-width="1.4" opacity="0.35"/>
+<text x="28" y="396" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#14181f">Firestore<tspan dx="11" font-size="11.5" fill="#1b4d4a">× 1</tspan></text>
+<text x="28" y="414" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#5c6673">System of record: events and gyms.</text>
+<text x="28" y="431" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#8a93a0">Native mode · "(default)" · single-region, co-located with Cloud Run</text>
+<text x="28" y="468" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#14181f">Cloud Storage bucket<tspan dx="11" font-size="11.5" fill="#1b4d4a">× 2</tspan></text>
+<text x="28" y="486" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#5c6673">Raw snapshot of every fetch, and Terraform state.</text>
+<text x="28" y="503" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#8a93a0">snapshots: Coldline at 90d, deleted at 365d · state: versioned · both UBLA</text>
+<text x="28" y="534" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#1b4d4a" letter-spacing="1.4">SCHEDULING</text>
+<line x1="28" y1="543" x2="872" y2="543" stroke="#1b4d4a" stroke-width="1.4" opacity="0.35"/>
+<text x="28" y="569" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#14181f">Cloud Scheduler job<tspan dx="11" font-size="11.5" fill="#1b4d4a">× 2</tspan></text>
+<text x="28" y="587" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#5c6673">The only thing that starts work. No queue, no event bus.</text>
+<text x="28" y="604" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#8a93a0">update-weekly Mon 09:00 MT · discover-gyms 1st &amp; 15th 10:00 MT</text>
+<text x="28" y="635" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#1b4d4a" letter-spacing="1.4">BUILD AND DEPLOY</text>
+<line x1="28" y1="644" x2="872" y2="644" stroke="#1b4d4a" stroke-width="1.4" opacity="0.35"/>
+<text x="28" y="670" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#14181f">Artifact Registry<tspan dx="11" font-size="11.5" fill="#1b4d4a">× 1</tspan></text>
+<text x="28" y="688" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#5c6673">One container image per commit, built in CI.</text>
+<text x="28" y="705" text-anchor="start" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#8a93a0">Docker format · repository "app" · us-central1</text>
+<rect x="28" y="734" width="844" height="58" rx="8" fill="#f7f8f7" stroke="#e2e6ea"/>
+<text x="46" y="758" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#14181f">Not used, and not needed at this size:</text>
+<text x="46" y="777" text-anchor="start" font-family="Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#5c6673">no load balancer · no VPC or subnets · no Kubernetes · no Pub/Sub · no Memorystore · no Cloud SQL · no CDN</text>
+</svg>
