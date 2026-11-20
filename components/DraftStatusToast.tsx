@@ -18,6 +18,15 @@ function subscribe(callback: () => void): () => void {
 
 const getServerSnapshot = () => false;
 
+// YAML reads an unquoted `updated: 2026-11-18` as a Date, and Date#toString
+// is time-zone dependent, so the server and browser rendered different text
+// (a hydration mismatch). Always print the calendar date in UTC.
+function formatUpdated(value: unknown): string | undefined {
+  if (!value) return undefined;
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  return String(value);
+}
+
 const DEFAULT_REPO = "fast-forward-innovation/fastforward-com";
 
 const STATUS_ACCENT: Record<EditorialStatus, string> = {
@@ -98,7 +107,7 @@ export function DraftStatusToast({
         </div>
         {(editorial.branch || editorial.updated) && (
           <div className="font-mono text-[11px] text-[var(--color-ff_gray)] mt-1">
-            {[editorial.branch, editorial.updated && `updated ${editorial.updated}`]
+            {[editorial.branch, editorial.updated && `updated ${formatUpdated(editorial.updated)}`]
               .filter(Boolean)
               .join(" · ")}
           </div>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pantheon partner banner, phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&family=Manrope:wght@400;500;800&display=swap">
+<style>
+body{margin:0;font-family:'Manrope',system-ui,sans-serif}
+</style>
+</helmet>
+<div style="width: 390px; height: 640px; box-sizing: border-box; padding: 24px 16px; background: #ffffff; display: flex; align-items: center">
+<aside aria-label="Partnership" style="position: relative; overflow: hidden; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px; padding: 28px 24px; border-radius: 12px; background: {{panel}}; color: #191819">
+<svg aria-hidden="true" viewBox="0 0 200 320" style="position: absolute; right: -30px; bottom: -40px; height: 260px; width: auto" fill="#191819" fill-opacity="0.07"><path d="M130 0 L20 170 H92 L60 320 L190 130 H116 Z"/></svg>
+<div style="position: relative; width: 200px; box-sizing: border-box; padding: 16px; background: #ffffff; border-radius: 8px; border: 2px solid #191819">
+<img src="/content/images/pantheon-partnership/pantheon-fast-forward-logo-lockup.png" alt="Pantheon and Fast Forward" style="display: block; width: 100%; height: auto">
+</div>
+<div style="position: relative; display: flex; flex-direction: column; gap: 12px">
+<p style="margin: 0; display: inline-flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 500; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase"><span style="display: inline-block; width: 24px; height: 2px; background: #191819"></span>Partnership</p>
+<p style="margin: 0; font-size: 30px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em">Built in partnership with Pantheon</p>
+<p style="margin: 0; font-size: 16px; line-height: 1.5; font-weight: 500">We worked closely with Pantheon's engineering and product teams on the development and testing of this site.</p>
+</div>
+</aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"panel":{"editor":"color","default":"#ffdc28","options":["#ffdc28","#ffffff","#edf1f2","#008ca8"]},"$preview":{"width":390,"height":640}}'>
+class Component extends DCLogic {
+renderVals() {
+return { panel: this.props.panel ?? '#ffdc28' };
+}
+}
+</script>
+</body>
+</html>

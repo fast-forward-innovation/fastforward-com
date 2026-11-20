@@ -1,0 +1,204 @@
+---
+title: Helping Haitian Teachers Share Classroom Materials
+slug: platform-ayiti
+date: '2026-11-18T12:00:00'
+excerpt: >-
+  Platform Ayiti shares Haitian Creole classroom materials made by Haitian
+  teachers for Haitian teachers. We built it as a fast teaching library, with
+  Asistan, an AI assistant that finds the right materials in the teacher's own
+  language.
+isSticky: false
+draft: false
+heroWidth: inset
+featuredImage:
+  # iStock 455621531, © Vedran Vukoja. Licensed stock photo.
+  src: /content/images/blog/iStock-455621531-haiti-chalkboard.jpg
+  alt: >-
+    A chalk outline map of Haiti and the word "Haiti" drawn on a blackboard
+    in a wooden frame.
+  width: 1800
+  height: 1125
+cardImage:
+  src: /content/images/blog/iStock-455621531-haiti-chalkboard.jpg
+  alt: >-
+    A chalk outline map of Haiti and the word "Haiti" drawn on a blackboard
+    in a wooden frame.
+  width: 1800
+  height: 1125
+additionalPostFields:
+  label: MIT-Haiti Initiative
+  brandColor: '#008ca8'
+  seoDescription: >-
+    How Fast Forward built Platform Ayiti for the MIT-Haiti Initiative: a fast
+    library of Haitian Creole classroom materials, with Asistan, an AI
+    assistant that answers teachers in their own language.
+services:
+  - web-development
+  - technical-consulting
+  - nextjs
+  - pantheon
+pageSections:
+  - type: MainSection
+    title: The Challenge
+    tagline: Classroom materials in the language students actually speak
+    background: white
+    richText: >
+      <p>The Platform Ayiti project provides classroom material in Haitian
+      Creole for all ages and all subjects, created by Haitian teachers, for
+      Haitian teachers. In Haiti, the official language for schools is French.
+      But virtually 100% of the population speaks Haitian Creole as their
+      native language, and it is a part of the cultural identity.</p>
+
+      <p>Platform Ayiti gives teachers a place to share resources and
+      collaborate. Most teachers reach it on a phone over mobile data. So the
+      site has to be fast on a slow connection, and teachers need to find the
+      right material quickly.</p>
+  - type: DeviceShowcase
+    background: '#7055A2'
+    screen:
+      src: /content/images/projects/platform-ayiti/platform-ayiti-home-full.webp
+      alt: >-
+        The full Platform Ayiti home page in Haitian Creole: a featured story
+        about a canal, buttons to find and contribute resources, a welcome
+        video, browsing by grade level, subject and category, a resource
+        search, and three ways to join the community.
+      width: 1316
+      height: 4103
+  - type: MainSection
+    title: The Solution
+    tagline: A teaching library with an assistant that speaks your language
+    background: gray
+    richText: >
+      <p>We built Platform Ayiti as a teaching library, not just a publishing
+      site. Teachers can do more than find materials. They curate their
+      favorite sources into lists and share those lists with other teachers.
+      We wanted it to be really, really fast on the connections teachers
+      actually have. Pages load quickly over mobile data, and anything a
+      teacher saves stays on their phone, so it still works when the
+      connection drops.</p>
+
+      <p>The heart of the new platform is Asistan (Kreyòl for "assistant").
+      A teacher asks for what they need in plain words. For example: "Do you
+      have materials for teaching grade 4 science about water conservation?"
+      Asistan answers with a list of matching resources from the library, and
+      the teacher can save them straight into a list.</p>
+
+      <p>Teachers can ask in Haitian Creole, French, English or any of about
+      140 other languages. Asistan works out the language of the question and
+      answers in the same language. That supports teachers who want to work in
+      Haitian Creole, and it welcomes French and English speakers too. When
+      nothing in the library matches, Asistan asks follow-up questions and
+      suggests other resources that could help.</p>
+
+      <p><strong>Asistan stays inside the library.</strong> It only answers
+      about content on the site, or content the site links to or references.
+      It does not generate teaching materials, and it never recommends
+      anything outside the library. Every answer points a teacher to real
+      material made by other teachers.</p>
+  - type: DeviceShowcase
+    background: '#7055A2'
+    screen:
+      src: /content/images/projects/platform-ayiti/platform-ayiti-asistan-full.webp
+      alt: >-
+        Asistan answering, in English, "Do you have materials for teaching
+        grade 4 science about water conservation?" It points to grade 4
+        science curriculum and environmental resources, notes that nothing is
+        titled water conservation, and lists four matching resources. A side
+        panel has already drafted a new list with a title and summary.
+      width: 1316
+      height: 1836
+  - type: MainSection
+    title: Behind the Curtain
+    tagline: Built to be fast for teachers and easy for editors
+    background: white
+    richText: >
+      <p>Every page on Platform Ayiti is built ahead of time with
+      <strong>Next.js</strong> and served from a CDN close to the reader. The
+      server does the heavy lifting, so phones download as little JavaScript
+      as possible. That is what keeps pages quick over mobile data.</p>
+
+      <p>The people who run the site edit it in <strong>Pantheon P1</strong>.
+      It holds the content and media, and gives editors a visual page editor
+      built on the open-source Puck editor and Tiptap. Editors see the page
+      they are building as they build it.</p>
+
+      <p>Teacher accounts live in <strong>Google Cloud</strong>, using
+      Firebase for sign-in and identity. Each teacher's preferences and saved
+      lists are stored there too, and cached on their device so the lists
+      still work offline. Teachers reorder lists with up and down arrows
+      instead of dragging, so keyboard and screen-reader users can manage them
+      as well.</p>
+
+      <p>Asistan runs on <strong>Google Vertex AI</strong>. We index all of
+      the site's content and give it to the model as context. That is what
+      keeps its answers inside the library. Search works the same way on a
+      smaller scale: a compact index filtered in the browser, with every
+      result a page search engines can crawl.</p>
+
+      <p>We also used AI in our own process. It helped us audit the content
+      structure to shape the content model, and it helped us build repeatable
+      Playwright test suites.</p>
+
+      <aside class="stack-callout" aria-label="The stack">
+        <p class="stack-callout__label">The stack</p>
+        <ul>
+          <li><strong>Next.js</strong> Static-first, server-rendered pages</li>
+          <li><strong>Pantheon P1</strong> Content, media and visual editing</li>
+          <li><strong>Google Cloud (Firebase)</strong> Sign-in and saved lists</li>
+          <li><strong>Google Vertex AI</strong> Asistan</li>
+        </ul>
+      </aside>
+  - type: Banner
+    eyebrow: Partnership
+    title: Built in partnership with Pantheon
+    text: >-
+      <p>We worked closely with Pantheon's engineering and product teams on
+      the development and testing of this site.</p>
+    logo:
+      src: /content/images/pantheon-partnership/pantheon-fast-forward-logo-lockup.png
+      alt: Pantheon and Fast Forward
+      width: 780
+      height: 568
+    background: '#ffdc28'
+    darkText: true
+  - type: MainSection
+    title: The Result
+    tagline: Fast on any connection, useful even without one
+    background: gray
+    richText: >
+      <p>Most teachers reach Platform Ayiti on a phone over mobile data, so we
+      tested it the way they use it. We compared four pages on the old site
+      and the new one with Google Lighthouse, under a simulated Haitian mobile
+      connection of 7 Mbps with 100 ms of latency. Every page got faster. The
+      home page now shows its first content in 0.73 seconds, down from 1.59,
+      and the server starts responding in 0.07 seconds instead of nearly a
+      full second. Pages are lighter too. The home page dropped from 2.5 MB to
+      1.0 MB, and the blog index went from 6.1 MB to under 1 MB. On mobile
+      data, every megabyte a teacher doesn't download counts.</p>
+
+      <p>The rebuild also made the library easier to find. Every page we
+      tested now scores 100 for SEO in Lighthouse, up from the low to mid
+      80s, and accessibility scores rose on every page.</p>
+
+      <p>Speed only helps when there is a connection, and in Haiti that isn't
+      a given. Platform Ayiti is a progressive web application, so it keeps
+      working when the signal drops. A teacher's saved materials and lists
+      are stored on their device, so they can open them in the classroom
+      with limited or no internet access.</p>
+
+      <p>The platform does more for teachers than it used to. Asistan answers
+      in the teacher's own language and points them to materials that fit
+      their lesson. Teachers save what they find into lists, then share those
+      lists with colleagues, so a good unit plan can travel from one
+      classroom to the next.</p>
+
+      <p>The full figures and method are in the <a
+      href="/reports/mit-ayiti/migration-overview-report-11-7-2026.html"
+      target="_blank" rel="noopener">overview report</a> and the <a
+      href="/reports/mit-ayiti/migration-technical-report-11-7-2026.html"
+      target="_blank" rel="noopener">technical report</a>.</p>
+
+      <!-- Teacher feedback on Asistan goes here in a later version. -->
+
+      <p><strong>Build the library around the teacher, not the content.</strong></p>
+---

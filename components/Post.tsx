@@ -12,6 +12,7 @@ export function Post({ project }: { project: Project }) {
         additionalPostFields={project.additionalPostFields}
         services={project.services}
         pageSections={project.pageSections}
+        heroWidth={project.heroWidth}
       />
       <FeaturedProjects excludeSlug={project.slug} />
       {project.draft ? (

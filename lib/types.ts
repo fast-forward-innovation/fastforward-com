@@ -161,9 +161,28 @@ export interface Banner {
   cta?: { label: string; href: string };
 }
 
+/**
+ * A device mockup with a scrollable screen: a CSS tablet frame on a solid
+ * color panel, holding a full-length page screenshot the reader can scroll
+ * inside the screen. The screenshot should be captured at the frame's width
+ * (1316px, from a 1440px viewport) and can be any height.
+ */
+export interface DeviceShowcase {
+  type: "DeviceShowcase";
+  /** Full-length screenshot of the page shown on the screen. */
+  screen: FrontmatterImage;
+  /** Panel color behind the device, as a hex string. */
+  background?: string;
+  /** Screen shape. Only a landscape tablet for now. */
+  device?: "tablet";
+  /** Short caption under the device. */
+  caption?: string;
+}
+
 export type PageSection =
   | MainSection
   | Banner
+  | DeviceShowcase
   | ImageBlock
   | CardGrid
   | ClientQuote
@@ -200,6 +219,12 @@ export interface Project {
   draft?: boolean;
   editorial?: Editorial;
   featuredImage?: FrontmatterImage;
+  /**
+   * `full` (default) bleeds the featured image edge to edge; `content` caps
+   * it at the content width with side gutters, like blog case studies;
+   * `inset` is narrower still (1080px) with more padding around it.
+   */
+  heroWidth?: "full" | "content" | "inset";
   cardImage?: FrontmatterImage;
   additionalPostFields?: AdditionalPostFields;
   services: string[];

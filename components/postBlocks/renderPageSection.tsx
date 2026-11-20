@@ -10,6 +10,7 @@ import { TeamProfile } from "./TeamProfile";
 import { FeaturedWorkBlock } from "./FeaturedWorkBlock";
 import { ZigZag } from "./ZigZag";
 import { BannerBlock } from "./BannerBlock";
+import { DeviceShowcaseBlock } from "./DeviceShowcaseBlock";
 
 export type PageSectionType = PageSection["type"];
 
@@ -25,6 +26,7 @@ export const ALL_SECTION_TYPES: readonly PageSectionType[] = [
   "FeaturedWork",
   "ZigZag",
   "Banner",
+  "DeviceShowcase",
 ];
 
 /**
@@ -40,6 +42,7 @@ export const CASE_STUDY_SECTION_TYPES: readonly PageSectionType[] = [
   "FeaturedWork",
   "ZigZag",
   "Banner",
+  "DeviceShowcase",
 ];
 
 export interface RenderSectionContext {
@@ -94,6 +97,8 @@ export function renderPageSection(
       return <ZigZag key={index} block={section} />;
     case "Banner":
       return <BannerBlock key={index} block={section} />;
+    case "DeviceShowcase":
+      return <DeviceShowcaseBlock key={index} block={section} />;
     default:
       return null;
   }

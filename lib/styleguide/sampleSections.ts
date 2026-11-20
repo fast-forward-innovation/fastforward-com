@@ -6,6 +6,7 @@
  */
 import type {
   Banner,
+  DeviceShowcase,
   CardGrid,
   ClientQuote,
   CodeBlock,
@@ -420,6 +421,21 @@ export const sampleBannerDark: Banner = {
   cta: { label: "Read the report", href: "/blog" },
 };
 
+// ---------------------------------------------------------------------------
+// DeviceShowcase
+// ---------------------------------------------------------------------------
+
+export const sampleDeviceShowcase: DeviceShowcase = {
+  type: "DeviceShowcase",
+  background: "#7055A2",
+  screen: {
+    src: "/content/images/projects/platform-ayiti/platform-ayiti-asistan-full.webp",
+    alt: "A full-length screenshot of the Platform Ayiti assistant page.",
+    width: 1316,
+    height: 1836,
+  },
+};
+
 export interface FieldDoc {
   name: string;
   type: string;
@@ -610,5 +626,18 @@ export const blockGallery: BlockDoc[] = [
       { label: "Partner colour, logo, no link", section: sampleBanner },
       { label: "Default black with link", section: sampleBannerDark },
     ],
+  },
+  {
+    type: "DeviceShowcase",
+    label: "DeviceShowcase",
+    allowedIn: "default, case-study, blog-case-study, lab-project",
+    description:
+      "A CSS tablet on a solid color panel whose screen scrolls through a full-length page screenshot, so readers can explore the page inside the device. Capture the page at a 1440px viewport, crop the center 1316px, and stitch it to full height. Works without JavaScript; the screen is a focusable scroll region.",
+    fields: [
+      { name: "screen", type: "FrontmatterImage", required: true, notes: "Full-length screenshot, 1316px wide, any height." },
+      { name: "background", type: "hex string", notes: "Panel color behind the device. Use the client's brand color." },
+      { name: "caption", type: "string", notes: "Defaults to a hint to scroll inside the screen." },
+    ],
+    variants: [{ label: "Scrollable tablet", section: sampleDeviceShowcase }],
   },
 ];
