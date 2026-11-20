@@ -38,8 +38,10 @@ export function CaseStudyArticle({
    * `full` (our-work projects): the featured image bleeds edge to edge.
    * `content` (blog case studies): capped at the sections' content width,
    * with the same side gutters, so it never runs wider than the text.
+   * `inset`: narrower still (1080px) with generous side padding, for a hero
+   * that should sit inside the page rather than fill it.
    */
-  heroWidth?: "full" | "content";
+  heroWidth?: "full" | "content" | "inset";
 }) {
   const backgroundColor = additionalPostFields?.brandColor
     ? hexToRgba(additionalPostFields.brandColor)
@@ -124,14 +126,20 @@ export function CaseStudyArticle({
           <div
             id="featured-image"
             className={
-              heroWidth === "content"
-                ? "relative mb-[4.5rem] px-6 md:px-12"
-                : "relative mb-[4.5rem] lg:px-6"
+              heroWidth === "full"
+                ? "relative mb-[4.5rem] lg:px-6"
+                : heroWidth === "inset"
+                  ? "relative mb-[4.5rem] px-6 md:px-16 lg:px-24"
+                  : "relative mb-[4.5rem] px-6 md:px-12"
             }
           >
             <div
               className={
-                heroWidth === "content" ? "max-w-screen-xl mx-auto" : undefined
+                heroWidth === "full"
+                  ? undefined
+                  : heroWidth === "inset"
+                    ? "max-w-[1080px] mx-auto"
+                    : "max-w-screen-xl mx-auto"
               }
             >
               {featuredImage.placeholder ? (
@@ -141,9 +149,7 @@ export function CaseStudyArticle({
                   height={featuredImage.height ?? 900}
                   notes={featuredImage.notes}
                   className={
-                    heroWidth === "content"
-                      ? "w-full"
-                      : "max-lg:h-[60vh] w-full"
+                    heroWidth === "full" ? "max-lg:h-[60vh] w-full" : "w-full"
                   }
                 />
               ) : (
@@ -154,14 +160,16 @@ export function CaseStudyArticle({
                   height={featuredImage.height ?? 900}
                   priority
                   sizes={
-                    heroWidth === "content"
-                      ? "(min-width: 1280px) 1280px, 100vw"
-                      : "100vw"
+                    heroWidth === "full"
+                      ? "100vw"
+                      : heroWidth === "inset"
+                        ? "(min-width: 1080px) 1080px, 100vw"
+                        : "(min-width: 1280px) 1280px, 100vw"
                   }
                   className={
-                    heroWidth === "content"
-                      ? "h-auto object-cover w-full"
-                      : "max-lg:h-[60vh] object-cover w-full"
+                    heroWidth === "full"
+                      ? "max-lg:h-[60vh] object-cover w-full"
+                      : "h-auto object-cover w-full"
                   }
                 />
               )}

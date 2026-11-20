@@ -509,28 +509,31 @@
   .banner-section {
     padding-block: 3rem;
   }
+  /* Spec: docs/design/pantheon-partner-banner/{phone,desktop}.dc.html */
   .ff-banner {
     position: relative;
     overflow: hidden;
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 1.5rem;
-    align-items: center;
-    padding: 1.75rem;
+    padding: 1.75rem 1.5rem;
     border-radius: 0.75rem;
     background: var(--color-ff_black);
     color: #fff;
   }
-  /* Faint lightning-bolt watermark, echoing the Pantheon mark. */
+  /* Faint lightning-bolt watermark, echoing the Pantheon mark. Same path
+     as the design's SVG (viewBox 200x320) as a clip-path polygon. */
   .ff-banner::after {
     content: "";
     position: absolute;
-    right: -1rem;
-    bottom: -2rem;
-    width: 9rem;
-    height: 14rem;
+    right: -30px;
+    bottom: -40px;
+    height: 260px;
+    aspect-ratio: 200 / 320;
     background: currentColor;
     opacity: 0.07;
-    clip-path: polygon(65% 0, 10% 53%, 46% 53%, 30% 100%, 95% 41%, 58% 41%);
+    clip-path: polygon(65% 0, 10% 53.125%, 46% 53.125%, 30% 100%, 95% 40.625%, 58% 40.625%);
     pointer-events: none;
   }
   .ff-banner__logo,
@@ -547,45 +550,60 @@
     color: var(--color-ff_black);
   }
   .ff-banner__logo {
+    flex: none;
+    width: 200px;
+    padding: 1rem;
     background: #fff;
     border-radius: 0.5rem;
     border: 2px solid var(--color-ff_black);
-    padding: 1rem;
-    width: 9rem;
   }
   .ff-banner__logo img {
     width: 100%;
     height: auto;
     display: block;
   }
-  .ff-banner__eyebrow {
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
+  .ff-banner__body {
     display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .ff-banner__body > * {
+    margin: 0;
+  }
+  .ff-banner__eyebrow {
+    display: inline-flex;
     align-items: center;
     gap: 0.625rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   .ff-banner__eyebrow::before {
     content: "";
-    width: 1.75rem;
+    width: 1.5rem;
     height: 2px;
     background: currentColor;
   }
   .ff-banner__title {
-    font-size: 1.75rem;
-    line-height: 1.2;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
+    font-size: 1.875rem;
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.02em;
   }
-  .ff-banner__text > :last-child {
-    margin-bottom: 0;
+  .ff-banner__text,
+  .ff-banner__text p {
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  .ff-banner__text > * {
+    margin: 0;
   }
   .ff-banner__cta {
     display: inline-block;
-    margin-top: 1.25rem;
+    margin-top: 0.5rem;
     font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 0.2em;
@@ -595,15 +613,205 @@
       padding-block: 4rem;
     }
     .ff-banner {
-      grid-template-columns: auto 1fr;
-      gap: 2.5rem;
+      flex-direction: row;
+      align-items: center;
+      gap: 3.5rem;
       padding: 2.5rem 3rem;
     }
+    .ff-banner::after {
+      right: -24px;
+      top: -20px;
+      bottom: auto;
+      height: 360px;
+    }
     .ff-banner__logo {
-      width: 13rem;
+      width: 280px;
+      padding: 1.5rem;
+    }
+    .ff-banner__body {
+      gap: 0.875rem;
+      max-width: 620px;
+    }
+    .ff-banner__eyebrow {
+      font-size: 0.875rem;
+    }
+    .ff-banner__eyebrow::before {
+      width: 1.75rem;
     }
     .ff-banner__title {
-      font-size: 2.25rem;
+      font-size: 2.75rem;
+      line-height: 1.1;
+    }
+    .ff-banner__text {
+      max-width: 540px;
+    }
+    .ff-banner__text,
+    .ff-banner__text p {
+      font-size: 1.125rem;
+    }
+  }
+
+  /* ----- Device showcase block -----
+     `type: DeviceShowcase` (components/postBlocks/DeviceShowcaseBlock.tsx):
+     a CSS tablet on a solid panel, matching the flat 2880x1800 mockups in
+     older case studies, except the screen scrolls through a full-length
+     screenshot. Screen ratio matches a 1316x813 browser capture. */
+  .device-showcase {
+    /* Pin line: just under the fixed site header (82 / 92 / 114px). */
+    --pin-top: 98px;
+    --scroll-distance: 0px;
+    margin: 0;
+    padding: 3rem 1rem 1.5rem;
+    background: var(--color-ff_black);
+  }
+  /* Extra panel height = how far the screenshot travels while pinned. It
+     has to be a spacer inside the panel, not padding: a sticky element can
+     only move within its parent's content box. */
+  .device-showcase__spacer {
+    display: none;
+  }
+  .device-showcase.is-linked .device-showcase__spacer {
+    display: block;
+    height: var(--scroll-distance);
+  }
+  .device-showcase__sticky {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .device-showcase.is-linked .device-showcase__sticky {
+    position: sticky;
+    top: var(--pin-top);
+  }
+  .device-showcase__tablet {
+    position: relative;
+    width: min(100%, 1040px, calc((100svh - var(--pin-top) - 4.5rem) * 1.5));
+    padding: clamp(10px, 2.4%, 28px);
+    border-radius: clamp(22px, 5%, 54px);
+    background: #18181a;
+    border: 3px solid #3e3e42;
+    box-shadow: 0 30px 70px rgba(28, 18, 52, 0.45);
+  }
+  /* Top and side hardware buttons. */
+  .device-showcase__tablet::before,
+  .device-showcase__tablet::after {
+    content: "";
+    position: absolute;
+    background: #1e1e20;
+    border-radius: 3px;
+  }
+  .device-showcase__tablet::before {
+    top: -7px;
+    left: 8%;
+    width: 11%;
+    height: 6px;
+    box-shadow: calc(100% + 12px) 0 0 #1e1e20;
+  }
+  .device-showcase__tablet::after {
+    left: -7px;
+    top: 14%;
+    width: 6px;
+    height: 13%;
+  }
+  .device-showcase__screen {
+    aspect-ratio: 1316 / 813;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: clamp(10px, 2.6%, 26px);
+    background: #fff;
+    scrollbar-width: thin;
+  }
+  .device-showcase__screen:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 4px;
+  }
+  .device-showcase.is-linked .device-showcase__screen {
+    overflow: hidden;
+  }
+  .device-showcase__content {
+    will-change: transform;
+  }
+  .device-showcase__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  /* The base layer colors every span; keep the hint white on the panel. */
+  .device-showcase__caption span {
+    color: inherit;
+  }
+  .device-showcase__hint--linked,
+  .device-showcase.is-linked .device-showcase__hint--static {
+    display: none;
+  }
+  .device-showcase.is-linked .device-showcase__hint--linked {
+    display: inline;
+  }
+  .device-showcase__caption {
+    margin-top: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    color: #fff;
+    opacity: 0.85;
+    text-align: center;
+  }
+  @media (min-width: 768px) {
+    .device-showcase {
+      padding: 5rem 3rem 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .device-showcase {
+      --pin-top: 112px;
+    }
+  }
+  @media (min-width: 1280px) {
+    .device-showcase {
+      --pin-top: 138px;
+    }
+  }
+
+  /* ----- Stack callout -----
+     `<aside class="stack-callout">` in a MainSection's richText: a small
+     boxed summary of the tech stack after a narrative "Behind the Curtain".
+     Two-column rows: the platform name, then what it does. */
+  .main-section .stack-callout {
+    margin-top: 2rem;
+    max-width: 34rem;
+    padding: 1.25rem 1.5rem;
+    background: #fff;
+    border-left: 4px solid var(--color-ff_teal);
+    border-radius: 0.375rem;
+  }
+  .main-section .stack-callout__label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ff_teal);
+    margin-bottom: 0.75rem !important;
+  }
+  .main-section .stack-callout ul {
+    padding-left: 0;
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+  .main-section .stack-callout ul li {
+    display: grid;
+    grid-template-columns: 11.5rem 1fr;
+    gap: 0.75rem;
+  }
+  .main-section .stack-callout ul li + li {
+    margin-top: 0.5rem;
+  }
+  .main-section .stack-callout ul li::before {
+    content: none;
+  }
+  @media (max-width: 479px) {
+    .main-section .stack-callout ul li {
+      grid-template-columns: 1fr;
+      gap: 0;
     }
   }
 
