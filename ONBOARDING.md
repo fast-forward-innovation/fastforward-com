@@ -115,6 +115,7 @@ names come back, values don't — so nothing can hand them to you automatically.
 | Lab Project pages | `PCC_SITE_ID`, `PCC_TOKEN` | Ask Jason. Without them those pages render empty and the server logs a notice. |
 | Inquiry auto-classification | `ANTHROPIC_API_KEY` | console.anthropic.com. Optional — submissions just go through untagged. |
 | Content Publisher webhooks | `PCC_WEBHOOK_SECRET` | `openssl rand -hex 32`, then set the same value on Pantheon. |
+| Prospect-review Slack alerts | `SLACK_REVIEW_WEBHOOK_URL` | Usually leave unset locally: alerts are logged to the terminal. To test end-to-end, use a webhook for a private test channel. |
 
 `.env.local` is read at server start — restart `npm run dev` after editing it.
 

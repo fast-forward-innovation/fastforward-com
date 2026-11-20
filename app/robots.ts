@@ -22,6 +22,8 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
         disallow: [
           "/contact-submitted",
           "/api/",
+          // Prospect reviews are unlisted: reachable only by the links we send.
+          "/review/",
           ...draftProjectPaths,
           ...draftPagePaths,
         ],

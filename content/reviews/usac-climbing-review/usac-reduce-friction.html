@@ -1,0 +1,132 @@
+<!-- usac-reduce-friction: prepared from the USA Climbing handoff (docs/reviews/usac-review-handoff.zip).
+     Barlow fonts swapped for Manrope; colors unchanged. Scoped styles + one section only. -->
+<style>
+/* Scoped to .usac-f so it can sit beside .usac-j in the same proposal */
+.usac-f{
+  --ink:#16202E; --muted:#5B6675; --rule:#D9DEE5; --paper:#FFFFFF;
+  --wp:#1B3A6B; --g:#E3A80F; --s80:#C8302F; --vl:#178C80; --mdl:#6A4BA6;
+  font-family:var(--font-manrope),system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color:var(--ink); background:var(--paper);
+  max-width:980px; margin:0 auto; padding:36px 28px 28px; line-height:1.45;
+}
+.usac-f *{box-sizing:border-box}
+.usac-f h2{font-family:var(--font-manrope),"Arial Narrow",Arial,sans-serif; font-weight:700; font-size:2rem; line-height:1.1; margin:0 0 10px}
+.usac-f h3{font-family:var(--font-manrope),"Arial Narrow",Arial,sans-serif; font-weight:700; font-size:1.2rem; margin:0 0 12px}
+.usac-f .lead{color:var(--muted); font-size:1.04rem; max-width:62ch; margin:0 0 26px}
+
+.usac-f .hold{
+  display:inline-block; flex:none; width:26px; height:24px;
+  border-radius:52% 48% 57% 43% / 46% 58% 42% 54%;
+  background:var(--c); box-shadow:inset 0 -3px 0 rgba(0,0,0,.18);
+}
+.usac-f [data-sys="g"]{--c:var(--g)}
+.usac-f [data-sys="s80"]{--c:var(--s80)}
+.usac-f [data-sys="vl"]{--c:var(--vl)}
+.usac-f [data-sys="mdl"]{--c:var(--mdl)}
+
+/* Architecture strip */
+.usac-f .stack{display:grid; grid-template-columns:150px 1.5fr 56px 1.1fr; align-items:stretch; gap:0; margin-bottom:30px}
+.usac-f .col{position:relative}
+.usac-f .col + .col::before{ /* rope between columns */
+  content:""; position:absolute; left:-18px; width:18px; top:50%; height:2px;
+  background:repeating-linear-gradient(90deg,#9AA3AE 0 6px,transparent 6px 10px);
+}
+.usac-f .members{padding:6px 18px 6px 0; margin-right:18px}
+.usac-f .members p{margin:0 0 8px; font-size:.82rem; color:var(--muted)}
+.usac-f .members ul{list-style:none; margin:0; padding:0; font-weight:500; font-size:.95rem}
+.usac-f .members li{padding:3px 0}
+
+.usac-f .door{background:var(--wp); color:#fff; border-radius:10px; padding:16px 18px; margin-right:18px}
+.usac-f .door strong{display:block; font-family:var(--font-manrope),Arial,sans-serif; font-size:1.25rem; margin-bottom:2px}
+.usac-f .door small{display:block; color:#C9D4E6; font-size:.82rem; margin-bottom:10px}
+.usac-f .door ul{margin:0; padding:0 0 0 18px; font-size:.9rem}
+.usac-f .door li{margin:3px 0}
+
+.usac-f .api{
+  background:#EEF1F5; border:1px solid var(--rule); border-radius:8px; margin-right:18px;
+  display:flex; align-items:center; justify-content:center;
+}
+.usac-f .api span{writing-mode:vertical-rl; transform:rotate(180deg); font-weight:600; font-size:.86rem; color:var(--ink); padding:10px 0}
+
+.usac-f .systems{display:flex; flex-direction:column; justify-content:space-between; gap:10px}
+.usac-f .sys{display:flex; gap:10px; align-items:flex-start}
+.usac-f .sys b{display:block; font-size:.95rem}
+.usac-f .sys span.role{display:block; font-size:.82rem; color:var(--muted); line-height:1.3}
+
+/* Fixes */
+.usac-f .fixes{list-style:none; margin:0; padding:0; border-top:1px solid var(--rule)}
+.usac-f .fix{display:grid; grid-template-columns:1fr 28px 1.25fr; gap:12px; align-items:center; padding:12px 0; border-bottom:1px solid var(--rule)}
+.usac-f .was{font-size:.88rem; border-left:3px solid var(--s80); background:#FBF1F0; padding:6px 10px}
+.usac-f .was em{display:block; font-style:normal; font-size:.76rem; color:var(--muted)}
+.usac-f .to{height:2px; background:repeating-linear-gradient(90deg,#9AA3AE 0 6px,transparent 6px 10px); position:relative}
+.usac-f .to::after{content:""; position:absolute; right:-1px; top:-4px; border:5px solid transparent; border-left:7px solid #9AA3AE; border-right:0}
+.usac-f .now{font-size:.92rem; font-weight:500}
+.usac-f .now span{display:block; font-weight:400; font-size:.82rem; color:var(--muted)}
+.usac-f .source{font-size:.78rem; color:var(--muted); margin:14px 0 0}
+
+@media (max-width:760px){
+  .usac-f{padding:26px 18px}
+  .usac-f .stack{grid-template-columns:1fr; gap:18px}
+  .usac-f .col + .col::before{left:24px; top:-18px; width:2px; height:18px;
+    background:repeating-linear-gradient(180deg,#9AA3AE 0 6px,transparent 6px 10px)}
+  .usac-f .members, .usac-f .door, .usac-f .api{margin-right:0}
+  .usac-f .members ul{display:flex; flex-wrap:wrap; gap:4px 16px}
+  .usac-f .api span{writing-mode:horizontal-tb; transform:none; padding:10px 14px}
+  .usac-f .fix{grid-template-columns:1fr; gap:6px}
+  .usac-f .to{display:none}
+}
+@media print{.usac-f .fix{break-inside:avoid}}
+</style>
+<section class="usac-f" aria-labelledby="usac-f-title">
+  <h2 id="usac-f-title">One front door, with the systems behind it</h2>
+  <p class="lead">Members start and finish every journey on usaclimbing.org. An API layer talks to Sport80, Vertical-Life and the Education Hub, so the handoffs happen between systems instead of between browser tabs.</p>
+
+  <div class="stack" role="img" aria-label="Members use usaclimbing.org, which connects through an API layer to Google Docs, Sport80, Vertical-Life and the Moodle Education Hub">
+    <div class="col members">
+      <p>Members</p>
+      <ul><li>Competitors</li><li>Parents</li><li>Judges</li><li>Routesetters</li></ul>
+    </div>
+    <div class="col door">
+      <strong>usaclimbing.org</strong>
+      <small>The place every journey starts and ends</small>
+      <ul>
+        <li>My USA Climbing: status, next steps, links into each system</li>
+        <li>Journey pages for compete, certify, coach and host</li>
+        <li>Guides, schedules and lists as site pages, not Google Docs</li>
+        <li>Site forms that route to the right staff member</li>
+      </ul>
+    </div>
+    <div class="col api"><span>API layer</span></div>
+    <div class="col systems">
+      <div class="sys" data-sys="g"><span class="hold" aria-hidden="true"></span><div><b>Google Docs</b><span class="role">Season guides, schedules and lists</span></div></div>
+      <div class="sys" data-sys="s80"><span class="hold" aria-hidden="true"></span><div><b>Sport80</b><span class="role">Membership, compliance, payments</span></div></div>
+      <div class="sys" data-sys="vl"><span class="hold" aria-hidden="true"></span><div><b>Vertical-Life</b><span class="role">Competition entries and results</span></div></div>
+      <div class="sys" data-sys="mdl"><span class="hold" aria-hidden="true"></span><div><b>Education Hub</b><span class="role">Courses and certification exams</span></div></div>
+    </div>
+  </div>
+
+  <h3>How each friction point goes away</h3>
+  <ol class="fixes">
+    <li class="fix">
+      <div class="was"><em>Competitor</em>Re-entering membership details fails with one generic error</div>
+      <div class="to" aria-hidden="true"></div>
+      <div class="now">Membership is checked once through the API<span>Results profile is pre-filled, and any mismatch names the field to fix</span></div>
+    </li>
+    <li class="fix">
+      <div class="was"><em>Parent</em>Results profile form defaults to “For myself”</div>
+      <div class="to" aria-hidden="true"></div>
+      <div class="now">Parents register from the family account<span>Choose the child, and their details carry across</span></div>
+    </li>
+    <li class="fix">
+      <div class="was"><em>Judge</em>Education Hub opens in a pop-up that browsers block</div>
+      <div class="to" aria-hidden="true"></div>
+      <div class="now">Courses launch in the same tab from the certify page<span>Progress and certification status show in My USA Climbing</span></div>
+    </li>
+    <li class="fix">
+      <div class="was"><em>Routesetter</em>Level 2 applications run on a Google form, with no setter course</div>
+      <div class="to" aria-hidden="true"></div>
+      <div class="now">Applications become site forms with tracked status<span>A routesetter track is added to the Education Hub</span></div>
+    </li>
+  </ol>
+  <p class="source">Target state proposed by Fast Forward. Exact capabilities depend on the Sport80, Vertical-Life and Moodle APIs, confirmed during discovery.</p>
+</section>

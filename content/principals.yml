@@ -1,0 +1,15 @@
+# Fast Forward principals who send prospect site reviews.
+# A review names its principal by `id` (content/reviews/*.mdx → principal:).
+# Contact options left blank are hidden on the review page.
+#
+#   email         Required. The "Email" button opens a pre-addressed draft.
+#   linkedin      Profile URL. "Message on LinkedIn" opens it.
+#   slackUserId   Slack member ID (profile → ⋮ → Copy member ID). View alerts
+#                 @-mention it so the principal is notified.
+
+- id: jason
+  name: Jason Yarrington
+  role: Co-founder
+  email: jason@fastforward.sh
+  linkedin: https://www.linkedin.com/in/jasonyarrington
+  slackUserId: U03H06B4N

@@ -8,13 +8,7 @@ import type {
 import { PlaceholderImage } from "./postBlocks/PlaceholderImage";
 import { renderPageSections } from "./postBlocks/renderPageSection";
 import { DraftStatusToast } from "./DraftStatusToast";
-
-function hexToRgba(hex: string, alpha = 0.12) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
+import { hexToRgba } from "@/lib/color";
 
 export function LabProjectArticle({
   title,
@@ -36,7 +30,7 @@ export function LabProjectArticle({
   slug?: string;
 }) {
   const backgroundColor = additionalPostFields?.brandColor
-    ? hexToRgba(additionalPostFields.brandColor)
+    ? hexToRgba(additionalPostFields.brandColor, 0.12)
     : "#ebf2f6";
 
   const stack = additionalPostFields?.stack ?? [];
