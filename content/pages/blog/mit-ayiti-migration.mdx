@@ -3,19 +3,8 @@ title: "Our Site’s Problems, or Our Plugins’ Problems? Rebuilding MIT-Ayiti 
 slug: blog/mit-ayiti-migration
 date: '2026-10-04T12:00:00'
 layout: blog
-draft: true
+draft: false
 pinned: true
-editorial:
-  status: draft
-  branch: content/mit-ayiti-blog
-  updated: 2026-10-04
-  notes: >-
-    First full draft from the author's brief, with the three design callouts.
-    Featured image is an iStock photo (455621531); confirm the licence
-    covers blog use. Confirm the sidebar's description of
-    MIT-Ayiti and the video caption. The article's bandwidth/latency figures
-    disagree with the latency callout's SpeedOf.Me data; reconcile before
-    review.
 author:
   name: Jason Yarrington
   role: Web Solutions
@@ -30,7 +19,7 @@ featuredImage:
 additionalPostFields:
   seoDescription: >-
     MIT-Ayiti shares Haitian Creole learning materials between Haitian
-    educators in every subject, K–12. The WordPress site we inherited did the
+    educators in every subject, from kindergarten to grade 12. The WordPress site we inherited did the
     job by stacking plugin on plugin. Here's how we rebuilt it on Next.js and
     Pantheon P1, and why solving the problems from the ground up worked
     better than fighting the plugins.
@@ -113,7 +102,7 @@ contentHtml: |
 
   <h2>Built for low bandwidth</h2>
 
-  <p>A page that loads instantly in Boston can crawl in Haiti. Haitian users get about one sixth of the bandwidth: 51 Mbps versus 301 Mbps. On mobile it's worse, averaging 8.87 Mbps. Every request travels to the US and back with roughly eight times the latency. Every kilobyte counts.</p>
+  <p>A page that loads instantly in Boston can crawl in Haiti. The median connection there is about 6.9 Mbps, against a global median of 33.9 Mbps. On mobile it's worse, around 2 Mbps. And every request waits about 101 milliseconds before anything starts to load. Every kilobyte counts.</p>
 
   <div data-callout="haiti-latency"></div>
 
