@@ -294,6 +294,21 @@
     text-underline-offset: 0.2em;
   }
 
+  /* Links in case-study and pillar-page prose (MainSection richText):
+     dark teal and underlined so they read as links, matching .page-prose. */
+  .main-section p a:not(.btn),
+  .main-section li a:not(.btn),
+  .main-section dd a:not(.btn) {
+    color: var(--color-ff_tealDarker);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .main-section p a:not(.btn):hover,
+  .main-section li a:not(.btn):hover,
+  .main-section dd a:not(.btn):hover {
+    color: var(--color-ff_teal);
+  }
+
   /* Bulleted lists in MDX content — small teal square markers in a
      hanging indent (so wrapped lines align with the text), with
      breathing room between items. */
