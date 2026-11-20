@@ -740,8 +740,17 @@
     outline: 3px solid #fff;
     outline-offset: 4px;
   }
+  /* In linked mode the page drives the screen, so it must not be a scroll
+     container. `overflow: hidden` (plus the base `overscroll-behavior:
+     contain`) still made it one, and it swallowed wheel and trackpad
+     scrolling whenever the pointer was over the tablet. `clip` cuts the
+     overflow without creating a scroll container. `min-height: 0` stops
+     aspect-ratio from growing the box to fit the screenshot, which it
+     does once the box is no longer a scroll container. */
   .device-showcase.is-linked .device-showcase__screen {
-    overflow: hidden;
+    overflow: clip;
+    overscroll-behavior: auto;
+    min-height: 0;
   }
   .device-showcase__content {
     will-change: transform;
